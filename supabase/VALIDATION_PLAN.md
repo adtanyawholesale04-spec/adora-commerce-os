@@ -1,23 +1,26 @@
 # Supabase Validation Plan
 
-Status: blocked until migration SQL files and Docker runtime are present.
+Status: blocked until WSL/Docker Linux engine is available.
 
 ## Current State
 
 - Starter pack contains `supabase/MIGRATION_README.md`.
 - Migration status document says migrations `001-034` are complete.
-- The actual SQL files are not present in this workspace yet.
+- Migration files `001-034` are present under `supabase/migrations`.
+- Supabase config exists at `supabase/config.toml`.
 - Supabase CLI is available through `npx.cmd supabase` at version `2.109.1`.
-- Docker is not currently available in PATH, so Supabase local cannot start yet.
+- Docker Desktop is installed under `C:\Users\Tanya\AppData\Local\Programs\DockerDesktop`.
+- `docker.exe` is available at `C:\Users\Tanya\AppData\Local\Programs\DockerDesktop\resources\bin\docker.exe`, but is not in PATH.
+- WSL is not installed, so Docker Desktop Linux engine returns HTTP 500 and Supabase local cannot start yet.
 
 ## Validation Gate
 
 Run only against a fresh local or development Supabase database.
 
 ```text
-1. Install / expose Docker Desktop or another supported Docker runtime
-2. Add migrations 001-034 under supabase/migrations
-3. Run npx.cmd supabase db reset
+1. Install WSL and make Docker Desktop Linux engine healthy
+2. Add Docker CLI to PATH or keep using the full Docker Desktop binary path
+3. Run `npx.cmd supabase db reset`
 4. Resolve SQL dependency and constraint errors
 5. Test Auth -> Profile -> Membership -> RLS
 6. Test cross-tenant access denial
