@@ -44,6 +44,15 @@ product_cost_api_wrappers as (
     'api_get_product_variant_cost',
     'api_update_product_variant_cost'
   )
+),
+guarded_operations_api_wrappers as (
+  select oid
+  from security_definer_functions
+  where proname in (
+    'api_process_refund',
+    'api_override_qc_session',
+    'api_create_shipment_label'
+  )
 )
 select 'security_definer_total' as check_name,
        count(*)::text as result
@@ -77,5 +86,10 @@ union all
 select 'product_cost_api_wrappers_authenticated_execute' as check_name,
        count(*)::text as result
 from product_cost_api_wrappers
+where has_function_privilege('authenticated', oid, 'EXECUTE')
+union all
+select 'guarded_operations_api_wrappers_authenticated_execute' as check_name,
+       count(*)::text as result
+from guarded_operations_api_wrappers
 where has_function_privilege('authenticated', oid, 'EXECUTE')
 order by check_name;

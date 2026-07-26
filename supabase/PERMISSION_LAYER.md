@@ -69,6 +69,16 @@ Migration `20260726200055_operations_permission_rls.sql` extends permission-awar
 
 Refund processing, QC override, label creation, and external carrier calls should still move through guarded wrappers when business-state transitions are implemented.
 
+Migration `20260726201809_guarded_operations_wrappers.sql` exposes guarded operations RPC functions for high-risk workflow transitions:
+
+| Wrapper | Purpose | Required permission |
+|---|---|---|
+| `public.api_process_refund` | Create a refund and refund transaction after checking refundable amount | `payment.refund` |
+| `public.api_override_qc_session` | Mark a failed or in-progress QC session as passed with an audit event | `warehouse.qc.override` |
+| `public.api_create_shipment_label` | Attach carrier label/tracking data and move shipment to `LABEL_CREATED` | `shipping.print_label` |
+
+Direct `authenticated` insert/update access is revoked from `refunds` and `refund_transactions`. Direct updates are revoked from `fulfillment_qc_sessions` and `shipments`. These actions now require the wrapper layer so the database can enforce ownership, permission, state, amount, and audit rules consistently.
+
 ## Policy Shape
 
 The existing migration `033_rls_policies.sql` creates permissive tenant policies for every `organization_id` table. The permission layer adds restrictive policies, so access is effectively:
@@ -89,6 +99,7 @@ This keeps tenant isolation and action authorization independent and reviewable.
 - `010_product_cost_wrappers_test.sql` validates guarded product cost read/update wrappers and direct cost column denial.
 - `011_operations_permission_rls_test.sql` validates operations RLS across conversations, payments, returns, fulfillment, QC, and shipping.
 - `012_role_matrix_validation.sql` validates owner, manager, warehouse, and support role behavior across representative domains.
+- `013_guarded_operations_wrappers_test.sql` validates guarded refund processing, QC override, and shipment label wrappers.
 
 ## Next Expansion
 
@@ -97,7 +108,7 @@ Apply the same pattern to the remaining domains after confirming the intended pe
 - Inventory transfer workflow: `inventory.transfer`.
 - Reservation and allocation lifecycle policy for order fulfillment roles.
 - Credit, loyalty, reports, notifications, and audit.
-- Guarded wrappers for refund processing, QC override, and shipment label workflows.
+- Normal QC completion, shipment handoff, and carrier webhook wrappers.
 - Persisted seed roles for owner, manager, warehouse, and support after the final role matrix is approved.
 
 Transaction-critical SECURITY DEFINER functions should remain unavailable to browser roles until wrapped by permission-checking server-side functions.

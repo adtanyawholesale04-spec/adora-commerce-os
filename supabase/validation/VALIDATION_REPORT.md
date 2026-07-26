@@ -19,6 +19,7 @@ All migrations replayed:
 20260726194356_inventory_transaction_wrappers.sql
 20260726195240_product_cost_wrappers.sql
 20260726200055_operations_permission_rls.sql
+20260726201809_guarded_operations_wrappers.sql
 ```
 
 ## Baseline Checks
@@ -26,14 +27,14 @@ All migrations replayed:
 | Check | Result |
 |---|---:|
 | Public table count | 121 |
-| Migration count | 41 |
+| Migration count | 42 |
 | Permissions seeded | 44 |
 | Features seeded | 14 |
 | Plans seeded | 4 |
 | Tenant tables without RLS | 0 |
 | Public tables without RLS | 0 |
 | Append-only triggers | 4 |
-| Public SECURITY DEFINER functions | 14 |
+| Public SECURITY DEFINER functions | 17 |
 
 ## Supabase Advisory
 
@@ -69,6 +70,9 @@ api_post_inventory_movement             postgres + authenticated
 api_release_inventory_reservation       postgres + authenticated
 api_reserve_inventory                   postgres + authenticated
 api_update_product_variant_cost         postgres + authenticated
+api_process_refund                      postgres + authenticated
+api_override_qc_session                 postgres + authenticated
+api_create_shipment_label               postgres + authenticated
 current_profile_id                      postgres + authenticated
 is_org_member                           postgres + authenticated
 has_org_permission                      postgres + authenticated
@@ -79,19 +83,20 @@ convert_reservation_to_allocation       postgres only
 post_inventory_movement                 postgres only
 ```
 
-The low-level transaction-critical functions remain unavailable to browser roles. The `api_*` inventory wrappers are authenticated RPC entrypoints with internal permission and ownership checks.
+The low-level transaction-critical functions remain unavailable to browser roles. The `api_*` wrappers are authenticated RPC entrypoints with internal permission, ownership, business-state, and audit checks.
 
 ## Security Definer Exposure Check
 
 | Check | Result |
 |---|---:|
-| SECURITY DEFINER functions total | 14 |
+| SECURITY DEFINER functions total | 17 |
 | SECURITY DEFINER functions executable by public | 0 |
 | SECURITY DEFINER functions executable by anon | 0 |
 | Transaction functions executable by authenticated | 0 |
 | Helper functions executable by authenticated | 3 |
 | Inventory API wrappers executable by authenticated | 4 |
 | Product cost API wrappers executable by authenticated | 2 |
+| Guarded operations API wrappers executable by authenticated | 3 |
 
 The helper functions remain executable by `authenticated` because they are used by RLS policies and membership/permission resolution. Transaction-critical functions remain restricted to `postgres`.
 
@@ -204,3 +209,18 @@ The test validates representative role behavior:
 - `warehouse` can adjust inventory through guarded wrappers but cannot view payments or product cost.
 - `support` can reply to conversations but cannot view payments or edit products.
 - Cross-tenant product visibility remains blocked.
+
+## Guarded Operations Wrapper Test
+
+`supabase/validation/013_guarded_operations_wrappers_test.sql` passes against the local Supabase stack.
+
+The test verifies:
+
+- `api_process_refund` creates a refund and refund transaction only within the refundable amount.
+- Direct authenticated inserts into `refunds` are denied.
+- `api_override_qc_session` marks a QC session as passed, updates fulfillment state, and writes an audit event.
+- Direct authenticated updates to `fulfillment_qc_sessions` are denied.
+- `api_create_shipment_label` attaches label/tracking data and moves the shipment to `LABEL_CREATED`.
+- Direct authenticated shipment label updates are denied.
+- Users missing `payment.refund`, `warehouse.qc.override`, or `shipping.print_label` cannot call the matching wrappers.
+- Cross-tenant shipment label calls are rejected.
