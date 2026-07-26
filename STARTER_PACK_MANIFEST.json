@@ -1,0 +1,8 @@
+{
+  "project": "ADORA Commerce OS",
+  "short_name": "ACOS",
+  "repository_slug": "adora-commerce-os",
+  "migration_range": "001-034",
+  "current_gate": "Supabase validation then Phase 0",
+  "file_count": 58
+}
