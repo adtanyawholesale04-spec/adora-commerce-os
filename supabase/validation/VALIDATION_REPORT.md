@@ -16,6 +16,7 @@ All migrations replayed:
 20260726190748_authenticated_rls_table_grants.sql
 20260726192643_permission_aware_domain_rls.sql
 20260726193333_product_inventory_permission_rls.sql
+20260726194356_inventory_transaction_wrappers.sql
 ```
 
 ## Baseline Checks
@@ -23,14 +24,14 @@ All migrations replayed:
 | Check | Result |
 |---|---:|
 | Public table count | 121 |
-| Migration count | 38 |
+| Migration count | 39 |
 | Permissions seeded | 44 |
 | Features seeded | 14 |
 | Plans seeded | 4 |
 | Tenant tables without RLS | 0 |
 | Public tables without RLS | 0 |
 | Append-only triggers | 4 |
-| Public SECURITY DEFINER functions | 8 |
+| Public SECURITY DEFINER functions | 12 |
 
 ## Supabase Advisory
 
@@ -60,6 +61,10 @@ reserve_inventory
 Current privilege posture after migration `035`:
 
 ```text
+api_convert_reservation_to_allocation   postgres + authenticated
+api_post_inventory_movement             postgres + authenticated
+api_release_inventory_reservation       postgres + authenticated
+api_reserve_inventory                   postgres + authenticated
 current_profile_id                      postgres + authenticated
 is_org_member                           postgres + authenticated
 has_org_permission                      postgres + authenticated
@@ -70,17 +75,18 @@ convert_reservation_to_allocation       postgres only
 post_inventory_movement                 postgres only
 ```
 
-The transaction-critical functions are intentionally unavailable to browser roles until server-side wrappers or internal permission checks are implemented.
+The low-level transaction-critical functions remain unavailable to browser roles. The `api_*` inventory wrappers are authenticated RPC entrypoints with internal permission and ownership checks.
 
 ## Security Definer Exposure Check
 
 | Check | Result |
 |---|---:|
-| SECURITY DEFINER functions total | 8 |
+| SECURITY DEFINER functions total | 12 |
 | SECURITY DEFINER functions executable by public | 0 |
 | SECURITY DEFINER functions executable by anon | 0 |
 | Transaction functions executable by authenticated | 0 |
 | Helper functions executable by authenticated | 3 |
+| Inventory API wrappers executable by authenticated | 4 |
 
 The helper functions remain executable by `authenticated` because they are used by RLS policies and membership/permission resolution. Transaction-critical functions remain restricted to `postgres`.
 
@@ -138,3 +144,15 @@ The test verifies:
 - Inventory balances are not directly updateable by `authenticated`.
 - Inventory movements are not updateable by `authenticated`.
 - Variant cost columns remain unavailable to `authenticated`.
+
+## Inventory Transaction Wrapper Test
+
+`supabase/validation/009_inventory_transaction_wrappers_test.sql` passes against the local Supabase stack.
+
+The test verifies:
+
+- `api_post_inventory_movement` creates a movement, updates balance, and stamps `created_by` with the current profile.
+- `api_reserve_inventory`, `api_release_inventory_reservation`, and `api_convert_reservation_to_allocation` mutate reservation/allocation/balance state correctly.
+- Low-level `post_inventory_movement` remains unavailable to `authenticated`.
+- Cross-tenant wrapper calls are rejected.
+- Users without `inventory.adjust` cannot call inventory mutation wrappers.

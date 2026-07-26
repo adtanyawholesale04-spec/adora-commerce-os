@@ -38,6 +38,17 @@ Delete is not granted permanently in this pass. Deletions should stay server-sid
 
 Inventory balances are read-only to browser/API roles. Balance mutations should happen through transaction functions or server-side wrappers so stock changes stay auditable through `inventory_movements`.
 
+Migration `20260726194356_inventory_transaction_wrappers.sql` exposes guarded inventory transaction wrappers:
+
+| Wrapper | Low-level function | Required permission |
+|---|---|---|
+| `public.api_reserve_inventory` | `public.reserve_inventory` | `inventory.adjust` |
+| `public.api_release_inventory_reservation` | `public.release_inventory_reservation` | `inventory.adjust` |
+| `public.api_convert_reservation_to_allocation` | `public.convert_reservation_to_allocation` | `inventory.adjust` + `order.edit` |
+| `public.api_post_inventory_movement` | `public.post_inventory_movement` | `inventory.adjust` |
+
+The low-level functions remain unavailable to `authenticated`. The wrappers validate authentication, permissions, and object ownership before calling the privileged functions.
+
 ## Policy Shape
 
 The existing migration `033_rls_policies.sql` creates permissive tenant policies for every `organization_id` table. The permission layer adds restrictive policies, so access is effectively:
@@ -54,6 +65,7 @@ This keeps tenant isolation and action authorization independent and reviewable.
 - `006_domain_rls_crud_test.sql` validates tenant-scoped CRUD for permissioned users and cross-tenant denial.
 - `007_permission_layer_test.sql` validates that active members without the required permission cannot perform or see unauthorized actions.
 - `008_product_inventory_permission_rls_test.sql` validates product/variant and inventory balance/movement permission-aware RLS.
+- `009_inventory_transaction_wrappers_test.sql` validates guarded inventory transaction wrappers and low-level function denial.
 
 ## Next Expansion
 
@@ -61,6 +73,7 @@ Apply the same pattern to the remaining domains after confirming the intended pe
 
 - Product cost access: `product.cost.view`, `product.cost.edit`.
 - Inventory transfer workflow: `inventory.transfer`.
+- Reservation and allocation lifecycle policy for order fulfillment roles.
 - Conversations: `conversation.view`, `conversation.reply`, `conversation.assign`.
 - Payments, credit, loyalty, returns, fulfillment, shipping, and audit.
 

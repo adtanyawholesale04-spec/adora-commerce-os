@@ -26,6 +26,16 @@ helper_functions as (
     'is_org_member',
     'has_org_permission'
   )
+),
+inventory_api_wrappers as (
+  select oid
+  from security_definer_functions
+  where proname in (
+    'api_reserve_inventory',
+    'api_release_inventory_reservation',
+    'api_convert_reservation_to_allocation',
+    'api_post_inventory_movement'
+  )
 )
 select 'security_definer_total' as check_name,
        count(*)::text as result
@@ -49,5 +59,10 @@ union all
 select 'helper_functions_authenticated_execute' as check_name,
        count(*)::text as result
 from helper_functions
+where has_function_privilege('authenticated', oid, 'EXECUTE')
+union all
+select 'inventory_api_wrappers_authenticated_execute' as check_name,
+       count(*)::text as result
+from inventory_api_wrappers
 where has_function_privilege('authenticated', oid, 'EXECUTE')
 order by check_name;
