@@ -20,6 +20,7 @@ All migrations replayed:
 20260726195240_product_cost_wrappers.sql
 20260726200055_operations_permission_rls.sql
 20260726201809_guarded_operations_wrappers.sql
+20260726202729_shipping_workflow_wrappers.sql
 ```
 
 ## Baseline Checks
@@ -27,14 +28,14 @@ All migrations replayed:
 | Check | Result |
 |---|---:|
 | Public table count | 121 |
-| Migration count | 42 |
+| Migration count | 43 |
 | Permissions seeded | 44 |
 | Features seeded | 14 |
 | Plans seeded | 4 |
 | Tenant tables without RLS | 0 |
 | Public tables without RLS | 0 |
 | Append-only triggers | 4 |
-| Public SECURITY DEFINER functions | 17 |
+| Public SECURITY DEFINER functions | 20 |
 
 ## Supabase Advisory
 
@@ -73,6 +74,9 @@ api_update_product_variant_cost         postgres + authenticated
 api_process_refund                      postgres + authenticated
 api_override_qc_session                 postgres + authenticated
 api_create_shipment_label               postgres + authenticated
+api_complete_qc_session                 postgres + authenticated
+api_mark_shipment_ready_for_handoff     postgres + authenticated
+api_record_carrier_tracking_event       postgres + authenticated
 current_profile_id                      postgres + authenticated
 is_org_member                           postgres + authenticated
 has_org_permission                      postgres + authenticated
@@ -89,7 +93,7 @@ The low-level transaction-critical functions remain unavailable to browser roles
 
 | Check | Result |
 |---|---:|
-| SECURITY DEFINER functions total | 17 |
+| SECURITY DEFINER functions total | 20 |
 | SECURITY DEFINER functions executable by public | 0 |
 | SECURITY DEFINER functions executable by anon | 0 |
 | Transaction functions executable by authenticated | 0 |
@@ -97,6 +101,7 @@ The low-level transaction-critical functions remain unavailable to browser roles
 | Inventory API wrappers executable by authenticated | 4 |
 | Product cost API wrappers executable by authenticated | 2 |
 | Guarded operations API wrappers executable by authenticated | 3 |
+| Shipping workflow API wrappers executable by authenticated | 3 |
 
 The helper functions remain executable by `authenticated` because they are used by RLS policies and membership/permission resolution. Transaction-critical functions remain restricted to `postgres`.
 
@@ -224,3 +229,17 @@ The test verifies:
 - Direct authenticated shipment label updates are denied.
 - Users missing `payment.refund`, `warehouse.qc.override`, or `shipping.print_label` cannot call the matching wrappers.
 - Cross-tenant shipment label calls are rejected.
+
+## Shipping Workflow Wrapper Test
+
+`supabase/validation/014_shipping_workflow_wrappers_test.sql` passes against the local Supabase stack.
+
+The test verifies:
+
+- `api_complete_qc_session` completes a normal QC session from item totals and moves fulfillment to `QC_PASSED`.
+- `api_mark_shipment_ready_for_handoff` moves a labeled shipment to `READY_FOR_HANDOFF` and fulfillment to `READY_TO_SHIP`.
+- Direct authenticated inserts into `tracking_events` are denied.
+- `api_record_carrier_tracking_event` records carrier events and moves shipment state through `IN_TRANSIT` and `DELIVERED`.
+- Delivered tracking events complete the fulfillment and stamp `fulfilled_at`.
+- Terminal shipments reject later tracking status rewrites.
+- Users missing `warehouse.qc` cannot complete QC, and cross-tenant tracking updates are rejected.
