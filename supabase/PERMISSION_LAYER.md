@@ -89,6 +89,30 @@ Migration `20260726202729_shipping_workflow_wrappers.sql` completes the post-lab
 
 Direct `authenticated` inserts into `tracking_events` are revoked. Tracking events now move through the wrapper so carrier status transitions can validate terminal states and keep fulfillment audit events aligned.
 
+Migration `20260726203930_carrier_webhook_boundary.sql` adds the database boundary for carrier webhooks:
+
+| Object | Purpose |
+|---|---|
+| `public.carrier_webhook_events` | Stores idempotency keys, payload hashes, raw payloads, processing state, and linked tracking events |
+| `public.api_record_carrier_tracking_event` service-role path | Allows the verified Edge Function to route carrier events into the same tracking workflow without a user session |
+
+The `carrier-webhook` Edge Function is configured with `verify_jwt = false` because external carriers do not send Supabase JWTs. The function must verify the carrier HMAC signature before using the service role key. Configure one of:
+
+```text
+CARRIER_WEBHOOK_SECRETS={"flash":"...","kerry":"...","jandt":"...","thailand_post":"..."}
+CARRIER_WEBHOOK_SECRET_<PROVIDER_CODE>=...
+CARRIER_WEBHOOK_SECRET=...
+```
+
+Expected request headers:
+
+```text
+x-carrier-provider: flash
+x-carrier-signature: sha256=<hmac_sha256_hex_body>
+idempotency-key: <provider_event_id>
+x-organization-id: <organization_id>    # optional if payload includes organization_id
+```
+
 ## Policy Shape
 
 The existing migration `033_rls_policies.sql` creates permissive tenant policies for every `organization_id` table. The permission layer adds restrictive policies, so access is effectively:
@@ -111,6 +135,7 @@ This keeps tenant isolation and action authorization independent and reviewable.
 - `012_role_matrix_validation.sql` validates owner, manager, warehouse, and support role behavior across representative domains.
 - `013_guarded_operations_wrappers_test.sql` validates guarded refund processing, QC override, and shipment label wrappers.
 - `014_shipping_workflow_wrappers_test.sql` validates normal QC completion, shipment handoff, and carrier tracking updates.
+- `015_carrier_webhook_boundary_test.sql` validates carrier webhook idempotency storage and service-role routing into tracking updates.
 
 ## Next Expansion
 
@@ -119,7 +144,7 @@ Apply the same pattern to the remaining domains after confirming the intended pe
 - Inventory transfer workflow: `inventory.transfer`.
 - Reservation and allocation lifecycle policy for order fulfillment roles.
 - Credit, loyalty, reports, notifications, and audit.
-- Carrier-specific webhook signature verification at the Edge Function boundary.
+- Provider-specific payload adapters once real carrier contracts are available.
 - Persisted seed roles for owner, manager, warehouse, and support after the final role matrix is approved.
 
 Transaction-critical SECURITY DEFINER functions should remain unavailable to browser roles until wrapped by permission-checking server-side functions.

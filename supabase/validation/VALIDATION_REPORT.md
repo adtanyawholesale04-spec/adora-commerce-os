@@ -21,14 +21,15 @@ All migrations replayed:
 20260726200055_operations_permission_rls.sql
 20260726201809_guarded_operations_wrappers.sql
 20260726202729_shipping_workflow_wrappers.sql
+20260726203930_carrier_webhook_boundary.sql
 ```
 
 ## Baseline Checks
 
 | Check | Result |
 |---|---:|
-| Public table count | 121 |
-| Migration count | 43 |
+| Public table count | 122 |
+| Migration count | 44 |
 | Permissions seeded | 44 |
 | Features seeded | 14 |
 | Plans seeded | 4 |
@@ -102,6 +103,7 @@ The low-level transaction-critical functions remain unavailable to browser roles
 | Product cost API wrappers executable by authenticated | 2 |
 | Guarded operations API wrappers executable by authenticated | 3 |
 | Shipping workflow API wrappers executable by authenticated | 3 |
+| Carrier tracking RPC executable by service_role | 1 |
 
 The helper functions remain executable by `authenticated` because they are used by RLS policies and membership/permission resolution. Transaction-critical functions remain restricted to `postgres`.
 
@@ -243,3 +245,32 @@ The test verifies:
 - Delivered tracking events complete the fulfillment and stamp `fulfilled_at`.
 - Terminal shipments reject later tracking status rewrites.
 - Users missing `warehouse.qc` cannot complete QC, and cross-tenant tracking updates are rejected.
+
+## Carrier Webhook Boundary Test
+
+`supabase/validation/015_carrier_webhook_boundary_test.sql` passes against the local Supabase stack.
+
+The test verifies:
+
+- `authenticated` users cannot insert directly into `carrier_webhook_events`.
+- `service_role` can store carrier webhook idempotency/audit records.
+- Duplicate `(organization_id, provider_code, idempotency_key)` webhook events are rejected.
+- The service-role path can route a verified carrier event into `api_record_carrier_tracking_event`.
+- Carrier tracking updates still produce shipment state changes and fulfillment audit events.
+
+## Edge Function Boundary
+
+`supabase/functions/carrier-webhook/index.ts` implements the HTTP carrier webhook receiver.
+
+It verifies HMAC SHA-256 signatures before using the service role key, stores an idempotency record in `carrier_webhook_events`, normalizes provider payloads into canonical shipment statuses, and calls `api_record_carrier_tracking_event`.
+
+The function is configured with `verify_jwt = false` in `supabase/config.toml` because external carriers do not send Supabase JWTs. Signature verification is therefore mandatory before any database mutation.
+
+Local runtime smoke test:
+
+```text
+supabase functions serve --no-verify-jwt --env-file <temp-env>
+POST /functions/v1/carrier-webhook?provider=flash
+x-carrier-signature: sha256=bad
+=> 401 {"error":"bad_signature"}
+```

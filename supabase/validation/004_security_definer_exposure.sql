@@ -55,7 +55,7 @@ guarded_operations_api_wrappers as (
   )
 ),
 shipping_workflow_api_wrappers as (
-  select oid
+  select oid, proname
   from security_definer_functions
   where proname in (
     'api_complete_qc_session',
@@ -106,4 +106,10 @@ select 'shipping_workflow_api_wrappers_authenticated_execute' as check_name,
        count(*)::text as result
 from shipping_workflow_api_wrappers
 where has_function_privilege('authenticated', oid, 'EXECUTE')
+union all
+select 'carrier_tracking_service_role_execute' as check_name,
+       count(*)::text as result
+from shipping_workflow_api_wrappers
+where proname = 'api_record_carrier_tracking_event'
+  and has_function_privilege('service_role', oid, 'EXECUTE')
 order by check_name;
