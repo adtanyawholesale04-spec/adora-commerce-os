@@ -12,7 +12,7 @@ ADORA Commerce OS uses three access layers for browser/API roles:
 
 `anon` is not granted access to tenant domain tables.
 
-## First-Pass Domain Coverage
+## Permission-Aware Domain Coverage
 
 Migration `20260726192643_permission_aware_domain_rls.sql` applies the first permission-aware layer to:
 
@@ -23,7 +23,20 @@ Migration `20260726192643_permission_aware_domain_rls.sql` applies the first per
 | `public.orders` | `order.view` | `order.create` | `order.edit` |
 | `public.warehouses` | `inventory.view` | `inventory.adjust` | `inventory.adjust` |
 
+Migration `20260726193333_product_inventory_permission_rls.sql` extends the same model to:
+
+| Table | Select | Insert | Update |
+|---|---|---|---|
+| `public.products` | `product.view` | `product.create` | `product.edit` |
+| `public.product_variants` | `product.view` | `product.create` | `product.edit` |
+| `public.inventory_balances` | `inventory.view` | Not granted | Not granted |
+| `public.inventory_movements` | `inventory.view` | `inventory.adjust` | Not granted |
+
 Delete is not granted permanently in this pass. Deletions should stay server-side or receive separate explicit permissions after lifecycle rules are defined.
+
+`public.product_variants.cost_price` and `public.product_variants.minimum_selling_price` are not granted to `authenticated` in this pass. Cost access should use a cost-safe view or server-side wrapper that checks `product.cost.view` and `product.cost.edit`.
+
+Inventory balances are read-only to browser/API roles. Balance mutations should happen through transaction functions or server-side wrappers so stock changes stay auditable through `inventory_movements`.
 
 ## Policy Shape
 
@@ -40,13 +53,14 @@ This keeps tenant isolation and action authorization independent and reviewable.
 - `005_auth_membership_rls_test.sql` validates Auth -> Profile -> Membership -> RLS.
 - `006_domain_rls_crud_test.sql` validates tenant-scoped CRUD for permissioned users and cross-tenant denial.
 - `007_permission_layer_test.sql` validates that active members without the required permission cannot perform or see unauthorized actions.
+- `008_product_inventory_permission_rls_test.sql` validates product/variant and inventory balance/movement permission-aware RLS.
 
 ## Next Expansion
 
 Apply the same pattern to the remaining domains after confirming the intended permission code per action:
 
-- Products and variants: `product.view`, `product.create`, `product.edit`, cost-specific permissions.
-- Inventory movements and balances: `inventory.view`, `inventory.adjust`, `inventory.transfer`.
+- Product cost access: `product.cost.view`, `product.cost.edit`.
+- Inventory transfer workflow: `inventory.transfer`.
 - Conversations: `conversation.view`, `conversation.reply`, `conversation.assign`.
 - Payments, credit, loyalty, returns, fulfillment, shipping, and audit.
 

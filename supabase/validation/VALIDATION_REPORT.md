@@ -15,6 +15,7 @@ All migrations replayed:
 20260726185117_035_security_rls_hardening.sql
 20260726190748_authenticated_rls_table_grants.sql
 20260726192643_permission_aware_domain_rls.sql
+20260726193333_product_inventory_permission_rls.sql
 ```
 
 ## Baseline Checks
@@ -22,7 +23,7 @@ All migrations replayed:
 | Check | Result |
 |---|---:|
 | Public table count | 121 |
-| Migration count | 37 |
+| Migration count | 38 |
 | Permissions seeded | 44 |
 | Features seeded | 14 |
 | Plans seeded | 4 |
@@ -123,3 +124,17 @@ The test verifies that active organization membership is not enough by itself:
 - That same user cannot read customers or create warehouses without the required permission.
 
 The permission design is documented in `supabase/PERMISSION_LAYER.md`.
+
+## Product Inventory Permission RLS Test
+
+`supabase/validation/008_product_inventory_permission_rls_test.sql` passes against the local Supabase stack.
+
+The test verifies:
+
+- `products`, `product_variants`, `inventory_balances`, and `inventory_movements` expose only current-tenant rows.
+- Product and variant insert/update require the mapped product permissions.
+- Inventory movement insert requires `inventory.adjust`.
+- Cross-tenant product and inventory movement inserts are rejected by RLS.
+- Inventory balances are not directly updateable by `authenticated`.
+- Inventory movements are not updateable by `authenticated`.
+- Variant cost columns remain unavailable to `authenticated`.
