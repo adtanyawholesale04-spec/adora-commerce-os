@@ -13,6 +13,7 @@ All migrations replayed:
 ...
 034_seed_data.sql
 20260726185117_035_security_rls_hardening.sql
+20260726190748_authenticated_rls_table_grants.sql
 ```
 
 ## Baseline Checks
@@ -20,7 +21,7 @@ All migrations replayed:
 | Check | Result |
 |---|---:|
 | Public table count | 121 |
-| Migration count | 35 |
+| Migration count | 36 |
 | Permissions seeded | 44 |
 | Features seeded | 14 |
 | Plans seeded | 4 |
@@ -80,3 +81,17 @@ The transaction-critical functions are intentionally unavailable to browser role
 | Helper functions executable by authenticated | 3 |
 
 The helper functions remain executable by `authenticated` because they are used by RLS policies and membership/permission resolution. Transaction-critical functions remain restricted to `postgres`.
+
+## Auth Profile Membership RLS Test
+
+`supabase/validation/005_auth_membership_rls_test.sql` passes against the local Supabase stack.
+
+The test creates two temporary authenticated users, profiles, organizations, and memberships inside a transaction, then switches the JWT subject claim between the two users. It verifies:
+
+- `current_profile_id()` resolves the active user's profile.
+- `is_org_member()` returns true only for the user's own organization.
+- `profiles`, `organization_memberships`, and `organizations` expose only the current user's tenant rows through RLS.
+
+The test ends with `ROLLBACK`, so no fixture data is persisted.
+
+Migration `20260726190748_authenticated_rls_table_grants.sql` grants `SELECT` on the three tested identity/membership tables to `authenticated` and keeps `anon` without those grants. Row visibility remains constrained by existing RLS policies.
