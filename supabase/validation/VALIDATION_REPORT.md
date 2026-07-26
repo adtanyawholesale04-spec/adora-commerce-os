@@ -95,3 +95,17 @@ The test creates two temporary authenticated users, profiles, organizations, and
 The test ends with `ROLLBACK`, so no fixture data is persisted.
 
 Migration `20260726190748_authenticated_rls_table_grants.sql` grants `SELECT` on the three tested identity/membership tables to `authenticated` and keeps `anon` without those grants. Row visibility remains constrained by existing RLS policies.
+
+## Domain RLS CRUD Test
+
+`supabase/validation/006_domain_rls_crud_test.sql` passes against the local Supabase stack.
+
+The test uses temporary transaction-scoped grants for `authenticated` on `customers`, `purchase_sessions`, `orders`, and `warehouses`, then rolls them back with the fixture data. It verifies:
+
+- Tenant-scoped reads expose only the current user's organization rows.
+- Same-tenant inserts are allowed by the generic tenant `WITH CHECK` policies.
+- Cross-tenant inserts are rejected by RLS.
+- Same-tenant updates/deletes can affect visible rows.
+- Cross-tenant updates/deletes affect zero rows because the target rows are not visible through RLS.
+
+These grants are intentionally validation-only. Permanent CRUD grants for domain tables should be added only after the application permission layer is narrowed beyond basic organization membership.
