@@ -68,3 +68,15 @@ post_inventory_movement                 postgres only
 ```
 
 The transaction-critical functions are intentionally unavailable to browser roles until server-side wrappers or internal permission checks are implemented.
+
+## Security Definer Exposure Check
+
+| Check | Result |
+|---|---:|
+| SECURITY DEFINER functions total | 8 |
+| SECURITY DEFINER functions executable by public | 0 |
+| SECURITY DEFINER functions executable by anon | 0 |
+| Transaction functions executable by authenticated | 0 |
+| Helper functions executable by authenticated | 3 |
+
+The helper functions remain executable by `authenticated` because they are used by RLS policies and membership/permission resolution. Transaction-critical functions remain restricted to `postgres`.
