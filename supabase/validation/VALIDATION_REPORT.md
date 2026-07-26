@@ -266,6 +266,8 @@ It verifies HMAC SHA-256 signatures before using the service role key, stores an
 
 The function is configured with `verify_jwt = false` in `supabase/config.toml` because external carriers do not send Supabase JWTs. Signature verification is therefore mandatory before any database mutation.
 
+Provider adapter fixtures were added under `supabase/functions/carrier-webhook/fixtures` for Flash, Kerry, J&T, and Thailand Post. They cover canonical mappings to `IN_TRANSIT`, `DELIVERED`, `EXCEPTION`, and `RTO`.
+
 Local runtime smoke test:
 
 ```text
@@ -274,3 +276,14 @@ POST /functions/v1/carrier-webhook?provider=flash
 x-carrier-signature: sha256=bad
 => 401 {"error":"bad_signature"}
 ```
+
+Provider fixture smoke test:
+
+```text
+POST /functions/v1/carrier-webhook?provider=flash
+body: fixtures/flash-picked-up.json
+x-carrier-signature: sha256=<valid fixture HMAC>
+=> 400 {"error":"missing_shipment_id"}
+```
+
+This confirms the function boots, verifies the signature, parses the Flash adapter fixture, and reaches the database lookup boundary. The fixture is expected to miss shipment lookup unless matching tracking numbers are seeded in the local database.

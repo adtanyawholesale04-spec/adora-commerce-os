@@ -1,0 +1,15 @@
+{
+  "organization_id": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb1",
+  "provider": "kerry",
+  "shipment": {
+    "tracking_number": "KERRY123456789TH",
+    "consignment_no": "KERRY123456789TH"
+  },
+  "event": {
+    "id": "kerry-event-delivered-001",
+    "status_code": "POD",
+    "event_code": "DELIVERED",
+    "description": "Parcel delivered and signed by recipient",
+    "event_at": "2026-07-30T15:30:00+07:00"
+  }
+}

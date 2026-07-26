@@ -1,19 +1,10 @@
 import "@supabase/functions-js/edge-runtime.d.ts";
-
-type JsonObject = Record<string, unknown>;
-
-type NormalizedCarrierEvent = {
-  organizationId: string;
-  shipmentId?: string;
-  trackingNumber?: string;
-  providerCode: string;
-  idempotencyKey: string;
-  externalEventId?: string;
-  eventCode: string;
-  eventDescription: string;
-  eventAt: string;
-  shipmentStatus?: "IN_TRANSIT" | "DELIVERED" | "EXCEPTION" | "RTO" | "CANCELLED";
-};
+import {
+  normalizeCarrierEvent,
+  normalizeKey,
+  readString,
+  type JsonObject,
+} from "./carrier-adapters.ts";
 
 const textEncoder = new TextEncoder();
 const jsonHeaders = { "content-type": "application/json" };
@@ -239,112 +230,6 @@ function bytesToHex(bytes: Uint8Array): string {
   return [...bytes].map((byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
-function normalizeCarrierEvent(
-  providerCode: string,
-  payload: JsonObject,
-  req: Request,
-): NormalizedCarrierEvent {
-  const normalizedProvider = normalizeKey(providerCode);
-  const statusText = normalizeKey(
-    readString(payload, [
-      "shipment_status",
-      "status",
-      "status_code",
-      "state",
-      "logistics_status",
-      "event_code",
-    ]) ?? "",
-  );
-  const eventCode = readString(payload, ["event_code", "code", "status_code", "state"]) ??
-    (statusText || "TRACKING_EVENT");
-
-  return {
-    organizationId: readString(payload, ["organization_id", "org_id"]) ??
-      req.headers.get("x-organization-id") ??
-      "",
-    shipmentId: readString(payload, ["shipment_id"]),
-    trackingNumber: readString(payload, [
-      "tracking_number",
-      "tracking_no",
-      "awb",
-      "awb_no",
-      "waybill",
-    ]),
-    providerCode: normalizedProvider,
-    idempotencyKey: req.headers.get("idempotency-key") ??
-      req.headers.get("x-idempotency-key") ??
-      readString(payload, ["idempotency_key", "event_id", "external_event_id", "tracking_event_id"]) ??
-      `${normalizedProvider}:${eventCode}:${
-        readString(payload, ["tracking_number", "tracking_no", "awb", "waybill"]) ?? "unknown"
-      }:${readString(payload, ["event_at", "timestamp", "occurred_at"]) ?? ""}`,
-    externalEventId: readString(payload, ["external_event_id", "event_id", "tracking_event_id"]),
-    eventCode,
-    eventDescription: readString(payload, [
-      "event_description",
-      "description",
-      "status_description",
-      "message",
-      "remark",
-    ]) ?? eventCode,
-    eventAt: readString(payload, ["event_at", "timestamp", "occurred_at", "status_at"]) ??
-      new Date().toISOString(),
-    shipmentStatus: mapShipmentStatus(normalizedProvider, statusText),
-  };
-}
-
-function mapShipmentStatus(
-  providerCode: string,
-  statusText: string,
-): NormalizedCarrierEvent["shipmentStatus"] {
-  const commonDelivered = ["DELIVERED", "DELIVERY_SUCCESS", "SUCCESS", "SIGNED", "RECEIVED"];
-  const commonTransit = ["PICKED_UP", "PICKUP", "IN_TRANSIT", "TRANSIT", "SHIPPED", "ON_ROUTE"];
-  const commonException = ["EXCEPTION", "FAILED", "DAMAGED", "LOST", "DELAYED", "HOLD"];
-  const commonRto = ["RTO", "RETURN", "RETURNED", "RETURN_TO_SENDER"];
-  const commonCancelled = ["CANCELLED", "CANCELED", "VOID"];
-
-  const providerAliases: Record<string, Record<string, NormalizedCarrierEvent["shipmentStatus"]>> = {
-    flash: {
-      "1": "IN_TRANSIT",
-      "2": "IN_TRANSIT",
-      "3": "DELIVERED",
-      "4": "EXCEPTION",
-      "5": "RTO",
-    },
-    kerry: {
-      POD: "DELIVERED",
-      DEL: "DELIVERED",
-      OFD: "IN_TRANSIT",
-      RCV: "IN_TRANSIT",
-      RTS: "RTO",
-      EXC: "EXCEPTION",
-    },
-    jandt: {
-      PICKUP: "IN_TRANSIT",
-      SENDING: "IN_TRANSIT",
-      SIGNED: "DELIVERED",
-      PROBLEM: "EXCEPTION",
-      RETURN: "RTO",
-    },
-    thailand_post: {
-      DELIVERED: "DELIVERED",
-      TRANSPORTING: "IN_TRANSIT",
-      UNSUCCESSFUL: "EXCEPTION",
-      RETURNED: "RTO",
-    },
-  };
-
-  const providerMap = providerAliases[providerCode] ?? {};
-
-  if (providerMap[statusText]) return providerMap[statusText];
-  if (commonDelivered.includes(statusText)) return "DELIVERED";
-  if (commonTransit.includes(statusText)) return "IN_TRANSIT";
-  if (commonException.includes(statusText)) return "EXCEPTION";
-  if (commonRto.includes(statusText)) return "RTO";
-  if (commonCancelled.includes(statusText)) return "CANCELLED";
-
-  return undefined;
-}
-
 async function findShipmentIdByTrackingNumber(
   supabase: {
     from: (table: string) => {
@@ -372,24 +257,4 @@ async function findShipmentIdByTrackingNumber(
     .maybeSingle();
 
   return data?.id as string | undefined;
-}
-
-function readString(payload: JsonObject, keys: string[]): string | undefined {
-  for (const key of keys) {
-    const value = payload[key];
-
-    if (typeof value === "string" && value.trim()) {
-      return value.trim();
-    }
-
-    if (typeof value === "number") {
-      return String(value);
-    }
-  }
-
-  return undefined;
-}
-
-function normalizeKey(value: string): string {
-  return value.trim().toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
 }

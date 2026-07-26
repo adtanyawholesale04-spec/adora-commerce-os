@@ -113,6 +113,17 @@ idempotency-key: <provider_event_id>
 x-organization-id: <organization_id>    # optional if payload includes organization_id
 ```
 
+Provider adapter fixtures live in `supabase/functions/carrier-webhook/fixtures`:
+
+| Provider | Fixture | Canonical status |
+|---|---|---|
+| Flash | `flash-picked-up.json` | `IN_TRANSIT` |
+| Kerry | `kerry-delivered.json` | `DELIVERED` |
+| J&T | `jandt-exception.json` | `EXCEPTION` |
+| Thailand Post | `thailand-post-returned.json` | `RTO` |
+
+These fixtures are intentionally isolated from the database. They validate request shape and mapping behavior; replace or extend them with exact production payload contracts when each carrier account is connected.
+
 ## Policy Shape
 
 The existing migration `033_rls_policies.sql` creates permissive tenant policies for every `organization_id` table. The permission layer adds restrictive policies, so access is effectively:

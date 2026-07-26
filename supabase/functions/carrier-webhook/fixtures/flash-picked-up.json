@@ -1,0 +1,12 @@
+{
+  "organization_id": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb1",
+  "provider_code": "flash",
+  "data": {
+    "event_id": "flash-event-picked-up-001",
+    "tracking_number": "FLASH123456789TH",
+    "status_code": "1",
+    "event_code": "PICKED_UP",
+    "description": "Flash Express picked up the parcel",
+    "event_time": "2026-07-29T10:00:00+07:00"
+  }
+}

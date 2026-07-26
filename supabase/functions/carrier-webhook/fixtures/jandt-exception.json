@@ -1,0 +1,12 @@
+{
+  "organization_id": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb1",
+  "carrier": "jandt",
+  "bill_code": "JNT123456789TH",
+  "trace": {
+    "id": "jandt-event-exception-001",
+    "status": "problem",
+    "event_code": "DELIVERY_EXCEPTION",
+    "description": "Recipient unavailable",
+    "scan_time": "2026-07-30T18:20:00+07:00"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "organization_id": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb1",
+  "provider_code": "thailand_post",
+  "barcode": "THP123456789TH",
+  "track": {
+    "event_id": "thpost-event-returned-001",
+    "status": "returned",
+    "event_code": "RETURN_TO_SENDER",
+    "description": "Item returned to sender",
+    "status_date": "2026-07-31T09:10:00+07:00"
+  }
+}
