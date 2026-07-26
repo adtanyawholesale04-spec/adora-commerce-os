@@ -49,6 +49,15 @@ Migration `20260726194356_inventory_transaction_wrappers.sql` exposes guarded in
 
 The low-level functions remain unavailable to `authenticated`. The wrappers validate authentication, permissions, and object ownership before calling the privileged functions.
 
+Migration `20260726195240_product_cost_wrappers.sql` exposes guarded product cost RPC functions:
+
+| Wrapper | Purpose | Required permission |
+|---|---|---|
+| `public.api_get_product_variant_cost` | Read `cost_price` and `minimum_selling_price` | `product.cost.view` |
+| `public.api_update_product_variant_cost` | Update `cost_price` and `minimum_selling_price` | `product.cost.edit` |
+
+Direct column access to variant cost fields remains unavailable to `authenticated`. Cost access is separated from general `product.view` and `product.edit`.
+
 ## Policy Shape
 
 The existing migration `033_rls_policies.sql` creates permissive tenant policies for every `organization_id` table. The permission layer adds restrictive policies, so access is effectively:
@@ -66,12 +75,12 @@ This keeps tenant isolation and action authorization independent and reviewable.
 - `007_permission_layer_test.sql` validates that active members without the required permission cannot perform or see unauthorized actions.
 - `008_product_inventory_permission_rls_test.sql` validates product/variant and inventory balance/movement permission-aware RLS.
 - `009_inventory_transaction_wrappers_test.sql` validates guarded inventory transaction wrappers and low-level function denial.
+- `010_product_cost_wrappers_test.sql` validates guarded product cost read/update wrappers and direct cost column denial.
 
 ## Next Expansion
 
 Apply the same pattern to the remaining domains after confirming the intended permission code per action:
 
-- Product cost access: `product.cost.view`, `product.cost.edit`.
 - Inventory transfer workflow: `inventory.transfer`.
 - Reservation and allocation lifecycle policy for order fulfillment roles.
 - Conversations: `conversation.view`, `conversation.reply`, `conversation.assign`.

@@ -36,6 +36,14 @@ inventory_api_wrappers as (
     'api_convert_reservation_to_allocation',
     'api_post_inventory_movement'
   )
+),
+product_cost_api_wrappers as (
+  select oid
+  from security_definer_functions
+  where proname in (
+    'api_get_product_variant_cost',
+    'api_update_product_variant_cost'
+  )
 )
 select 'security_definer_total' as check_name,
        count(*)::text as result
@@ -64,5 +72,10 @@ union all
 select 'inventory_api_wrappers_authenticated_execute' as check_name,
        count(*)::text as result
 from inventory_api_wrappers
+where has_function_privilege('authenticated', oid, 'EXECUTE')
+union all
+select 'product_cost_api_wrappers_authenticated_execute' as check_name,
+       count(*)::text as result
+from product_cost_api_wrappers
 where has_function_privilege('authenticated', oid, 'EXECUTE')
 order by check_name;

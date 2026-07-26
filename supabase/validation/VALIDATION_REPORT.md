@@ -17,6 +17,7 @@ All migrations replayed:
 20260726192643_permission_aware_domain_rls.sql
 20260726193333_product_inventory_permission_rls.sql
 20260726194356_inventory_transaction_wrappers.sql
+20260726195240_product_cost_wrappers.sql
 ```
 
 ## Baseline Checks
@@ -24,14 +25,14 @@ All migrations replayed:
 | Check | Result |
 |---|---:|
 | Public table count | 121 |
-| Migration count | 39 |
+| Migration count | 40 |
 | Permissions seeded | 44 |
 | Features seeded | 14 |
 | Plans seeded | 4 |
 | Tenant tables without RLS | 0 |
 | Public tables without RLS | 0 |
 | Append-only triggers | 4 |
-| Public SECURITY DEFINER functions | 12 |
+| Public SECURITY DEFINER functions | 14 |
 
 ## Supabase Advisory
 
@@ -62,9 +63,11 @@ Current privilege posture after migration `035`:
 
 ```text
 api_convert_reservation_to_allocation   postgres + authenticated
+api_get_product_variant_cost            postgres + authenticated
 api_post_inventory_movement             postgres + authenticated
 api_release_inventory_reservation       postgres + authenticated
 api_reserve_inventory                   postgres + authenticated
+api_update_product_variant_cost         postgres + authenticated
 current_profile_id                      postgres + authenticated
 is_org_member                           postgres + authenticated
 has_org_permission                      postgres + authenticated
@@ -81,12 +84,13 @@ The low-level transaction-critical functions remain unavailable to browser roles
 
 | Check | Result |
 |---|---:|
-| SECURITY DEFINER functions total | 12 |
+| SECURITY DEFINER functions total | 14 |
 | SECURITY DEFINER functions executable by public | 0 |
 | SECURITY DEFINER functions executable by anon | 0 |
 | Transaction functions executable by authenticated | 0 |
 | Helper functions executable by authenticated | 3 |
 | Inventory API wrappers executable by authenticated | 4 |
+| Product cost API wrappers executable by authenticated | 2 |
 
 The helper functions remain executable by `authenticated` because they are used by RLS policies and membership/permission resolution. Transaction-critical functions remain restricted to `postgres`.
 
@@ -156,3 +160,18 @@ The test verifies:
 - Low-level `post_inventory_movement` remains unavailable to `authenticated`.
 - Cross-tenant wrapper calls are rejected.
 - Users without `inventory.adjust` cannot call inventory mutation wrappers.
+
+## Product Cost Wrapper Test
+
+`supabase/validation/010_product_cost_wrappers_test.sql` passes against the local Supabase stack.
+
+The test verifies:
+
+- Direct `cost_price` column reads remain unavailable to `authenticated`.
+- Direct `cost_price` updates remain unavailable to `authenticated`.
+- A user with `product.cost.view` can read cost fields through `api_get_product_variant_cost`.
+- A user without `product.cost.edit` cannot update cost fields.
+- A user with `product.cost.edit` can update cost fields through `api_update_product_variant_cost`.
+- A user with edit-only cost permission cannot read cost through the view wrapper unless they also have `product.cost.view`.
+- Cross-tenant cost reads are rejected.
+- Negative cost values are rejected.
