@@ -1,6 +1,6 @@
 # Supabase Validation Plan
 
-Status: blocked until WSL/Docker Linux engine is available.
+Status: migration replay passed; security policy review required before Phase 0 application development.
 
 ## Current State
 
@@ -11,23 +11,23 @@ Status: blocked until WSL/Docker Linux engine is available.
 - Supabase CLI is available through `npx.cmd supabase` at version `2.109.1`.
 - Docker Desktop is installed under `C:\Users\Tanya\AppData\Local\Programs\DockerDesktop`.
 - `docker.exe` is available at `C:\Users\Tanya\AppData\Local\Programs\DockerDesktop\resources\bin\docker.exe`, but is not in PATH.
-- WSL is not installed, so Docker Desktop Linux engine returns HTTP 500 and Supabase local cannot start yet.
+- WSL is installed and Docker Desktop Linux engine is healthy.
+- `npx.cmd supabase start` completed successfully.
+- `npx.cmd supabase db reset` replayed migrations `001-034` successfully.
 
 ## Validation Gate
 
 Run only against a fresh local or development Supabase database.
 
 ```text
-1. Install WSL and make Docker Desktop Linux engine healthy
-2. Add Docker CLI to PATH or keep using the full Docker Desktop binary path
-3. Run `npx.cmd supabase db reset`
-4. Resolve SQL dependency and constraint errors
-5. Test Auth -> Profile -> Membership -> RLS
-6. Test cross-tenant access denial
-7. Test inventory reservation race conditions
-8. Test append-only ledger enforcement
-9. Test QC label gate through RPC/application boundary
-10. Run advisors/security review before staging
+1. Review and approve remediation for the 6 public tables where RLS is currently disabled
+2. Review `SECURITY DEFINER` public functions and restrict execute privileges where appropriate
+3. Test Auth -> Profile -> Membership -> RLS
+4. Test cross-tenant access denial
+5. Test inventory reservation race conditions
+6. Test append-only ledger enforcement
+7. Test QC label gate through RPC/application boundary
+8. Run advisors/security review before staging
 ```
 
 ## 2026 Supabase Notes
