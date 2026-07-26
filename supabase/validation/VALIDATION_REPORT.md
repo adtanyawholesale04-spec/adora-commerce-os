@@ -192,3 +192,15 @@ The test verifies:
 - Shipping package writes require `shipping.create`.
 - Cross-tenant operation writes are rejected.
 - A member with only `conversation.view` cannot write replies or view payments.
+
+## Role Matrix Validation
+
+`supabase/validation/012_role_matrix_validation.sql` passes against the local Supabase stack.
+
+The test validates representative role behavior:
+
+- `owner` receives the full permission set and can use sensitive wrappers such as product cost access.
+- `manager` can manage product/payment workflows but cannot view product cost or adjust inventory.
+- `warehouse` can adjust inventory through guarded wrappers but cannot view payments or product cost.
+- `support` can reply to conversations but cannot view payments or edit products.
+- Cross-tenant product visibility remains blocked.

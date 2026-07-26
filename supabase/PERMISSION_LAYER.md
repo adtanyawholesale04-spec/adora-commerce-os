@@ -88,6 +88,7 @@ This keeps tenant isolation and action authorization independent and reviewable.
 - `009_inventory_transaction_wrappers_test.sql` validates guarded inventory transaction wrappers and low-level function denial.
 - `010_product_cost_wrappers_test.sql` validates guarded product cost read/update wrappers and direct cost column denial.
 - `011_operations_permission_rls_test.sql` validates operations RLS across conversations, payments, returns, fulfillment, QC, and shipping.
+- `012_role_matrix_validation.sql` validates owner, manager, warehouse, and support role behavior across representative domains.
 
 ## Next Expansion
 
@@ -97,5 +98,6 @@ Apply the same pattern to the remaining domains after confirming the intended pe
 - Reservation and allocation lifecycle policy for order fulfillment roles.
 - Credit, loyalty, reports, notifications, and audit.
 - Guarded wrappers for refund processing, QC override, and shipment label workflows.
+- Persisted seed roles for owner, manager, warehouse, and support after the final role matrix is approved.
 
 Transaction-critical SECURITY DEFINER functions should remain unavailable to browser roles until wrapped by permission-checking server-side functions.
