@@ -86,6 +86,54 @@ insert into public.organization_memberships (
     now()
   );
 
+insert into public.roles (id, organization_id, code, name, status, is_system_role)
+values
+  (
+    '77777777-7777-7777-7777-777777777711',
+    'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbb11',
+    'domain_rls_operator',
+    'Domain RLS Operator',
+    'ACTIVE',
+    false
+  ),
+  (
+    '77777777-7777-7777-7777-777777777722',
+    'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbb22',
+    'domain_rls_operator',
+    'Domain RLS Operator',
+    'ACTIVE',
+    false
+  );
+
+insert into public.role_permissions (role_id, permission_id)
+select r.id, p.id
+from public.roles r
+cross join public.permissions p
+where r.id in (
+    '77777777-7777-7777-7777-777777777711'::uuid,
+    '77777777-7777-7777-7777-777777777722'::uuid
+  )
+  and p.code in (
+    'customer.view',
+    'customer.edit',
+    'order.view',
+    'order.create',
+    'order.edit',
+    'inventory.view',
+    'inventory.adjust'
+  );
+
+insert into public.membership_roles (membership_id, role_id)
+values
+  (
+    'dddddddd-dddd-dddd-dddd-dddddddddd11',
+    '77777777-7777-7777-7777-777777777711'
+  ),
+  (
+    'dddddddd-dddd-dddd-dddd-dddddddddd22',
+    '77777777-7777-7777-7777-777777777722'
+  );
+
 insert into public.customers (
   id,
   organization_id,

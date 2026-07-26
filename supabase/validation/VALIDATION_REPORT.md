@@ -14,6 +14,7 @@ All migrations replayed:
 034_seed_data.sql
 20260726185117_035_security_rls_hardening.sql
 20260726190748_authenticated_rls_table_grants.sql
+20260726192643_permission_aware_domain_rls.sql
 ```
 
 ## Baseline Checks
@@ -21,7 +22,7 @@ All migrations replayed:
 | Check | Result |
 |---|---:|
 | Public table count | 121 |
-| Migration count | 36 |
+| Migration count | 37 |
 | Permissions seeded | 44 |
 | Features seeded | 14 |
 | Plans seeded | 4 |
@@ -100,12 +101,25 @@ Migration `20260726190748_authenticated_rls_table_grants.sql` grants `SELECT` on
 
 `supabase/validation/006_domain_rls_crud_test.sql` passes against the local Supabase stack.
 
-The test uses temporary transaction-scoped grants for `authenticated` on `customers`, `purchase_sessions`, `orders`, and `warehouses`, then rolls them back with the fixture data. It verifies:
+The test grants temporary delete access only inside the transaction, seeds permissioned roles, and verifies the first permission-aware domain tables:
 
 - Tenant-scoped reads expose only the current user's organization rows.
-- Same-tenant inserts are allowed by the generic tenant `WITH CHECK` policies.
+- Same-tenant inserts are allowed only for users with the mapped create/edit permission.
 - Cross-tenant inserts are rejected by RLS.
 - Same-tenant updates/deletes can affect visible rows.
 - Cross-tenant updates/deletes affect zero rows because the target rows are not visible through RLS.
 
-These grants are intentionally validation-only. Permanent CRUD grants for domain tables should be added only after the application permission layer is narrowed beyond basic organization membership.
+Permanent delete grants are intentionally excluded from migration `20260726192643_permission_aware_domain_rls.sql`.
+
+## Permission Layer Test
+
+`supabase/validation/007_permission_layer_test.sql` passes against the local Supabase stack.
+
+The test verifies that active organization membership is not enough by itself:
+
+- A user with `customer.view` can read customers but cannot create customers.
+- That same user cannot read orders without `order.view`.
+- A user with `order.view`, `order.create`, and `order.edit` can read/update orders.
+- That same user cannot read customers or create warehouses without the required permission.
+
+The permission design is documented in `supabase/PERMISSION_LAYER.md`.
