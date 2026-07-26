@@ -1,8 +1,10 @@
--- Superseded by:
--- supabase/migrations/20260726185117_035_security_rls_hardening.sql
+-- ADORA Commerce OS (ACOS)
+-- 035_security_rls_hardening.sql
 --
--- Historical proposed remediation only.
--- Supabase advisory originally flagged these 6 public tables as RLS-disabled.
+-- Purpose:
+-- - Enable RLS on public tables flagged by Supabase advisory.
+-- - Add conservative read policies for relationship/catalog tables.
+-- - Restrict default EXECUTE privileges on public SECURITY DEFINER functions.
 
 alter table public.organizations enable row level security;
 alter table public.membership_roles enable row level security;
@@ -81,3 +83,28 @@ using (
       and public.is_org_member(ps.organization_id)
   )
 );
+
+-- SECURITY DEFINER helpers used by RLS policies should not retain default
+-- PUBLIC execute privileges. Grant only the role needed for authenticated
+-- application access.
+revoke execute on function public.current_profile_id() from public, anon;
+revoke execute on function public.is_org_member(uuid) from public, anon;
+revoke execute on function public.has_org_permission(uuid, text) from public, anon;
+
+grant execute on function public.current_profile_id() to authenticated;
+grant execute on function public.is_org_member(uuid) to authenticated;
+grant execute on function public.has_org_permission(uuid, text) to authenticated;
+
+-- Transaction-critical SECURITY DEFINER functions currently do not enforce
+-- business permissions internally. Keep them unavailable to browser roles
+-- until server-side wrappers or permission checks are implemented.
+revoke execute on function public.next_document_number(uuid, varchar, varchar, varchar)
+  from public, anon, authenticated;
+revoke execute on function public.reserve_inventory(uuid, uuid, uuid, uuid, numeric, timestamptz)
+  from public, anon, authenticated;
+revoke execute on function public.release_inventory_reservation(uuid)
+  from public, anon, authenticated;
+revoke execute on function public.convert_reservation_to_allocation(uuid, uuid, uuid)
+  from public, anon, authenticated;
+revoke execute on function public.post_inventory_movement(uuid, uuid, uuid, varchar, numeric, varchar, uuid, text, uuid)
+  from public, anon, authenticated;

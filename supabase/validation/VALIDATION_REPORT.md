@@ -12,6 +12,7 @@ All migrations replayed:
 001_extensions_helpers.sql
 ...
 034_seed_data.sql
+20260726185117_035_security_rls_hardening.sql
 ```
 
 ## Baseline Checks
@@ -19,33 +20,28 @@ All migrations replayed:
 | Check | Result |
 |---|---:|
 | Public table count | 121 |
-| Migration count | 34 |
+| Migration count | 35 |
 | Permissions seeded | 44 |
 | Features seeded | 14 |
 | Plans seeded | 4 |
 | Tenant tables without RLS | 0 |
+| Public tables without RLS | 0 |
 | Append-only triggers | 4 |
 | Public SECURITY DEFINER functions | 8 |
 
 ## Supabase Advisory
 
-Supabase reported a critical RLS advisory:
+The prior critical RLS advisory has been remediated by:
 
 ```text
-6 table(s) have Row Level Security disabled:
-public.conversation_orders
-public.membership_roles
-public.organizations
-public.plan_features
-public.purchase_session_orders
-public.role_permissions
+20260726185117_035_security_rls_hardening.sql
 ```
 
-Do not blindly enable RLS without policies; that can block required reads/writes. Review `003_proposed_rls_remediation.sql` before applying.
+Current validation shows `public_tables_without_rls = 0`.
 
 ## Security Definer Functions
 
-These public functions currently use default execute privileges:
+These public functions are still SECURITY DEFINER by design:
 
 ```text
 convert_reservation_to_allocation
@@ -58,4 +54,17 @@ release_inventory_reservation
 reserve_inventory
 ```
 
-Recommended next step: restrict execute privileges for transaction/RPC functions and keep helper access limited to the roles that actually need them.
+Current privilege posture after migration `035`:
+
+```text
+current_profile_id                      postgres + authenticated
+is_org_member                           postgres + authenticated
+has_org_permission                      postgres + authenticated
+next_document_number                    postgres only
+reserve_inventory                       postgres only
+release_inventory_reservation           postgres only
+convert_reservation_to_allocation       postgres only
+post_inventory_movement                 postgres only
+```
+
+The transaction-critical functions are intentionally unavailable to browser roles until server-side wrappers or internal permission checks are implemented.

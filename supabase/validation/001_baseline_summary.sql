@@ -28,6 +28,13 @@ where n.nspname = 'public'
   )
   and not c.relrowsecurity
 union all
+select 'public_tables_without_rls' as check_name, count(*)::text as result
+from pg_class c
+join pg_namespace n on n.oid = c.relnamespace
+where n.nspname = 'public'
+  and c.relkind = 'r'
+  and not c.relrowsecurity
+union all
 select 'append_only_triggers' as check_name, count(*)::text as result
 from pg_trigger
 where tgname in (
