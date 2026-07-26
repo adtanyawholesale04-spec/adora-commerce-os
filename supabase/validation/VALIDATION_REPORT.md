@@ -18,6 +18,7 @@ All migrations replayed:
 20260726193333_product_inventory_permission_rls.sql
 20260726194356_inventory_transaction_wrappers.sql
 20260726195240_product_cost_wrappers.sql
+20260726200055_operations_permission_rls.sql
 ```
 
 ## Baseline Checks
@@ -25,7 +26,7 @@ All migrations replayed:
 | Check | Result |
 |---|---:|
 | Public table count | 121 |
-| Migration count | 40 |
+| Migration count | 41 |
 | Permissions seeded | 44 |
 | Features seeded | 14 |
 | Plans seeded | 4 |
@@ -175,3 +176,19 @@ The test verifies:
 - A user with edit-only cost permission cannot read cost through the view wrapper unless they also have `product.cost.view`.
 - Cross-tenant cost reads are rejected.
 - Negative cost values are rejected.
+
+## Operations Permission RLS Test
+
+`supabase/validation/011_operations_permission_rls_test.sql` passes against the local Supabase stack.
+
+The test verifies:
+
+- Conversation, payment, return, fulfillment, and shipment reads expose only permitted tenant rows.
+- Conversation replies require `conversation.reply`.
+- Conversation assignment updates require `conversation.assign`.
+- Payment transaction writes require `payment.verify`.
+- Return management and return inspection writes require `return.manage` and `return.inspect`.
+- Fulfillment events and QC scans require warehouse permissions.
+- Shipping package writes require `shipping.create`.
+- Cross-tenant operation writes are rejected.
+- A member with only `conversation.view` cannot write replies or view payments.

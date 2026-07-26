@@ -58,6 +58,17 @@ Migration `20260726195240_product_cost_wrappers.sql` exposes guarded product cos
 
 Direct column access to variant cost fields remains unavailable to `authenticated`. Cost access is separated from general `product.view` and `product.edit`.
 
+Migration `20260726200055_operations_permission_rls.sql` extends permission-aware RLS to operations tables:
+
+| Domain | Tables | Key permissions |
+|---|---|---|
+| Conversations | `conversations`, `messages`, `conversation_assignments`, `conversation_notes`, live read models | `conversation.view`, `conversation.reply`, `conversation.assign` |
+| Payments | `payments`, `payment_transactions`, `payment_proofs`, `refunds`, `refund_transactions` | `payment.view`, `payment.verify`, `payment.refund` |
+| Returns | `returns`, `return_items`, `return_status_history`, `return_inventory_dispositions`, `exchange_replacements` | `return.view`, `return.manage`, `return.inspect` |
+| Fulfillment and shipping | `fulfillments`, `fulfillment_items`, fulfillment events, QC tables, shipments, packages, tracking events | `warehouse.pick`, `warehouse.pack`, `warehouse.qc`, `shipping.create` |
+
+Refund processing, QC override, label creation, and external carrier calls should still move through guarded wrappers when business-state transitions are implemented.
+
 ## Policy Shape
 
 The existing migration `033_rls_policies.sql` creates permissive tenant policies for every `organization_id` table. The permission layer adds restrictive policies, so access is effectively:
@@ -76,6 +87,7 @@ This keeps tenant isolation and action authorization independent and reviewable.
 - `008_product_inventory_permission_rls_test.sql` validates product/variant and inventory balance/movement permission-aware RLS.
 - `009_inventory_transaction_wrappers_test.sql` validates guarded inventory transaction wrappers and low-level function denial.
 - `010_product_cost_wrappers_test.sql` validates guarded product cost read/update wrappers and direct cost column denial.
+- `011_operations_permission_rls_test.sql` validates operations RLS across conversations, payments, returns, fulfillment, QC, and shipping.
 
 ## Next Expansion
 
@@ -83,7 +95,7 @@ Apply the same pattern to the remaining domains after confirming the intended pe
 
 - Inventory transfer workflow: `inventory.transfer`.
 - Reservation and allocation lifecycle policy for order fulfillment roles.
-- Conversations: `conversation.view`, `conversation.reply`, `conversation.assign`.
-- Payments, credit, loyalty, returns, fulfillment, shipping, and audit.
+- Credit, loyalty, reports, notifications, and audit.
+- Guarded wrappers for refund processing, QC override, and shipment label workflows.
 
 Transaction-critical SECURITY DEFINER functions should remain unavailable to browser roles until wrapped by permission-checking server-side functions.
