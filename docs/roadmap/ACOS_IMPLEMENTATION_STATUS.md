@@ -116,6 +116,13 @@ Track B Customer Engagement Platform
 | Business Rules V13 | `reference/BUSINESS_RULES_V13.md` | APPROVED | Commerce Core baseline |
 | Database Schema V1 Frozen V3 | `reference/DATABASE_SCHEMA_V1_FROZEN_V3.md` | APPROVED | Commerce Core frozen schema |
 | Supabase Migration Status | `reference/SUPABASE_MIGRATION_V1_STATUS.md` | ACTIVE | Migration 001–034 status |
+| A3 Admin Service Contract Map | `docs/api-contracts/ACOS_A3_ADMIN_SERVICE_CONTRACT_MAP.md` | HARDENED_IN_REVIEW | Admin MVP service boundary before UI implementation; guarded action envelope now references A3 hardening contract |
+| A3 Guarded Action Service Contract Hardening | `docs/api-contracts/ACOS_A3_GUARDED_ACTION_SERVICE_CONTRACT_HARDENING.md` | IMPLEMENTED | Server-only action envelope, risk tiers, first action candidates, idempotency/audit/tenant guardrails, and blocked action list |
+| A3 Low-Risk Guarded Admin Action Skeletons | `docs/api-contracts/A3_LOW_RISK_GUARDED_ADMIN_ACTION_SKELETONS.md` | IMPLEMENTED | Server-only skeletons for member invite request and organization profile update request |
+| A3 Permission-Aware UI Affordances | `docs/api-contracts/A3_PERMISSION_AWARE_UI_AFFORDANCES.md` | IMPLEMENTED | Disabled UI affordances show action IDs, permission state, skeleton readiness, audit requirement, and persistence-disabled status |
+| CORE-UI-001 Admin Shell Contract | `docs/api-contracts/CORE_UI_001_ADMIN_APP_SHELL_RBAC_NAVIGATION.md` | IMPLEMENTED | Admin shell, auth entry, organization switcher, and permission-aware navigation contract |
+| CORE-UI-002 Products Read Contract | `docs/api-contracts/CORE_UI_002_PRODUCTS_READ_ONLY_SCREEN.md` | IMPLEMENTED | Read-only Products screen and server read model contract |
+| CORE-UI-DESIGN-001 Admin Visual System Pass | `docs/api-contracts/CORE_UI_DESIGN_001_ADMIN_VISUAL_SYSTEM_PASS.md` | IMPLEMENTED | Admin light/dark theme and Thai/English UI preference foundation |
 | Architecture V2 Content Retention | `docs/architecture/ACOS_ARCHITECTURE_V2_CONTENT_RETENTION.md` | APPROVED DIRECTION | Track B architecture direction |
 | ER Diagram V2 Content Retention | `docs/er/ER_DIAGRAM_V2_CONTENT_RETENTION.md` | PROPOSED | Not frozen |
 | Cost Scale Model V1 | `docs/architecture/COST_SCALE_MODEL_V1.md` | REFERENCE | Used for scale planning |
@@ -266,21 +273,42 @@ Security/RLS/workflow/commerce integration validation passed locally at 2026-07-
 
 ## A3 — Commerce Admin MVP
 
+Planning evidence:
+
+```text
+docs/api-contracts/ACOS_A3_ADMIN_SERVICE_CONTRACT_MAP.md
+
+Status:
+IN_REVIEW
+
+Scope:
+Admin MVP service boundary and guarded action map.
+
+Important:
+No UI, schema, migration, role, permission, status, or financial rule implementation is claimed by this planning artifact.
+```
+
 | Task ID | Module | Status | Notes |
 |---|---|---:|---|
-| CORE-UI-001 | Admin Dashboard | NOT_STARTED | Requires A1/A2 clarity |
-| CORE-UI-002 | Products | NOT_STARTED |  |
-| CORE-UI-003 | Inventory | NOT_STARTED |  |
-| CORE-UI-004 | Customers | NOT_STARTED |  |
-| CORE-UI-005 | Orders | NOT_STARTED |  |
-| CORE-UI-006 | Payments | NOT_STARTED |  |
-| CORE-UI-007 | Fulfillment | NOT_STARTED |  |
-| CORE-UI-008 | Warehouse QC | NOT_STARTED |  |
-| CORE-UI-009 | Shipping | NOT_STARTED |  |
-| CORE-UI-010 | Returns | NOT_STARTED |  |
-| CORE-UI-011 | Promotions | NOT_STARTED |  |
-| CORE-UI-012 | Users / Roles | NOT_STARTED |  |
-| CORE-UI-013 | Settings | NOT_STARTED |  |
+| CORE-UI-000 | Admin service contract map | HARDENED_IN_REVIEW | Defines read/action boundary for Admin MVP and now references guarded action hardening requirements |
+| CORE-UI-DESIGN-001 | Admin visual system pass | IMPLEMENTED | Light/dark theme tokens, Thai/English UI preferences, and shared Admin preference switcher added |
+| CORE-UI-001 | Admin app shell / RBAC navigation | IMPLEMENTED | `/admin` shell, magic-link sign-in, sign-out, organization switcher, server auth context loader, and permission-aware navigation contract added |
+| CORE-UI-002 | Products | IMPLEMENTED | `/admin/products` read-only product/variant snapshot added; product reads use RLS, inventory totals require `inventory.view`, and cost fields remain wrapper-only |
+| CORE-UI-003 | Inventory | IMPLEMENTED | `/admin/inventory` read-only warehouse, balance, and movement screen added; inventory reads require `inventory.view`, product labels require `product.view`, and mutations remain wrapper-only |
+| CORE-UI-004 | Customers | IMPLEMENTED | `/admin/customers` read-only customer master screen added; customer reads require `customer.view`, optional order signals require `order.view`, and edit/merge/privacy flows remain service-contract gated |
+| CORE-UI-005 | Orders | IMPLEMENTED | `/admin/orders` read-only order list/status/payment/fulfillment snapshot added; order reads require `order.view`, optional customer labels require `customer.view`, and create/edit/cancel/reprice remain service-contract gated |
+| CORE-UI-006 | Payments | IMPLEMENTED | `/admin/payments` read-only payment, transaction, and refund snapshot added; payment reads require `payment.view`, optional order labels require `order.view`, and verification/settlement/refund processing remain service/wrapper gated |
+| CORE-UI-007 | Fulfillment | IMPLEMENTED | `/admin/fulfillment` read-only fulfillment queue/item/QC/shipping snapshot added; fulfillment reads require `warehouse.pick`, optional QC signals require `warehouse.qc`, optional shipping signals require `shipping.create`, and state transitions remain service/wrapper gated |
+| CORE-UI-008 | Warehouse QC | IMPLEMENTED | `/admin/qc` read-only QC session, item total, and scan signal snapshot added; QC reads require `warehouse.qc`, optional fulfillment labels require `warehouse.pick`, optional product labels require `product.view`, and completion/override/scan ingestion remain service/wrapper gated |
+| CORE-UI-009 | Shipping | IMPLEMENTED | `/admin/shipping` read-only shipment, package, package item, provider, and tracking snapshot added; shipping reads require `shipping.create`, print label remains wrapper-only with `shipping.print_label`, and label/handoff/tracking/webhook/cost/COD flows remain guarded |
+| CORE-UI-010 | Returns | IMPLEMENTED | `/admin/returns` read-only RMA/RTO/exchange, item, history, disposition, and replacement snapshot added; return reads require `return.view`, optional order/product labels respect permissions, and create/approve/inspect/restock/refund/exchange flows remain service/wrapper gated |
+| CORE-UI-011 | Promotions | IMPLEMENTED | `/admin/promotions` read-only campaign/version/rule/action/coupon/trigger/applied-benefit snapshot added; promotion reads require `promotion.view`, optional order labels respect `order.view`, and create/edit/publish/validate/simulate/evaluate/rewrite flows remain service/engine gated |
+| CORE-UI-012 | Users / Roles | IMPLEMENTED | `/admin/users` read-only member, role, permission, role-permission, and invitation snapshot added; reads require `members.view`, Auth Admin data is not selected, and invite/deactivate/role assignment/support access flows remain guarded admin-service/audit gated |
+| CORE-UI-013 | Settings | IMPLEMENTED | `/admin/settings` read-only organization, subscription, entitlement, usage, and plan-feature snapshot added; reads require `organization.settings.view`, `config_json` and service-role data are not selected, and commercial writes remain owner-decision gated |
+| A3-READ-QA-001 | Read-only Admin QA + Dashboard reconciliation | IMPLEMENTED | `/admin` Dashboard read model added, Dashboard navigation reconciled to `READY_FOR_READ`, and QA contract test/report added for CORE-UI-001 through CORE-UI-013 |
+| A3-ACTION-CONTRACT-001 | Guarded action service contract hardening | IMPLEMENTED | Server-only guarded action envelope, risk tiers, first allowed action candidates, idempotency/audit/tenant guardrails, and not-ready action list documented and contract-tested; no write endpoint, schema, migration, role, or permission added |
+| A3-ACTION-SKELETON-001 | Low-risk guarded admin action skeletons | IMPLEMENTED | Server-only skeletons added for `admin.member.invite.request` and `admin.organization.profile.update.request`; guards auth, active membership, active organization, exact permission, tenant scope, validation, audit requirement, and controlled errors; persistence intentionally disabled |
+| A3-UI-AFFORDANCE-001 | Permission-aware UI affordances | IMPLEMENTED | `/admin/users` and `/admin/settings` now show disabled action affordances for member invite and organization profile update skeletons, including required permission, tenant scope, audit requirement, and persistence-disabled status |
 
 ---
 
@@ -836,6 +864,8 @@ Cost model refinement
 Security checklist refinement
 Fresh replay protocol refinement
 Non-destructive validation reporting
+Admin MVP service contract planning
+Admin app shell/RBAC navigation planning
 ```
 
 ---
@@ -943,7 +973,26 @@ READY
 
 Track A Commerce Core:
 BASELINE + A2 INTEGRATION VALIDATED
-NEXT: Admin Application MVP planning / service-layer contracts
+A3 ADMIN SERVICE CONTRACT MAP HARDENED_IN_REVIEW
+CORE-UI-DESIGN-001 ADMIN VISUAL SYSTEM PASS IMPLEMENTED
+CORE-UI-001 ADMIN APP SHELL IMPLEMENTED
+CORE-UI-002 PRODUCTS READ-ONLY SCREEN IMPLEMENTED
+CORE-UI-003 INVENTORY READ-ONLY SCREEN IMPLEMENTED
+CORE-UI-004 CUSTOMERS READ-ONLY SCREEN IMPLEMENTED
+CORE-UI-005 ORDERS READ-ONLY SCREEN IMPLEMENTED
+CORE-UI-006 PAYMENTS READ-ONLY SCREEN IMPLEMENTED
+CORE-UI-007 FULFILLMENT READ-ONLY SCREEN IMPLEMENTED
+CORE-UI-008 WAREHOUSE QC READ-ONLY SCREEN IMPLEMENTED
+CORE-UI-009 SHIPPING READ-ONLY SCREEN IMPLEMENTED
+CORE-UI-010 RETURNS READ-ONLY SCREEN IMPLEMENTED
+CORE-UI-011 PROMOTIONS READ-ONLY SCREEN IMPLEMENTED
+CORE-UI-012 USERS / ROLES READ-ONLY SCREEN IMPLEMENTED
+CORE-UI-013 SETTINGS READ-ONLY SCREEN IMPLEMENTED
+A3 READ-ONLY ADMIN QA + DASHBOARD RECONCILIATION IMPLEMENTED
+A3 GUARDED ACTION SERVICE CONTRACT HARDENING IMPLEMENTED
+A3 LOW-RISK GUARDED ADMIN ACTION SKELETONS IMPLEMENTED
+A3 PERMISSION-AWARE UI AFFORDANCES IMPLEMENTED
+NEXT: A3 audited persistence contract for admin.member.invite.request
 
 Track B Customer Engagement:
 ARCHITECTURE DIRECTION APPROVED

@@ -1,11 +1,40 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@config "../../tailwind.config.ts";
+@import "tailwindcss";
 
 :root {
   color-scheme: light;
-  background: #f7f9fb;
-  color: #1f2933;
+  --color-ink: 2 44 74;
+  --color-muted: 58 90 113;
+  --color-line: 196 221 237;
+  --color-surface: 240 248 254;
+  --color-panel: 255 255 255;
+  --color-panel-strong: 232 245 254;
+  --color-sidebar: 2 44 74;
+  --color-brand: 8 119 209;
+  --color-accent: 181 122 0;
+  --color-success: 0 132 173;
+  --color-warning: 181 122 0;
+  --color-danger: 224 70 78;
+  --shadow-panel: 0 1px 2px rgb(2 44 74 / 0.08), 0 12px 28px rgb(2 44 74 / 0.06);
+  background: rgb(var(--color-surface));
+  color: rgb(var(--color-ink));
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-ink: 248 252 255;
+  --color-muted: 173 211 235;
+  --color-line: 19 77 117;
+  --color-surface: 1 31 54;
+  --color-panel: 5 53 85;
+  --color-panel-strong: 8 67 106;
+  --color-sidebar: 1 27 46;
+  --color-brand: 80 195 255;
+  --color-accent: 255 209 67;
+  --color-success: 80 195 255;
+  --color-warning: 255 209 67;
+  --color-danger: 239 96 103;
+  --shadow-panel: 0 1px 2px rgb(0 0 0 / 0.24), 0 12px 30px rgb(0 0 0 / 0.14);
 }
 
 * {
@@ -15,7 +44,38 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: #f7f9fb;
-  color: #1f2933;
-  font-family: Arial, Helvetica, sans-serif;
+  background: rgb(var(--color-surface));
+  color: rgb(var(--color-ink));
+  font-family: var(--font-noto-sans-thai), "Segoe UI", Arial, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+a,
+button,
+input,
+select {
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid rgb(var(--color-brand));
+  outline-offset: 2px;
+}
+
+input,
+select,
+button {
+  font: inherit;
+}
+
+::selection {
+  background: rgb(var(--color-brand) / 0.22);
 }

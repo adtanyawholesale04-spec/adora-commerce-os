@@ -17,18 +17,18 @@ const phaseZeroScope = [
 export default function Home() {
   return (
     <main className="min-h-screen">
-      <section className="border-b border-line bg-white">
+      <section className="border-b border-line bg-panel">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div>
             <p className="text-sm font-semibold uppercase tracking-wide text-brand">ACOS</p>
             <h1 className="text-2xl font-semibold text-ink">ADORA Commerce OS</h1>
           </div>
-          <div className="rounded-md border border-line px-3 py-2 text-sm text-muted">Phase 0 Foundation</div>
+          <div className="rounded-md border border-line bg-panel-strong px-3 py-2 text-sm text-muted">Phase 0 Foundation</div>
         </div>
       </section>
 
       <section className="mx-auto grid max-w-7xl gap-6 px-6 py-8 lg:grid-cols-[1.15fr_0.85fr]">
-        <div className="rounded-lg border border-line bg-white p-6">
+        <div className="rounded-lg border border-line bg-panel p-6">
           <h2 className="text-xl font-semibold text-ink">Supabase Validation Gate</h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
             Development starts only after a fresh Supabase database validates migrations,
@@ -44,11 +44,11 @@ export default function Home() {
           </ul>
         </div>
 
-        <div className="rounded-lg border border-line bg-white p-6">
+        <div className="rounded-lg border border-line bg-panel p-6">
           <h2 className="text-xl font-semibold text-ink">Phase 0 Scope</h2>
           <div className="mt-5 grid gap-3">
             {phaseZeroScope.map((item) => (
-              <div key={item} className="rounded-md border border-line bg-surface px-4 py-3 text-sm text-ink">
+              <div key={item} className="rounded-md border border-line bg-panel-strong px-4 py-3 text-sm text-ink">
                 {item}
               </div>
             ))}
