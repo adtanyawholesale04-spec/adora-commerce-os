@@ -41,13 +41,16 @@ describe("A3 low-risk guarded Admin action skeletons", () => {
       "organization_not_active",
       "permission_denied",
       "validation_error",
-      "not_implemented"
+      "not_implemented",
+      "persisted",
+      "duplicate_reused",
+      "role_assignment_not_supported"
     ]) {
       assert.match(`${guard}\n${lowRisk}`, new RegExp(required.replace(/[.]/g, "\\.")), `${required} missing`);
     }
   });
 
-  it("does not add persistence or service-role behavior to the skeleton", () => {
+  it("keeps persistence behind RPC and avoids service-role behavior in server actions", () => {
     const combined = [
       readFileSync(files.guard, "utf8"),
       readFileSync(files.lowRisk, "utf8"),
@@ -58,6 +61,7 @@ describe("A3 low-risk guarded Admin action skeletons", () => {
     assert.doesNotMatch(combined, /\.insert\s*\(/);
     assert.doesNotMatch(combined, /\.update\s*\(/);
     assert.doesNotMatch(combined, /\.delete\s*\(/);
+    assert.match(combined, /api_request_member_invitation/);
     assert.doesNotMatch(combined, /service_role/i);
     assert.doesNotMatch(combined, /SUPABASE_SERVICE/i);
   });
@@ -68,6 +72,9 @@ describe("A3 low-risk guarded Admin action skeletons", () => {
     assert.match(status, /A3-ACTION-SKELETON-001[\s\S]*IMPLEMENTED/);
     assert.match(status, /A3 LOW-RISK GUARDED ADMIN ACTION SKELETONS IMPLEMENTED/);
     assert.match(status, /A3 PERMISSION-AWARE UI AFFORDANCES IMPLEMENTED/);
-    assert.match(status, /NEXT: A3 audited persistence contract for admin\.member\.invite\.request/);
+    assert.match(status, /A3 MEMBER INVITE AUDITED PERSISTENCE CONTRACT IMPLEMENTED/);
+    assert.match(status, /A3 MEMBER INVITE DB-ONLY PERSISTENCE IMPLEMENTED/);
+    assert.match(status, /A3 MEMBER INVITE UI VALIDATION \+ SUBMIT ENABLEMENT IMPLEMENTED/);
+    assert.match(status, /A3 MEMBER INVITE AUTH ADMIN EMAIL-SEND BOUNDARY IMPLEMENTED/);
   });
 });

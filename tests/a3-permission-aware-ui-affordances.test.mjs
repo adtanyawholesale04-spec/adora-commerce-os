@@ -6,24 +6,24 @@ import { describe, it } from "node:test";
 const root = process.cwd();
 
 const usersPage = join(root, "src", "app", "admin", "users", "page.tsx");
+const usersForm = join(root, "src", "app", "admin", "users", "member-invite-form.tsx");
 const settingsPage = join(root, "src", "app", "admin", "settings", "page.tsx");
 const i18n = join(root, "src", "lib", "admin", "i18n.ts");
 const contract = join(root, "docs", "api-contracts", "A3_PERMISSION_AWARE_UI_AFFORDANCES.md");
 const status = join(root, "docs", "roadmap", "ACOS_IMPLEMENTATION_STATUS.md");
 
 describe("A3 permission-aware UI affordances", () => {
-  it("adds disabled affordances to Users and Settings without enabling writes", () => {
+  it("keeps permission-aware affordances to Users and Settings without direct browser writes", () => {
     for (const file of [usersPage, settingsPage, contract]) {
       assert.ok(existsSync(file), `${file} is missing`);
     }
 
-    const users = readFileSync(usersPage, "utf8");
+    const users = `${readFileSync(usersPage, "utf8")}\n${readFileSync(usersForm, "utf8")}`;
     const settings = readFileSync(settingsPage, "utf8");
 
-    assert.match(users, /MemberInviteAffordance/);
+    assert.match(users, /MemberInviteForm/);
     assert.match(users, /admin\.member\.invite\.request/);
     assert.match(users, /members\.manage/);
-    assert.match(users, /disabled/);
 
     assert.match(settings, /OrganizationProfileAffordance/);
     assert.match(settings, /admin\.organization\.profile\.update\.request/);
@@ -43,7 +43,9 @@ describe("A3 permission-aware UI affordances", () => {
       "skeletonReady",
       "permissionRequired",
       "persistenceDisabled",
+      "persistenceEnabled",
       "submitDisabled",
+      "submitInvite",
       "memberInviteAction",
       "organizationProfileAction"
     ]) {
@@ -56,6 +58,9 @@ describe("A3 permission-aware UI affordances", () => {
 
     assert.match(currentStatus, /A3-UI-AFFORDANCE-001[\s\S]*IMPLEMENTED/);
     assert.match(currentStatus, /A3 PERMISSION-AWARE UI AFFORDANCES IMPLEMENTED/);
-    assert.match(currentStatus, /NEXT: A3 audited persistence contract for admin\.member\.invite\.request/);
+    assert.match(currentStatus, /A3 MEMBER INVITE AUDITED PERSISTENCE CONTRACT IMPLEMENTED/);
+    assert.match(currentStatus, /A3 MEMBER INVITE DB-ONLY PERSISTENCE IMPLEMENTED/);
+    assert.match(currentStatus, /A3 MEMBER INVITE UI VALIDATION \+ SUBMIT ENABLEMENT IMPLEMENTED/);
+    assert.match(currentStatus, /A3 MEMBER INVITE AUTH ADMIN EMAIL-SEND BOUNDARY IMPLEMENTED/);
   });
 });

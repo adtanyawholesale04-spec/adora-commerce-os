@@ -8,12 +8,12 @@ Date: 2026-07-27
 
 ## Scope
 
-This task adds server-only skeleton boundaries for the first Tier 1 Admin action candidates:
+This task added server-only skeleton boundaries for the first Tier 1 Admin action candidates:
 
 - `admin.member.invite.request`
 - `admin.organization.profile.update.request`
 
-The skeletons validate the action envelope and inputs, then return a controlled `not_implemented` result. They intentionally do not insert, update, delete, call Auth Admin, mutate subscriptions, mutate entitlements, or expose service-role behavior.
+The initial skeletons validated the action envelope and inputs, then returned a controlled `not_implemented` result. `admin.member.invite.request` has since advanced to DB-only RPC persistence; `admin.organization.profile.update.request` remains skeleton-only. Neither path calls Auth Admin, mutates subscriptions, mutates entitlements, or exposes service-role behavior.
 
 ## Files
 
@@ -41,7 +41,7 @@ Each action skeleton requires:
 
 | Action ID | Required Permission | Current Behavior | Future Write Boundary |
 |---|---|---|---|
-| `admin.member.invite.request` | `members.manage` | Normalizes email and role IDs, validates UUID role IDs, returns `not_implemented` after guard success | Future audited invitation service; Auth Admin remains server-only |
+| `admin.member.invite.request` | `members.manage` | Normalizes email, rejects role assignment, persists/reuses pending invite through `api_request_member_invitation`, and audits the action | DB-only invitation service; Auth Admin email send remains server-only future scope |
 | `admin.organization.profile.update.request` | `organization.settings.edit` | Normalizes name/timezone/currency, rejects invalid profile fields, returns `not_implemented` after guard success | Future audited settings service limited to organization profile fields |
 
 ## Explicit Non-Scope
@@ -58,6 +58,8 @@ Each action skeleton requires:
 
 Permission-aware UI affordances are implemented in `docs/api-contracts/A3_PERMISSION_AWARE_UI_AFFORDANCES.md`.
 
+The audited persistence contract for `admin.member.invite.request` is implemented in `docs/api-contracts/A3_MEMBER_INVITE_AUDITED_PERSISTENCE_CONTRACT.md`, and DB-only persistence is implemented in `docs/api-contracts/A3_MEMBER_INVITE_PERSISTENCE_IMPLEMENTATION.md`.
+
 ## Next Recommended Task
 
-Design the audited persistence contract for `admin.member.invite.request`.
+Implement A3 member invite UI validation and submit enablement for the DB-only invite flow.

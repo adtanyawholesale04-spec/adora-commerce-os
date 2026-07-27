@@ -120,6 +120,11 @@ Track B Customer Engagement Platform
 | A3 Guarded Action Service Contract Hardening | `docs/api-contracts/ACOS_A3_GUARDED_ACTION_SERVICE_CONTRACT_HARDENING.md` | IMPLEMENTED | Server-only action envelope, risk tiers, first action candidates, idempotency/audit/tenant guardrails, and blocked action list |
 | A3 Low-Risk Guarded Admin Action Skeletons | `docs/api-contracts/A3_LOW_RISK_GUARDED_ADMIN_ACTION_SKELETONS.md` | IMPLEMENTED | Server-only skeletons for member invite request and organization profile update request |
 | A3 Permission-Aware UI Affordances | `docs/api-contracts/A3_PERMISSION_AWARE_UI_AFFORDANCES.md` | IMPLEMENTED | Disabled UI affordances show action IDs, permission state, skeleton readiness, audit requirement, and persistence-disabled status |
+| A3 Member Invite Audited Persistence Contract | `docs/api-contracts/A3_MEMBER_INVITE_AUDITED_PERSISTENCE_CONTRACT.md` | IMPLEMENTED | Defines `admin.member.invite.request` write shape, duplicate invite behavior, expiry gate, audit payload, role assignment non-scope, and Auth Admin server-only boundary |
+| A3 Member Invite Persistence Implementation | `docs/api-contracts/A3_MEMBER_INVITE_PERSISTENCE_IMPLEMENTATION.md` | IMPLEMENTED | DB-only guarded RPC persists `organization_invitations` and `audit_logs` with ACOS 7-day TTL, duplicate reuse, actor profile audit, and no Auth Admin email send |
+| A3 Member Invite UI Submit Enablement | `docs/api-contracts/A3_MEMBER_INVITE_UI_SUBMIT_ENABLEMENT.md` | IMPLEMENTED | `/admin/users` enables DB-only invite submit with client/server validation, permission-aware disabled state, server action revalidation, and no Auth Admin email send |
+| A3 Member Invite Auth Admin Email Boundary | `docs/api-contracts/A3_MEMBER_INVITE_AUTH_ADMIN_EMAIL_BOUNDARY.md` | IMPLEMENTED | Sends Supabase Auth Admin invite email from a server-only secret boundary after DB persistence, records email sent/failed audit events, and blocks repeat sends after successful audit |
+| A3 Member Invite Acceptance Activation Boundary | `docs/api-contracts/A3_MEMBER_INVITE_ACCEPTANCE_ACTIVATION_BOUNDARY.md` | IMPLEMENTED | Invite callback accepts `invitation_id` after Supabase session exchange, matches authenticated email to invitation email, creates/reuses profile, activates membership, marks invitation accepted, audits acceptance, and keeps role assignment deferred |
 | CORE-UI-001 Admin Shell Contract | `docs/api-contracts/CORE_UI_001_ADMIN_APP_SHELL_RBAC_NAVIGATION.md` | IMPLEMENTED | Admin shell, auth entry, organization switcher, and permission-aware navigation contract |
 | CORE-UI-002 Products Read Contract | `docs/api-contracts/CORE_UI_002_PRODUCTS_READ_ONLY_SCREEN.md` | IMPLEMENTED | Read-only Products screen and server read model contract |
 | CORE-UI-DESIGN-001 Admin Visual System Pass | `docs/api-contracts/CORE_UI_DESIGN_001_ADMIN_VISUAL_SYSTEM_PASS.md` | IMPLEMENTED | Admin light/dark theme and Thai/English UI preference foundation |
@@ -309,6 +314,11 @@ No UI, schema, migration, role, permission, status, or financial rule implementa
 | A3-ACTION-CONTRACT-001 | Guarded action service contract hardening | IMPLEMENTED | Server-only guarded action envelope, risk tiers, first allowed action candidates, idempotency/audit/tenant guardrails, and not-ready action list documented and contract-tested; no write endpoint, schema, migration, role, or permission added |
 | A3-ACTION-SKELETON-001 | Low-risk guarded admin action skeletons | IMPLEMENTED | Server-only skeletons added for `admin.member.invite.request` and `admin.organization.profile.update.request`; guards auth, active membership, active organization, exact permission, tenant scope, validation, audit requirement, and controlled errors; persistence intentionally disabled |
 | A3-UI-AFFORDANCE-001 | Permission-aware UI affordances | IMPLEMENTED | `/admin/users` and `/admin/settings` now show disabled action affordances for member invite and organization profile update skeletons, including required permission, tenant scope, audit requirement, and persistence-disabled status |
+| A3-ACTION-PERSISTENCE-CONTRACT-001 | Member invite audited persistence contract | IMPLEMENTED | Defines future `organization_invitations` + `audit_logs` persistence for `admin.member.invite.request`, duplicate handling, expiry approval gate, Auth Admin server-only boundary, and role assignment non-scope; no write endpoint, migration, or enabled UI submit added |
+| A3-ACTION-PERSISTENCE-001 | Member invite DB-only persistence | IMPLEMENTED | Adds guarded `api_request_member_invitation` RPC and server action integration for `admin.member.invite.request`; persists invitation + audit with 7-day TTL, rejects role assignment, reuses duplicate pending invites, and keeps Auth Admin email/visible UI submit disabled |
+| A3-ACTION-UI-SUBMIT-001 | Member invite UI validation and submit enablement | IMPLEMENTED | Enables `/admin/users` DB-only member invite submit through the guarded server action, adds required email validation and form result handling, revalidates the users read model after success, and keeps role assignment/Auth Admin email send out of scope |
+| A3-ACTION-AUTH-ADMIN-001 | Supabase Auth Admin invite email-send boundary | IMPLEMENTED | Adds server-only Auth Admin client with `SUPABASE_SECRET_KEY`/legacy service-role fallback, requires configured invite redirect URL, sends `inviteUserByEmail` after DB persistence, and records email sent/failed audit events for retry-safe idempotency |
+| A3-ACTION-INVITE-ACCEPT-001 | Member invite acceptance callback and membership activation boundary | IMPLEMENTED | Adds `api_accept_member_invitation`, binds acceptance to authenticated Supabase email, creates/reuses active profile, activates `organization_memberships`, marks invitation `ACCEPTED`, records `admin.member.invite.accepted`, and leaves role assignment deferred |
 
 ---
 
@@ -992,7 +1002,12 @@ A3 READ-ONLY ADMIN QA + DASHBOARD RECONCILIATION IMPLEMENTED
 A3 GUARDED ACTION SERVICE CONTRACT HARDENING IMPLEMENTED
 A3 LOW-RISK GUARDED ADMIN ACTION SKELETONS IMPLEMENTED
 A3 PERMISSION-AWARE UI AFFORDANCES IMPLEMENTED
-NEXT: A3 audited persistence contract for admin.member.invite.request
+A3 MEMBER INVITE AUDITED PERSISTENCE CONTRACT IMPLEMENTED
+A3 MEMBER INVITE DB-ONLY PERSISTENCE IMPLEMENTED
+A3 MEMBER INVITE UI VALIDATION + SUBMIT ENABLEMENT IMPLEMENTED
+A3 MEMBER INVITE AUTH ADMIN EMAIL-SEND BOUNDARY IMPLEMENTED
+A3 MEMBER INVITE ACCEPTANCE + MEMBERSHIP ACTIVATION IMPLEMENTED
+NEXT: A3 member role assignment guarded action boundary
 
 Track B Customer Engagement:
 ARCHITECTURE DIRECTION APPROVED

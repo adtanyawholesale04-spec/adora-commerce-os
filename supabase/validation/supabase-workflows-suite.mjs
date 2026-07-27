@@ -26,6 +26,21 @@ runSqlSuite([
     file: "supabase/validation/015_carrier_webhook_boundary_test.sql",
     requiredRows: ["carrier_webhook_boundary|pass"],
   },
+  {
+    name: "member_invite_request_rpc",
+    file: "supabase/validation/017_member_invite_request_rpc_test.sql",
+    requiredRows: ["member_invite_request_rpc|pass"],
+  },
+  {
+    name: "member_invite_auth_admin_email_boundary",
+    file: "supabase/validation/018_member_invite_auth_admin_email_boundary_test.sql",
+    requiredRows: ["member_invite_auth_admin_email_boundary|pass"],
+  },
+  {
+    name: "member_invite_acceptance_activation",
+    file: "supabase/validation/019_member_invite_acceptance_activation_test.sql",
+    requiredRows: ["member_invite_acceptance_activation|pass"],
+  },
 ]);
 
 runNpmScript("validate:carrier-webhook-e2e");

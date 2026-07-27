@@ -26,6 +26,7 @@ export type GuardedAdminActionSuccess = {
   requiredPermission: string;
   organizationId: string;
   organizationName: string;
+  actorProfileId: string;
   actorEmail: string | null;
   entitlement: "not_plan_gated";
   auditRequired: true;
@@ -53,7 +54,7 @@ export async function requireGuardedAdminAction({
     return failure(context, "anonymous", actionId, requiredPermission);
   }
 
-  if (!context.activeOrganizationId || context.membershipStatus !== "ACTIVE") {
+  if (!context.activeOrganizationId || !context.profileId || context.membershipStatus !== "ACTIVE") {
     return failure(context, "missing_active_membership", actionId, requiredPermission);
   }
 
@@ -72,6 +73,7 @@ export async function requireGuardedAdminAction({
     requiredPermission,
     organizationId: context.activeOrganizationId,
     organizationName: context.organizationName ?? context.activeOrganizationId,
+    actorProfileId: context.profileId,
     actorEmail: context.userEmail,
     entitlement: "not_plan_gated",
     auditRequired: true,

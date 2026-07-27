@@ -74,6 +74,9 @@ describe("A3 guarded action service contracts", () => {
     assert.match(status, /A3 GUARDED ACTION SERVICE CONTRACT HARDENING IMPLEMENTED/);
     assert.match(status, /A3 LOW-RISK GUARDED ADMIN ACTION SKELETONS IMPLEMENTED/);
     assert.match(status, /A3 PERMISSION-AWARE UI AFFORDANCES IMPLEMENTED/);
-    assert.match(status, /NEXT: A3 audited persistence contract for admin\.member\.invite\.request/);
+    assert.match(status, /A3 MEMBER INVITE AUDITED PERSISTENCE CONTRACT IMPLEMENTED/);
+    assert.match(status, /A3 MEMBER INVITE DB-ONLY PERSISTENCE IMPLEMENTED/);
+    assert.match(status, /A3 MEMBER INVITE UI VALIDATION \+ SUBMIT ENABLEMENT IMPLEMENTED/);
+    assert.match(status, /A3 MEMBER INVITE AUTH ADMIN EMAIL-SEND BOUNDARY IMPLEMENTED/);
   });
 });

@@ -5,10 +5,23 @@ import {
   type GuardedAdminActionFailure,
   type GuardedAdminActionSuccess
 } from "@/lib/admin/actions/guarded";
+import {
+  createSupabaseAuthAdminClient,
+  getSupabaseInviteRedirectUrlForInvitation,
+  SupabaseAuthAdminConfigError
+} from "@/lib/supabase/admin";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export type LowRiskAdminActionCode =
   | GuardedAdminActionFailure["code"]
   | "validation_error"
+  | "role_assignment_not_supported"
+  | "email_already_invited_or_member"
+  | "auth_admin_not_configured"
+  | "auth_admin_redirect_not_configured"
+  | "auth_admin_invite_failed"
+  | "auth_admin_audit_error"
+  | "persistence_error"
   | "not_implemented";
 
 export type LowRiskAdminActionResult<TPayload> =
@@ -21,15 +34,19 @@ export type LowRiskAdminActionResult<TPayload> =
     }
   | {
       ok: true;
-      code: "not_implemented";
+      code: "not_implemented" | "persisted" | "duplicate_reused";
       actionId: string;
       message: string;
       permission: string;
       organizationId: string;
+      actorProfileId: string | null;
       actorEmail: string | null;
       tenantScoped: true;
       auditRequired: true;
-      serviceRoleBoundary: "server_only_not_used_in_skeleton";
+      serviceRoleBoundary:
+        | "server_only_not_used_in_skeleton"
+        | "server_only_not_used"
+        | "server_only_auth_admin_secret";
       payload: TPayload;
     };
 
@@ -43,6 +60,15 @@ export type MemberInviteRequestPayload = {
   email: string;
   roleIds: string[];
   clientActionId: string | null;
+  invitationId?: string;
+  status?: "PENDING";
+  expiresAt?: string;
+  reusedExisting?: boolean;
+  ttlDays?: 7;
+  authAdminEmailSent?: boolean;
+  authAdminUserId?: string | null;
+  authAdminEmailSentAt?: string;
+  authAdminEmailSkippedReason?: "already_sent";
 };
 
 export type OrganizationProfileUpdateRequestInput = {
@@ -77,7 +103,14 @@ export async function requestMemberInvitation(
     return validation;
   }
 
-  return skeletonAccepted(guard, validation.payload);
+  if (validation.payload.roleIds.length > 0) {
+    return actionError("admin.member.invite.request", "role_assignment_not_supported", {
+      roleIds:
+        "Invitation role assignment is not supported until the invitation-role persistence contract is implemented."
+    });
+  }
+
+  return persistMemberInvitation(guard, validation.payload);
 }
 
 export async function requestOrganizationProfileUpdate(
@@ -130,6 +163,7 @@ function validateMemberInviteInput(
     message: "Member invitation skeleton passed guard and validation; database write is intentionally not enabled yet.",
     permission: "members.manage",
     organizationId: "",
+    actorProfileId: null,
     actorEmail: null,
     tenantScoped: true,
     auditRequired: true,
@@ -174,6 +208,7 @@ function validateOrganizationProfileInput(
       "Organization profile update skeleton passed guard and validation; database write is intentionally not enabled yet.",
     permission: "organization.settings.edit",
     organizationId: "",
+    actorProfileId: null,
     actorEmail: null,
     tenantScoped: true,
     auditRequired: true,
@@ -198,12 +233,231 @@ function skeletonAccepted<TPayload>(
     message: "Guarded action skeleton passed. Persistence is intentionally disabled until the action contract is approved for writes.",
     permission: guard.requiredPermission,
     organizationId: guard.organizationId,
+    actorProfileId: guard.actorProfileId,
     actorEmail: guard.actorEmail,
     tenantScoped: true,
     auditRequired: guard.auditRequired,
     serviceRoleBoundary: "server_only_not_used_in_skeleton",
     payload
   };
+}
+
+type MemberInvitationRpcRow = {
+  invitation_id: string;
+  invitation_status: "PENDING";
+  expires_at: string;
+  reused_existing: boolean;
+};
+
+async function persistMemberInvitation(
+  guard: GuardedAdminActionSuccess,
+  payload: MemberInviteRequestPayload
+): Promise<LowRiskAdminActionResult<MemberInviteRequestPayload>> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase.rpc("api_request_member_invitation", {
+    p_organization_id: guard.organizationId,
+    p_email: payload.email,
+    p_client_request_id: uuidOrNull(payload.clientActionId)
+  });
+
+  if (error) {
+    return mapPersistenceError(error.message);
+  }
+
+  const row = Array.isArray(data) ? (data[0] as MemberInvitationRpcRow | undefined) : undefined;
+
+  if (!row) {
+    return actionError("admin.member.invite.request", "persistence_error");
+  }
+
+  const persistedPayload: MemberInviteRequestPayload = {
+    ...payload,
+    invitationId: row.invitation_id,
+    status: row.invitation_status,
+    expiresAt: row.expires_at,
+    reusedExisting: row.reused_existing,
+    ttlDays: 7
+  };
+  const emailSend = await sendMemberInvitationEmail(guard, supabase, persistedPayload);
+
+  if (!emailSend.ok) {
+    return emailSend;
+  }
+
+  return {
+    ok: true,
+    code: row.reused_existing ? "duplicate_reused" : "persisted",
+    actionId: guard.actionId,
+    message: row.reused_existing
+      ? "Existing pending member invitation reused; Auth invite email boundary completed."
+      : "Member invitation persisted; Auth invite email boundary completed.",
+    permission: guard.requiredPermission,
+    organizationId: guard.organizationId,
+    actorProfileId: guard.actorProfileId,
+    actorEmail: guard.actorEmail,
+    tenantScoped: true,
+    auditRequired: guard.auditRequired,
+    serviceRoleBoundary: "server_only_auth_admin_secret",
+    payload: emailSend.payload
+  };
+}
+
+type SupabaseRpcClient = Awaited<ReturnType<typeof createSupabaseServerClient>>;
+
+type MemberInvitationEmailPreparationRpcRow = {
+  invitation_id: string;
+  invite_email: string;
+  should_send: boolean;
+  already_sent: boolean;
+};
+
+async function sendMemberInvitationEmail(
+  guard: GuardedAdminActionSuccess,
+  supabase: SupabaseRpcClient,
+  payload: MemberInviteRequestPayload
+): Promise<LowRiskAdminActionResult<MemberInviteRequestPayload>> {
+  if (!payload.invitationId) {
+    return actionError("admin.member.invite.request", "persistence_error");
+  }
+
+  const { data, error } = await supabase.rpc("api_prepare_member_invitation_email_send", {
+    p_organization_id: guard.organizationId,
+    p_invitation_id: payload.invitationId
+  });
+
+  if (error) {
+    return actionError("admin.member.invite.request", "auth_admin_audit_error");
+  }
+
+  const preparation = Array.isArray(data)
+    ? (data[0] as MemberInvitationEmailPreparationRpcRow | undefined)
+    : undefined;
+
+  if (!preparation) {
+    return actionError("admin.member.invite.request", "auth_admin_audit_error");
+  }
+
+  if (!preparation.should_send || preparation.already_sent) {
+    return {
+      ok: true,
+      code: "persisted",
+      actionId: guard.actionId,
+      message: "Member invitation email was already sent for this pending invite.",
+      permission: guard.requiredPermission,
+      organizationId: guard.organizationId,
+      actorProfileId: guard.actorProfileId,
+      actorEmail: guard.actorEmail,
+      tenantScoped: true,
+      auditRequired: guard.auditRequired,
+      serviceRoleBoundary: "server_only_auth_admin_secret",
+      payload: {
+        ...payload,
+        email: preparation.invite_email,
+        authAdminEmailSent: false,
+        authAdminEmailSkippedReason: "already_sent"
+      }
+    };
+  }
+
+  let redirectTo: string;
+  let adminClient: ReturnType<typeof createSupabaseAuthAdminClient>;
+
+  try {
+    redirectTo = getSupabaseInviteRedirectUrlForInvitation(payload.invitationId);
+    adminClient = createSupabaseAuthAdminClient();
+  } catch (error) {
+    if (error instanceof SupabaseAuthAdminConfigError) {
+      await recordMemberInvitationEmailEvent(supabase, guard, payload, "FAILED", null, error.code);
+      return actionError("admin.member.invite.request", error.code);
+    }
+
+    await recordMemberInvitationEmailEvent(
+      supabase,
+      guard,
+      payload,
+      "FAILED",
+      null,
+      "auth_admin_not_configured"
+    );
+    return actionError("admin.member.invite.request", "auth_admin_not_configured");
+  }
+
+  const invitedAt = new Date().toISOString();
+  const { data: inviteData, error: inviteError } =
+    await adminClient.auth.admin.inviteUserByEmail(preparation.invite_email, {
+      redirectTo,
+      data: {
+        organization_id: guard.organizationId,
+        invitation_id: payload.invitationId
+      }
+    });
+
+  if (inviteError) {
+    await recordMemberInvitationEmailEvent(
+      supabase,
+      guard,
+      payload,
+      "FAILED",
+      null,
+      "auth_admin_invite_failed"
+    );
+    return actionError("admin.member.invite.request", "auth_admin_invite_failed");
+  }
+
+  const authUserId = inviteData.user?.id ?? null;
+  const audit = await recordMemberInvitationEmailEvent(
+    supabase,
+    guard,
+    payload,
+    "SENT",
+    authUserId,
+    null
+  );
+
+  if (!audit.ok) {
+    return actionError("admin.member.invite.request", "auth_admin_audit_error");
+  }
+
+  return {
+    ok: true,
+    code: "persisted",
+    actionId: guard.actionId,
+    message: "Member invitation email sent through Supabase Auth Admin.",
+    permission: guard.requiredPermission,
+    organizationId: guard.organizationId,
+    actorProfileId: guard.actorProfileId,
+    actorEmail: guard.actorEmail,
+    tenantScoped: true,
+    auditRequired: guard.auditRequired,
+    serviceRoleBoundary: "server_only_auth_admin_secret",
+    payload: {
+      ...payload,
+      email: preparation.invite_email,
+      authAdminEmailSent: true,
+      authAdminUserId: authUserId,
+      authAdminEmailSentAt: invitedAt
+    }
+  };
+}
+
+async function recordMemberInvitationEmailEvent(
+  supabase: SupabaseRpcClient,
+  guard: GuardedAdminActionSuccess,
+  payload: MemberInviteRequestPayload,
+  deliveryStatus: "SENT" | "FAILED",
+  authUserId: string | null,
+  errorCode: string | null
+) {
+  const { error } = await supabase.rpc("api_record_member_invitation_email_event", {
+    p_organization_id: guard.organizationId,
+    p_invitation_id: payload.invitationId,
+    p_client_request_id: uuidOrNull(payload.clientActionId),
+    p_delivery_status: deliveryStatus,
+    p_auth_user_id: authUserId,
+    p_error_code: errorCode
+  });
+
+  return { ok: !error };
 }
 
 function denied<TPayload>(
@@ -230,6 +484,23 @@ function validationError<TPayload>(
   };
 }
 
+function actionError<TPayload>(
+  actionId: string,
+  code: Exclude<
+    LowRiskAdminActionCode,
+    GuardedAdminActionFailure["code"] | "validation_error" | "not_implemented"
+  >,
+  fieldErrors?: Record<string, string>
+): LowRiskAdminActionResult<TPayload> {
+  return {
+    ok: false,
+    code,
+    actionId,
+    message: actionErrorMessages[code],
+    fieldErrors
+  };
+}
+
 function isValidEmail(value: string) {
   return value.length <= 320 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
@@ -244,3 +515,37 @@ function normalizeOptionalTrace(value: string | undefined) {
   const normalized = String(value ?? "").trim();
   return normalized.length > 0 && normalized.length <= 120 ? normalized : null;
 }
+
+function uuidOrNull(value: string | null) {
+  return value && isUuid(value) ? value : null;
+}
+
+function mapPersistenceError<TPayload>(message: string): LowRiskAdminActionResult<TPayload> {
+  if (/accepted invitation|membership conflict/i.test(message)) {
+    return actionError("admin.member.invite.request", "email_already_invited_or_member");
+  }
+
+  return actionError("admin.member.invite.request", "persistence_error");
+}
+
+const actionErrorMessages: Record<
+  Exclude<
+    LowRiskAdminActionCode,
+    GuardedAdminActionFailure["code"] | "validation_error" | "not_implemented"
+  >,
+  string
+> = {
+  role_assignment_not_supported:
+    "Role assignment during invitation is not enabled yet. Send the invitation without role IDs.",
+  email_already_invited_or_member:
+    "This email already has an accepted invitation or membership conflict.",
+  auth_admin_not_configured:
+    "Supabase Auth Admin invite email is not configured on the server.",
+  auth_admin_redirect_not_configured:
+    "Supabase invite redirect URL is not configured on the server.",
+  auth_admin_invite_failed:
+    "Supabase Auth Admin could not send the invitation email.",
+  auth_admin_audit_error:
+    "Supabase Auth Admin invitation email could not be audited.",
+  persistence_error: "Member invitation could not be persisted."
+};

@@ -19,6 +19,7 @@ export type AdminMembershipOption = {
 export type AdminShellContext = {
   mode: AdminShellMode;
   userEmail: string | null;
+  profileId: string | null;
   activeOrganizationId: string | null;
   organizationName: string | null;
   organizationStatus: string | null;
@@ -54,6 +55,7 @@ export async function getAdminShellContext(): Promise<AdminShellContext> {
     return {
       ...emptyContext("configured"),
       userEmail: user.email ?? null,
+      profileId: null,
       membershipStatus: "NO_PROFILE"
     };
   }
@@ -73,6 +75,7 @@ export async function getAdminShellContext(): Promise<AdminShellContext> {
     return {
       ...emptyContext("configured"),
       userEmail: user.email ?? null,
+      profileId: profile.id,
       membershipStatus: "NO_ACTIVE_MEMBERSHIP"
     };
   }
@@ -95,6 +98,7 @@ export async function getAdminShellContext(): Promise<AdminShellContext> {
   return {
     mode: "configured",
     userEmail: user.email ?? null,
+    profileId: profile.id,
     activeOrganizationId: activeMembership.organizationId,
     organizationName: activeMembership.organizationName,
     organizationStatus: activeMembership.organizationStatus,
@@ -111,6 +115,7 @@ function emptyContext(mode: AdminShellMode): AdminShellContext {
   return {
     mode,
     userEmail: null,
+    profileId: null,
     activeOrganizationId: null,
     organizationName: null,
     organizationStatus: null,

@@ -13,6 +13,7 @@ import {
   UsersRound
 } from "lucide-react";
 import { AdminPreferenceSwitcher } from "@/app/admin/_components/admin-preference-switcher";
+import { MemberInviteForm } from "@/app/admin/users/member-invite-form";
 import { adminCopy } from "@/lib/admin/i18n";
 import { getAdminPreferences } from "@/lib/admin/preferences";
 import {
@@ -93,10 +94,11 @@ export default async function UsersPage() {
               />
             ) : (
               <>
-                <MemberInviteAffordance
+                <MemberInviteForm
                   copy={copy.users}
                   canRequestInvitation={canRequestInvitation}
                   organizationName={model.context.organizationName ?? copy.common.unavailable}
+                  locale={preferences.locale}
                 />
                 <MembersTable copy={copy.users} members={model.members} locale={preferences.locale} />
                 <RolesTable copy={copy.users} roles={model.roles} locale={preferences.locale} />
@@ -138,7 +140,7 @@ export default async function UsersPage() {
                   copy.users.permissionState,
                   canRequestInvitation ? copy.users.readyWithPermission : copy.users.permissionRequired
                 ],
-                [copy.users.persistence, copy.users.persistenceDisabled],
+                [copy.users.persistence, copy.users.persistenceEnabled],
                 [copy.users.audit, copy.users.auditRequired]
               ]}
             />
@@ -146,7 +148,7 @@ export default async function UsersPage() {
               icon={<CircleSlash aria-hidden className="h-4 w-4 text-danger" />}
               title={copy.users.blockedInScreen}
               rows={[
-                [copy.users.inviteUser, copy.users.skeletonOnly],
+                [copy.users.inviteUser, copy.users.dbOnlyInviteBoundary],
                 [copy.users.deactivateMember, copy.users.adminServiceRequired],
                 [copy.users.roleAssignment, copy.users.adminServiceAuditRequired],
                 [copy.users.permissionCatalogEdit, copy.users.forbiddenNoNewPermission],
@@ -169,55 +171,6 @@ export default async function UsersPage() {
         </section>
       </div>
     </main>
-  );
-}
-
-function MemberInviteAffordance({
-  copy,
-  canRequestInvitation,
-  organizationName
-}: {
-  copy: Record<string, string>;
-  canRequestInvitation: boolean;
-  organizationName: string;
-}) {
-  return (
-    <section className="overflow-hidden rounded-lg border border-line bg-panel shadow-[var(--shadow-panel)]">
-      <SectionHeader
-        icon={<UserPlus aria-hidden className="h-4 w-4 text-brand" />}
-        title={copy.memberInviteAction}
-        count={canRequestInvitation ? copy.skeletonReady : copy.permissionRequired}
-      />
-      <div className="grid gap-4 p-5 lg:grid-cols-[minmax(0,1fr)_260px]">
-        <div className="grid gap-3 sm:grid-cols-2">
-          <PreviewField label={copy.email} value={copy.inviteEmailPreview} />
-          <PreviewField label={copy.roleAssignment} value={copy.roleSelectionPreview} />
-          <PreviewField label={copy.tenant} value={organizationName} />
-          <PreviewField label={copy.actionId} value="admin.member.invite.request" />
-        </div>
-        <div className="grid content-start gap-3 rounded-lg border border-line bg-panel-strong p-4">
-          <StatusBadge status={canRequestInvitation ? "SKELETON_READY" : "PERMISSION_REQUIRED"} />
-          <p className="text-sm text-muted">{copy.persistenceDisabled}</p>
-          <button
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-line bg-surface px-3 text-sm font-semibold text-muted"
-            disabled
-            type="button"
-          >
-            <UserPlus aria-hidden className="h-4 w-4" />
-            {copy.submitDisabled}
-          </button>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function PreviewField({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="grid gap-1 rounded-lg border border-line bg-panel-strong p-4">
-      <dt className="text-xs uppercase text-muted">{label}</dt>
-      <dd className="break-words text-sm font-medium">{value}</dd>
-    </div>
   );
 }
 

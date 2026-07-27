@@ -1,11 +1,16 @@
 import type { EmailOtpType } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
+import {
+  acceptMemberInvitationFromCallback,
+  appendAuthCallbackStatus
+} from "@/lib/auth/member-invite-acceptance";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const origin = requestUrl.origin;
   const next = sanitizeNextPath(requestUrl.searchParams.get("next"));
+  const invitationId = requestUrl.searchParams.get("invitation_id");
   const code = requestUrl.searchParams.get("code");
   const tokenHash = requestUrl.searchParams.get("token_hash");
   const type = requestUrl.searchParams.get("type");
@@ -15,7 +20,8 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
-      return NextResponse.redirect(`${origin}${next}`);
+      const inviteStatus = await acceptMemberInvitationFromCallback(supabase, invitationId);
+      return NextResponse.redirect(`${origin}${appendAuthCallbackStatus(next, inviteStatus)}`);
     }
   }
 
@@ -26,7 +32,8 @@ export async function GET(request: NextRequest) {
     });
 
     if (!error) {
-      return NextResponse.redirect(`${origin}${next}`);
+      const inviteStatus = await acceptMemberInvitationFromCallback(supabase, invitationId);
+      return NextResponse.redirect(`${origin}${appendAuthCallbackStatus(next, inviteStatus)}`);
     }
   }
 

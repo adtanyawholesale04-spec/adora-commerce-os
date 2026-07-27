@@ -33,4 +33,6 @@ The UI shows permission state, tenant scope, action ID, skeleton readiness, audi
 
 ## Next Recommended Task
 
-Design the audited persistence contract for `admin.member.invite.request`, including invitation table write shape, duplicate invite behavior, expiry behavior, audit payload, and Auth Admin boundary.
+The audited persistence contract for `admin.member.invite.request` is implemented in `docs/api-contracts/A3_MEMBER_INVITE_AUDITED_PERSISTENCE_CONTRACT.md`, and DB-only persistence is implemented in `docs/api-contracts/A3_MEMBER_INVITE_PERSISTENCE_IMPLEMENTATION.md`.
+
+Next, implement A3 member invite UI validation and submit enablement while keeping Supabase Auth Admin email sending behind a separate server-only boundary.
