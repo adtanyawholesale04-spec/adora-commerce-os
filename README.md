@@ -41,6 +41,26 @@ npm.cmd run lint
 npm.cmd run typecheck
 npm.cmd run test
 npm.cmd run build
+npm.cmd run validate:static
+npm.cmd run validate:supabase
+```
+
+## CI Gates
+
+GitHub Actions currently runs the non-Docker static gate:
+
+```text
+npm run validate:static
+```
+
+This covers lint, typecheck, Node tests, and production build.
+
+Supabase validation gates require a local Supabase/Docker stack and are still run manually:
+
+```text
+npm run validate:supabase-security
+npm run validate:supabase-workflows
+npm run validate:supabase
 ```
 
 ## First Milestone
