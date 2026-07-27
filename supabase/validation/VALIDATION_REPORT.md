@@ -287,3 +287,11 @@ x-carrier-signature: sha256=<valid fixture HMAC>
 ```
 
 This confirms the function boots, verifies the signature, parses the Flash adapter fixture, and reaches the database lookup boundary. The fixture is expected to miss shipment lookup unless matching tracking numbers are seeded in the local database.
+
+End-to-end runner added:
+
+```text
+npm run validate:carrier-webhook-e2e
+```
+
+The runner seeds local shipments matching Flash, Kerry, J&T, and Thailand Post fixture tracking numbers, starts `carrier-webhook`, sends signed webhook requests, verifies shipment/fulfillment state changes, verifies `tracking_events` and `carrier_webhook_events`, sends duplicate events to confirm idempotency, and cleans up fixture rows.

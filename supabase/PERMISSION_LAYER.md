@@ -124,6 +124,14 @@ Provider adapter fixtures live in `supabase/functions/carrier-webhook/fixtures`:
 
 These fixtures are intentionally isolated from the database. They validate request shape and mapping behavior; replace or extend them with exact production payload contracts when each carrier account is connected.
 
+End-to-end carrier webhook validation can be run locally with:
+
+```text
+npm run validate:carrier-webhook-e2e
+```
+
+The runner seeds shipments with tracking numbers matching all four fixtures, starts the local `carrier-webhook` Edge Function, sends signed webhook requests, verifies `carrier_webhook_events`, `tracking_events`, `shipments`, and `fulfillments`, checks duplicate delivery idempotency, then cleans up its fixture rows.
+
 ## Policy Shape
 
 The existing migration `033_rls_policies.sql` creates permissive tenant policies for every `organization_id` table. The permission layer adds restrictive policies, so access is effectively:

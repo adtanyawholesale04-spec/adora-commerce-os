@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "node --test"
+    "test": "node --test",
+    "validate:carrier-webhook-e2e": "node supabase/validation/carrier-webhook-e2e.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.3",
