@@ -109,10 +109,13 @@ Track B Customer Engagement Platform
 | AI Coding Constitution | `docs/governance/ACOS_AI_CODING_CONSTITUTION.md` | APPROVED | Mandatory AI execution rules |
 | Master Development Roadmap | `docs/roadmap/ACOS_MASTER_DEVELOPMENT_ROADMAP_V2.md` | APPROVED | Master execution map |
 | Implementation Status | `docs/roadmap/ACOS_IMPLEMENTATION_STATUS.md` | ACTIVE | This file |
-| Project Blueprint V13 | `docs/architecture/PROJECT_BLUEPRINT_V13.md` | APPROVED | Commerce Core baseline |
-| Business Rules V13 | `docs/business-rules/BUSINESS_RULES_V13.md` | APPROVED | Commerce Core baseline |
-| Database Schema V1 Frozen V3 | `docs/er/DATABASE_SCHEMA_V1_FROZEN_V3.md` | APPROVED | Commerce Core frozen schema |
-| Supabase Migration Status | `docs/migrations/SUPABASE_MIGRATION_V1_STATUS.md` | ACTIVE | Migration 001–034 status |
+| Status Reconciliation Audit | `docs/roadmap/ACOS_STATUS_RECONCILIATION_AUDIT.md` | ACTIVE | Drift audit between repository evidence and this status file |
+| Supabase Migration Replay Protocol | `docs/migrations/SUPABASE_MIGRATION_REPLAY_PROTOCOL.md` | ACTIVE | Defines baseline/full replay evidence layers |
+| Supabase Migration Replay Report 2026-07-27 | `docs/migrations/SUPABASE_MIGRATION_REPLAY_REPORT_2026-07-27.md` | IN_REVIEW | Security/workflow gates passed; fresh replay not yet run |
+| Project Blueprint V13 | `reference/PROJECT_BLUEPRINT_V13.md` | APPROVED | Commerce Core baseline |
+| Business Rules V13 | `reference/BUSINESS_RULES_V13.md` | APPROVED | Commerce Core baseline |
+| Database Schema V1 Frozen V3 | `reference/DATABASE_SCHEMA_V1_FROZEN_V3.md` | APPROVED | Commerce Core frozen schema |
+| Supabase Migration Status | `reference/SUPABASE_MIGRATION_V1_STATUS.md` | ACTIVE | Migration 001–034 status |
 | Architecture V2 Content Retention | `docs/architecture/ACOS_ARCHITECTURE_V2_CONTENT_RETENTION.md` | APPROVED DIRECTION | Track B architecture direction |
 | ER Diagram V2 Content Retention | `docs/er/ER_DIAGRAM_V2_CONTENT_RETENTION.md` | PROPOSED | Not frozen |
 | Cost Scale Model V1 | `docs/architecture/COST_SCALE_MODEL_V1.md` | REFERENCE | Used for scale planning |
@@ -159,10 +162,11 @@ Next Required Gate:
 Fresh Supabase Replay Validation
 
 Track B Reserved Migration Range:
-035+
+next approved Track B migration range after current repository latest
 
 Important:
-Do not generate migration 035+ until Business Rules Content Retention V1 and ER Diagram V2 are frozen.
+Post-034 Track A/shared hardening migrations exist in the repository and are not Track B production implementation.
+Do not generate Track B production migrations until Business Rules Content Retention V1 and ER Diagram V2 are frozen.
 ```
 
 ---
@@ -195,13 +199,13 @@ Do not generate migration 035+ until Business Rules Content Retention V1 and ER 
 
 | Task ID | Task | Status | Blocker / Notes |
 |---|---|---:|---|
-| CORE-DB-001 | Create fresh Supabase dev project | NOT_STARTED | Requires environment |
-| CORE-DB-002 | Replay migration `001–034` | NOT_STARTED | Blocked by CORE-DB-001 |
-| CORE-DB-003 | Validate extension/function/trigger dependency | NOT_STARTED | Blocked by CORE-DB-002 |
-| CORE-DB-004 | Validate FK / constraints / indexes | NOT_STARTED | Blocked by CORE-DB-002 |
-| CORE-DB-005 | Validate RLS policies | NOT_STARTED | Blocked by CORE-DB-002 |
-| CORE-DB-006 | Validate seed roles/permissions | NOT_STARTED | Blocked by CORE-DB-002 |
-| CORE-DB-007 | Document replay result | NOT_STARTED | Blocked by CORE-DB-002 |
+| CORE-DB-001 | Create fresh Supabase dev project | IN_PROGRESS | Local Supabase stack exists; destructive local reset or separate fresh project still required for fresh evidence |
+| CORE-DB-002 | Replay migration `001–034` | BLOCKED | Raw PostgreSQL temp DB failed at 002 because Supabase `auth` schema is absent; requires Supabase-prepared fresh DB/reset |
+| CORE-DB-003 | Validate extension/function/trigger dependency | NOT_STARTED | Blocked by CORE-DB-002 fresh replay |
+| CORE-DB-004 | Validate FK / constraints / indexes | NOT_STARTED | Blocked by CORE-DB-002 fresh replay |
+| CORE-DB-005 | Validate RLS policies | VALIDATED | `npm.cmd run validate:supabase-security` passed on current local Supabase DB at 2026-07-27 |
+| CORE-DB-006 | Validate seed roles/permissions | VALIDATED | Permission layer and role matrix validation passed on current local Supabase DB at 2026-07-27 |
+| CORE-DB-007 | Document replay result | IMPLEMENTED | Partial replay report added; fresh replay result still pending |
 
 ### Gate A1
 
@@ -213,6 +217,16 @@ Required for:
 Commerce Core implementation confidence
 Track B migration 035+ fresh replay later
 Production readiness
+```
+
+Latest evidence:
+
+```text
+docs/migrations/SUPABASE_MIGRATION_REPLAY_PROTOCOL.md
+docs/migrations/SUPABASE_MIGRATION_REPLAY_REPORT_2026-07-27.md
+
+Security/workflow validation passed on the current local Supabase DB.
+Fresh replay 001-034 and 001-latest are not yet passed.
 ```
 
 ---
@@ -596,11 +610,11 @@ Business Rules and ER V2 are not frozen.
 
 | Task ID | Task | Status | Notes |
 |---|---|---:|---|
-| SEC-001 | RLS test framework | NOT_STARTED | Required for both tracks |
-| SEC-002 | Cross-tenant test suite | NOT_STARTED | Required |
+| SEC-001 | RLS test framework | VALIDATED | SQL suites and runner passed at 2026-07-27 |
+| SEC-002 | Cross-tenant test suite | VALIDATED | Auth/profile/membership, domain RLS, permission layer, and role matrix checks passed at 2026-07-27 |
 | SEC-003 | Public feed rate limit | BLOCKED | Requires Feed routes |
 | SEC-004 | Upload abuse protection | BLOCKED | Requires Media |
-| SEC-005 | Webhook signature verification | BLOCKED | Requires provider integrations |
+| SEC-005 | Webhook signature verification | BLOCKED | Shipping carrier webhook boundary validated locally; broader provider integrations still require provider contracts |
 | SEC-006 | Secret management review | NOT_STARTED | Before provider integration |
 | SEC-007 | Support/admin access audit | NOT_STARTED | SaaS hardening |
 
@@ -810,6 +824,8 @@ Content/Retention rule drafting
 ER V2 review notes
 Cost model refinement
 Security checklist refinement
+Fresh replay protocol refinement
+Non-destructive validation reporting
 ```
 
 ---
@@ -917,7 +933,7 @@ READY
 
 Track A Commerce Core:
 BASELINE APPROVED
-NEXT: Fresh DB Validation
+NEXT: Fresh DB Validation fresh replay approval
 
 Track B Customer Engagement:
 ARCHITECTURE DIRECTION APPROVED
@@ -925,6 +941,10 @@ NEXT: Business Rule Review
 
 Implementation:
 CONTROLLED START
+
+Latest validation:
+Security/RLS/workflow suites passed on current local Supabase DB at 2026-07-27.
+Gate A1 remains NOT_PASSED until Supabase-prepared fresh replay completes.
 ```
 
 ---
