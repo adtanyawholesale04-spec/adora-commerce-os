@@ -141,6 +141,18 @@ npm run validate:shipping-workflow
 
 The suite verifies security-definer exposure, normal QC completion, shipment handoff, authenticated carrier tracking rules, carrier webhook storage/boundary rules, and the signed Edge Function webhook path.
 
+CI-friendly Supabase validation gates can be run locally with:
+
+```text
+npm run validate:supabase-security
+npm run validate:supabase-workflows
+npm run validate:supabase
+```
+
+`validate:supabase-security` checks db lint, baseline RLS posture, SECURITY DEFINER exposure, Auth -> Profile -> Membership -> RLS, permission-aware RLS, operations RLS, and the owner/manager/warehouse/support role matrix.
+
+`validate:supabase-workflows` checks transaction-critical wrappers, product cost wrappers, guarded refund/QC/label wrappers, shipping workflow wrappers, carrier webhook DB boundary, and the signed Edge Function webhook path.
+
 ## Policy Shape
 
 The existing migration `033_rls_policies.sql` creates permissive tenant policies for every `organization_id` table. The permission layer adds restrictive policies, so access is effectively:
@@ -165,6 +177,8 @@ This keeps tenant isolation and action authorization independent and reviewable.
 - `014_shipping_workflow_wrappers_test.sql` validates normal QC completion, shipment handoff, and carrier tracking updates.
 - `015_carrier_webhook_boundary_test.sql` validates carrier webhook idempotency storage and service-role routing into tracking updates.
 - `shipping-workflow-suite.mjs` runs the shipping regression gate across security-definer exposure, SQL workflow validations, and Edge Function carrier webhook E2E.
+- `supabase-security-suite.mjs` runs the CI-friendly security regression gate.
+- `supabase-workflows-suite.mjs` runs the CI-friendly workflow regression gate.
 
 ## Next Expansion
 

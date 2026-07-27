@@ -321,3 +321,34 @@ Latest local suite result:
 npm run validate:shipping-workflow
 shipping_workflow_suite pass
 ```
+
+## CI-Friendly Suites
+
+`supabase/validation/supabase-security-suite.mjs` runs the security regression gate:
+
+- Supabase DB lint
+- `001_baseline_summary.sql`
+- `004_security_definer_exposure.sql`
+- `005_auth_membership_rls_test.sql`
+- `006_domain_rls_crud_test.sql`
+- `007_permission_layer_test.sql`
+- `008_product_inventory_permission_rls_test.sql`
+- `011_operations_permission_rls_test.sql`
+- `012_role_matrix_validation.sql`
+
+`supabase/validation/supabase-workflows-suite.mjs` runs the workflow regression gate:
+
+- `009_inventory_transaction_wrappers_test.sql`
+- `010_product_cost_wrappers_test.sql`
+- `013_guarded_operations_wrappers_test.sql`
+- `014_shipping_workflow_wrappers_test.sql`
+- `015_carrier_webhook_boundary_test.sql`
+- `npm run validate:carrier-webhook-e2e`
+
+Local commands:
+
+```text
+npm run validate:supabase-security
+npm run validate:supabase-workflows
+npm run validate:supabase
+```
