@@ -71,7 +71,7 @@ The server-only Auth Admin email boundary appends `invitation_id` to `SUPABASE_I
 
 role assignment remains deferred.
 
-Reason: the approved persistence contract does not assign roles during invite request, and accepted membership must exist before a later guarded action writes `membership_roles`.
+Reason: the approved persistence contract does not assign roles during invite request, and accepted membership must exist before the guarded role assignment boundary writes `membership_roles`.
 
 ## Validation
 
@@ -99,4 +99,4 @@ The SQL validation covers:
 
 ## Next
 
-NEXT: A3 member role assignment guarded action boundary.
+NEXT: A3 member role management UI affordance and role assignment submit enablement.

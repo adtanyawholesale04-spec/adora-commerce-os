@@ -116,7 +116,7 @@ describe("A3 member invite Auth Admin email-send boundary", () => {
       "redirect allow-list",
       "idempotency",
       "audit",
-      "NEXT: A3 member role assignment guarded action boundary"
+      "NEXT: A3 member role management UI affordance and role assignment submit enablement"
     ]) {
       assert.match(
         `${contract}\n${status}`,

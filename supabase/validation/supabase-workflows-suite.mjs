@@ -41,6 +41,11 @@ runSqlSuite([
     file: "supabase/validation/019_member_invite_acceptance_activation_test.sql",
     requiredRows: ["member_invite_acceptance_activation|pass"],
   },
+  {
+    name: "member_role_assignment_boundary",
+    file: "supabase/validation/020_member_role_assignment_boundary_test.sql",
+    requiredRows: ["member_role_assignment_boundary|pass"],
+  },
 ]);
 
 runNpmScript("validate:carrier-webhook-e2e");

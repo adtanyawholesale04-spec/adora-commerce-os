@@ -102,7 +102,7 @@ describe("A3 member invite acceptance activation boundary", () => {
       "callback",
       "email match",
       "role assignment remains deferred",
-      "NEXT: A3 member role assignment guarded action boundary",
+      "NEXT: A3 member role management UI affordance and role assignment submit enablement",
       "019_member_invite_acceptance_activation_test.sql"
     ]) {
       assert.match(

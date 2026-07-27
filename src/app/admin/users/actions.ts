@@ -1,14 +1,22 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { requestMemberInvitation } from "@/lib/admin/actions/low-risk";
+import {
+  requestMemberInvitation,
+  requestMemberRoleAssignment
+} from "@/lib/admin/actions/low-risk";
 import type {
   LowRiskAdminActionResult,
+  MemberRoleAssignmentPayload,
   MemberInviteRequestPayload
 } from "@/lib/admin/actions/low-risk";
 
 export type MemberInvitationFormState =
   | LowRiskAdminActionResult<MemberInviteRequestPayload>
+  | null;
+
+export type MemberRoleAssignmentFormState =
+  | LowRiskAdminActionResult<MemberRoleAssignmentPayload>
   | null;
 
 export async function requestMemberInvitationServerAction(
@@ -23,6 +31,24 @@ export async function requestMemberInvitationServerAction(
   const result = await requestMemberInvitation({
     email: String(formData.get("email") ?? ""),
     roleIds,
+    clientActionId: String(formData.get("clientActionId") ?? "")
+  });
+
+  if (result.ok) {
+    revalidatePath("/admin/users");
+  }
+
+  return result;
+}
+
+export async function requestMemberRoleAssignmentServerAction(
+  _previousState: MemberRoleAssignmentFormState,
+  formData: FormData
+): Promise<MemberRoleAssignmentFormState> {
+  const result = await requestMemberRoleAssignment({
+    membershipId: String(formData.get("membershipId") ?? ""),
+    roleId: String(formData.get("roleId") ?? ""),
+    reason: String(formData.get("reason") ?? ""),
     clientActionId: String(formData.get("clientActionId") ?? "")
   });
 

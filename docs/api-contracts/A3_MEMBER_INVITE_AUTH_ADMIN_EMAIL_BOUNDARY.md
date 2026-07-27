@@ -127,4 +127,4 @@ Static and SQL validation assert:
 
 ## Next Recommended Task
 
-NEXT: A3 member role assignment guarded action boundary.
+NEXT: A3 member role management UI affordance and role assignment submit enablement.

@@ -22,6 +22,7 @@ export type LowRiskAdminActionCode =
   | "auth_admin_invite_failed"
   | "auth_admin_audit_error"
   | "persistence_error"
+  | "role_assignment_error"
   | "not_implemented";
 
 export type LowRiskAdminActionResult<TPayload> =
@@ -85,6 +86,23 @@ export type OrganizationProfileUpdateRequestPayload = {
   clientActionId: string | null;
 };
 
+export type MemberRoleAssignmentInput = {
+  membershipId: string;
+  roleId: string;
+  reason?: string;
+  clientActionId?: string;
+};
+
+export type MemberRoleAssignmentPayload = {
+  membershipId: string;
+  roleId: string;
+  reason: string | null;
+  clientActionId: string | null;
+  roleAssigned?: boolean;
+  alreadyAssigned?: boolean;
+  auditLogId?: string;
+};
+
 export async function requestMemberInvitation(
   input: MemberInviteRequestInput
 ): Promise<LowRiskAdminActionResult<MemberInviteRequestPayload>> {
@@ -132,6 +150,27 @@ export async function requestOrganizationProfileUpdate(
   }
 
   return skeletonAccepted(guard, validation.payload);
+}
+
+export async function requestMemberRoleAssignment(
+  input: MemberRoleAssignmentInput
+): Promise<LowRiskAdminActionResult<MemberRoleAssignmentPayload>> {
+  const guard = await requireGuardedAdminAction({
+    actionId: "admin.member.role.assign.request",
+    requiredPermission: "members.manage"
+  });
+
+  if (!guard.ok) {
+    return denied(guard);
+  }
+
+  const validation = validateMemberRoleAssignmentInput(input);
+
+  if (!validation.ok) {
+    return validation;
+  }
+
+  return assignMemberRole(guard, validation.payload);
 }
 
 function validateMemberInviteInput(
@@ -222,6 +261,51 @@ function validateOrganizationProfileInput(
   };
 }
 
+function validateMemberRoleAssignmentInput(
+  input: MemberRoleAssignmentInput
+): LowRiskAdminActionResult<MemberRoleAssignmentPayload> {
+  const membershipId = String(input.membershipId ?? "").trim();
+  const roleId = String(input.roleId ?? "").trim();
+  const reason = String(input.reason ?? "").trim();
+  const fieldErrors: Record<string, string> = {};
+
+  if (!isUuid(membershipId)) {
+    fieldErrors.membershipId = "Membership ID must be a UUID.";
+  }
+
+  if (!isUuid(roleId)) {
+    fieldErrors.roleId = "Role ID must be a UUID.";
+  }
+
+  if (reason.length > 500) {
+    fieldErrors.reason = "Reason must be 500 characters or fewer.";
+  }
+
+  if (Object.keys(fieldErrors).length > 0) {
+    return validationError("admin.member.role.assign.request", fieldErrors);
+  }
+
+  return {
+    ok: true,
+    code: "not_implemented",
+    actionId: "admin.member.role.assign.request",
+    message: "Member role assignment passed validation.",
+    permission: "members.manage",
+    organizationId: "",
+    actorProfileId: null,
+    actorEmail: null,
+    tenantScoped: true,
+    auditRequired: true,
+    serviceRoleBoundary: "server_only_not_used",
+    payload: {
+      membershipId,
+      roleId,
+      reason: reason || null,
+      clientActionId: normalizeOptionalTrace(input.clientActionId)
+    }
+  };
+}
+
 function skeletonAccepted<TPayload>(
   guard: GuardedAdminActionSuccess,
   payload: TPayload
@@ -303,6 +387,62 @@ async function persistMemberInvitation(
 }
 
 type SupabaseRpcClient = Awaited<ReturnType<typeof createSupabaseServerClient>>;
+
+type MemberRoleAssignmentRpcRow = {
+  membership_id: string;
+  role_id: string;
+  role_assigned: boolean;
+  already_assigned: boolean;
+  audit_log_id: string;
+};
+
+async function assignMemberRole(
+  guard: GuardedAdminActionSuccess,
+  payload: MemberRoleAssignmentPayload
+): Promise<LowRiskAdminActionResult<MemberRoleAssignmentPayload>> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase.rpc("api_assign_member_role", {
+    p_organization_id: guard.organizationId,
+    p_membership_id: payload.membershipId,
+    p_role_id: payload.roleId,
+    p_client_request_id: uuidOrNull(payload.clientActionId),
+    p_reason: payload.reason
+  });
+
+  if (error) {
+    return actionError("admin.member.role.assign.request", "role_assignment_error");
+  }
+
+  const row = Array.isArray(data) ? (data[0] as MemberRoleAssignmentRpcRow | undefined) : undefined;
+
+  if (!row) {
+    return actionError("admin.member.role.assign.request", "role_assignment_error");
+  }
+
+  return {
+    ok: true,
+    code: row.already_assigned ? "duplicate_reused" : "persisted",
+    actionId: guard.actionId,
+    message: row.already_assigned
+      ? "Member already has this role; duplicate assignment was audited."
+      : "Member role assignment was persisted and audited.",
+    permission: guard.requiredPermission,
+    organizationId: guard.organizationId,
+    actorProfileId: guard.actorProfileId,
+    actorEmail: guard.actorEmail,
+    tenantScoped: true,
+    auditRequired: guard.auditRequired,
+    serviceRoleBoundary: "server_only_not_used",
+    payload: {
+      ...payload,
+      membershipId: row.membership_id,
+      roleId: row.role_id,
+      roleAssigned: row.role_assigned,
+      alreadyAssigned: row.already_assigned,
+      auditLogId: row.audit_log_id
+    }
+  };
+}
 
 type MemberInvitationEmailPreparationRpcRow = {
   invitation_id: string;
@@ -547,5 +687,6 @@ const actionErrorMessages: Record<
     "Supabase Auth Admin could not send the invitation email.",
   auth_admin_audit_error:
     "Supabase Auth Admin invitation email could not be audited.",
-  persistence_error: "Member invitation could not be persisted."
+  persistence_error: "Member invitation could not be persisted.",
+  role_assignment_error: "Member role assignment could not be persisted."
 };

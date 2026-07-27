@@ -29,6 +29,7 @@ export type MemberSummary = {
   displayName: string;
   profileStatus: string;
   membershipStatus: string;
+  roleIds: string[];
   roleLabels: string[];
   permissionCount: number;
   isDefault: boolean;
@@ -382,6 +383,7 @@ function toMemberSummary(
     displayName: profileLabels.get(membership.profile_id) ?? membership.profile_id,
     profileStatus: profileStatuses.get(membership.profile_id) ?? "-",
     membershipStatus: membership.status,
+    roleIds,
     roleLabels: roleIds.map((roleId) => roleLabels.get(roleId) ?? roleId),
     permissionCount: permissionIds.size,
     isDefault: membership.is_default,
