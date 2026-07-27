@@ -23,6 +23,7 @@ export type LowRiskAdminActionCode =
   | "auth_admin_audit_error"
   | "persistence_error"
   | "role_assignment_error"
+  | "role_removal_error"
   | "not_implemented";
 
 export type LowRiskAdminActionResult<TPayload> =
@@ -103,6 +104,24 @@ export type MemberRoleAssignmentPayload = {
   auditLogId?: string;
 };
 
+export type MemberRoleRemovalInput = {
+  membershipId: string;
+  roleId: string;
+  reason?: string;
+  clientActionId?: string;
+};
+
+export type MemberRoleRemovalPayload = {
+  membershipId: string;
+  roleId: string;
+  reason: string | null;
+  clientActionId: string | null;
+  roleRemoved?: boolean;
+  alreadyRemoved?: boolean;
+  remainingRoleCount?: number;
+  auditLogId?: string;
+};
+
 export async function requestMemberInvitation(
   input: MemberInviteRequestInput
 ): Promise<LowRiskAdminActionResult<MemberInviteRequestPayload>> {
@@ -171,6 +190,27 @@ export async function requestMemberRoleAssignment(
   }
 
   return assignMemberRole(guard, validation.payload);
+}
+
+export async function requestMemberRoleRemoval(
+  input: MemberRoleRemovalInput
+): Promise<LowRiskAdminActionResult<MemberRoleRemovalPayload>> {
+  const guard = await requireGuardedAdminAction({
+    actionId: "admin.member.role.remove.request",
+    requiredPermission: "members.manage"
+  });
+
+  if (!guard.ok) {
+    return denied(guard);
+  }
+
+  const validation = validateMemberRoleRemovalInput(input);
+
+  if (!validation.ok) {
+    return validation;
+  }
+
+  return removeMemberRole(guard, validation.payload);
 }
 
 function validateMemberInviteInput(
@@ -306,6 +346,51 @@ function validateMemberRoleAssignmentInput(
   };
 }
 
+function validateMemberRoleRemovalInput(
+  input: MemberRoleRemovalInput
+): LowRiskAdminActionResult<MemberRoleRemovalPayload> {
+  const membershipId = String(input.membershipId ?? "").trim();
+  const roleId = String(input.roleId ?? "").trim();
+  const reason = String(input.reason ?? "").trim();
+  const fieldErrors: Record<string, string> = {};
+
+  if (!isUuid(membershipId)) {
+    fieldErrors.membershipId = "Membership ID must be a UUID.";
+  }
+
+  if (!isUuid(roleId)) {
+    fieldErrors.roleId = "Role ID must be a UUID.";
+  }
+
+  if (reason.length > 500) {
+    fieldErrors.reason = "Reason must be 500 characters or fewer.";
+  }
+
+  if (Object.keys(fieldErrors).length > 0) {
+    return validationError("admin.member.role.remove.request", fieldErrors);
+  }
+
+  return {
+    ok: true,
+    code: "not_implemented",
+    actionId: "admin.member.role.remove.request",
+    message: "Member role removal passed validation.",
+    permission: "members.manage",
+    organizationId: "",
+    actorProfileId: null,
+    actorEmail: null,
+    tenantScoped: true,
+    auditRequired: true,
+    serviceRoleBoundary: "server_only_not_used",
+    payload: {
+      membershipId,
+      roleId,
+      reason: reason || null,
+      clientActionId: normalizeOptionalTrace(input.clientActionId)
+    }
+  };
+}
+
 function skeletonAccepted<TPayload>(
   guard: GuardedAdminActionSuccess,
   payload: TPayload
@@ -396,6 +481,15 @@ type MemberRoleAssignmentRpcRow = {
   audit_log_id: string;
 };
 
+type MemberRoleRemovalRpcRow = {
+  membership_id: string;
+  role_id: string;
+  role_removed: boolean;
+  already_removed: boolean;
+  remaining_role_count: number;
+  audit_log_id: string;
+};
+
 async function assignMemberRole(
   guard: GuardedAdminActionSuccess,
   payload: MemberRoleAssignmentPayload
@@ -439,6 +533,55 @@ async function assignMemberRole(
       roleId: row.role_id,
       roleAssigned: row.role_assigned,
       alreadyAssigned: row.already_assigned,
+      auditLogId: row.audit_log_id
+    }
+  };
+}
+
+async function removeMemberRole(
+  guard: GuardedAdminActionSuccess,
+  payload: MemberRoleRemovalPayload
+): Promise<LowRiskAdminActionResult<MemberRoleRemovalPayload>> {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase.rpc("api_remove_member_role", {
+    p_organization_id: guard.organizationId,
+    p_membership_id: payload.membershipId,
+    p_role_id: payload.roleId,
+    p_client_request_id: uuidOrNull(payload.clientActionId),
+    p_reason: payload.reason
+  });
+
+  if (error) {
+    return actionError("admin.member.role.remove.request", "role_removal_error");
+  }
+
+  const row = Array.isArray(data) ? (data[0] as MemberRoleRemovalRpcRow | undefined) : undefined;
+
+  if (!row) {
+    return actionError("admin.member.role.remove.request", "role_removal_error");
+  }
+
+  return {
+    ok: true,
+    code: row.already_removed ? "duplicate_reused" : "persisted",
+    actionId: guard.actionId,
+    message: row.already_removed
+      ? "Member already does not have this role; duplicate removal was audited."
+      : "Member role removal was persisted and audited.",
+    permission: guard.requiredPermission,
+    organizationId: guard.organizationId,
+    actorProfileId: guard.actorProfileId,
+    actorEmail: guard.actorEmail,
+    tenantScoped: true,
+    auditRequired: guard.auditRequired,
+    serviceRoleBoundary: "server_only_not_used",
+    payload: {
+      ...payload,
+      membershipId: row.membership_id,
+      roleId: row.role_id,
+      roleRemoved: row.role_removed,
+      alreadyRemoved: row.already_removed,
+      remainingRoleCount: row.remaining_role_count,
       auditLogId: row.audit_log_id
     }
   };
@@ -688,5 +831,6 @@ const actionErrorMessages: Record<
   auth_admin_audit_error:
     "Supabase Auth Admin invitation email could not be audited.",
   persistence_error: "Member invitation could not be persisted.",
-  role_assignment_error: "Member role assignment could not be persisted."
+  role_assignment_error: "Member role assignment could not be persisted.",
+  role_removal_error: "Member role removal could not be persisted."
 };

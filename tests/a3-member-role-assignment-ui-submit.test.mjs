@@ -83,7 +83,7 @@ describe("A3 member role assignment UI submit enablement", () => {
       "No full role replacement",
       "No system-role assignment",
       "No self-role assignment",
-      "NEXT: A3 member role removal guarded action boundary"
+      "NEXT: A3 member role removal UI affordance and submit enablement"
     ]) {
       assert.match(
         `${contract}\n${boundaryContract}\n${status}`,

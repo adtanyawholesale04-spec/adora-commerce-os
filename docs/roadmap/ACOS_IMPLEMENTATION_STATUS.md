@@ -127,6 +127,7 @@ Track B Customer Engagement Platform
 | A3 Member Invite Acceptance Activation Boundary | `docs/api-contracts/A3_MEMBER_INVITE_ACCEPTANCE_ACTIVATION_BOUNDARY.md` | IMPLEMENTED | Invite callback accepts `invitation_id` after Supabase session exchange, matches authenticated email to invitation email, creates/reuses profile, activates membership, marks invitation accepted, audits acceptance, and keeps role assignment deferred |
 | A3 Member Role Assignment Guarded Action Boundary | `docs/api-contracts/A3_MEMBER_ROLE_ASSIGNMENT_GUARDED_ACTION_BOUNDARY.md` | IMPLEMENTED | Adds guarded `admin.member.role.assign.request` server boundary and `api_assign_member_role` RPC for active non-system role assignment to active memberships, with `members.manage`, tenant validation, idempotency, and audit |
 | A3 Member Role Assignment UI Submit Enablement | `docs/api-contracts/A3_MEMBER_ROLE_ASSIGNMENT_UI_SUBMIT_ENABLEMENT.md` | IMPLEMENTED | `/admin/users` enables permission-aware member role assignment submit through the guarded server action, active member/active non-system role filtering, duplicate affordance suppression, result handling, and read model revalidation |
+| A3 Member Role Removal Guarded Action Boundary | `docs/api-contracts/A3_MEMBER_ROLE_REMOVAL_GUARDED_ACTION_BOUNDARY.md` | IMPLEMENTED | Adds guarded `admin.member.role.remove.request` server boundary and `api_remove_member_role` RPC for active non-system role removal from active memberships, with `members.manage`, tenant validation, already-removed no-op auditing, self/system/last-role guards, and audit |
 | CORE-UI-001 Admin Shell Contract | `docs/api-contracts/CORE_UI_001_ADMIN_APP_SHELL_RBAC_NAVIGATION.md` | IMPLEMENTED | Admin shell, auth entry, organization switcher, and permission-aware navigation contract |
 | CORE-UI-002 Products Read Contract | `docs/api-contracts/CORE_UI_002_PRODUCTS_READ_ONLY_SCREEN.md` | IMPLEMENTED | Read-only Products screen and server read model contract |
 | CORE-UI-DESIGN-001 Admin Visual System Pass | `docs/api-contracts/CORE_UI_DESIGN_001_ADMIN_VISUAL_SYSTEM_PASS.md` | IMPLEMENTED | Admin light/dark theme and Thai/English UI preference foundation |
@@ -323,6 +324,7 @@ No UI, schema, migration, role, permission, status, or financial rule implementa
 | A3-ACTION-INVITE-ACCEPT-001 | Member invite acceptance callback and membership activation boundary | IMPLEMENTED | Adds `api_accept_member_invitation`, binds acceptance to authenticated Supabase email, creates/reuses active profile, activates `organization_memberships`, marks invitation `ACCEPTED`, records `admin.member.invite.accepted`, and leaves role assignment deferred |
 | A3-ACTION-ROLE-ASSIGN-001 | Member role assignment guarded action boundary | IMPLEMENTED | Adds `api_assign_member_role`, requires `members.manage`, assigns one active non-system role to one active target membership, rejects self/system/inactive/cross-tenant assignment, audits new and duplicate assignments, and keeps remove/replace role management deferred |
 | A3-ACTION-ROLE-ASSIGN-UI-001 | Member role management UI affordance and role assignment submit enablement | IMPLEMENTED | Enables `/admin/users` role assignment form through `requestMemberRoleAssignmentServerAction`, filters active assignable members and active non-system roles, suppresses already-assigned roles, surfaces success/error state, and keeps role removal/replacement deferred |
+| A3-ACTION-ROLE-REMOVE-001 | Member role removal guarded action boundary | IMPLEMENTED | Adds `api_remove_member_role`, requires `members.manage`, removes one active non-system role from one active target membership, rejects self/system/inactive/cross-tenant/last-role removal, audits removed and already-removed no-op requests, and keeps replacement/deactivation/UI submit affordance deferred |
 
 ---
 
@@ -1013,7 +1015,8 @@ A3 MEMBER INVITE AUTH ADMIN EMAIL-SEND BOUNDARY IMPLEMENTED
 A3 MEMBER INVITE ACCEPTANCE + MEMBERSHIP ACTIVATION IMPLEMENTED
 A3 MEMBER ROLE ASSIGNMENT GUARDED ACTION BOUNDARY IMPLEMENTED
 A3 MEMBER ROLE ASSIGNMENT UI SUBMIT ENABLEMENT IMPLEMENTED
-NEXT: A3 member role removal guarded action boundary
+A3 MEMBER ROLE REMOVAL GUARDED ACTION BOUNDARY IMPLEMENTED
+NEXT: A3 member role removal UI affordance and submit enablement
 
 Track B Customer Engagement:
 ARCHITECTURE DIRECTION APPROVED

@@ -79,4 +79,4 @@ requestMemberRoleAssignmentServerAction
 
 ## Next
 
-NEXT: A3 member role removal guarded action boundary.
+NEXT: A3 member role removal UI affordance and submit enablement.
