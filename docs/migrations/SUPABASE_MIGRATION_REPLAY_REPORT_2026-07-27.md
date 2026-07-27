@@ -2,16 +2,16 @@
 # SUPABASE MIGRATION REPLAY REPORT
 
 **Date:** 2026-07-27
-**Status:** PARTIAL
+**Status:** VALIDATED
 **Protocol:** `docs/migrations/SUPABASE_MIGRATION_REPLAY_PROTOCOL.md`
 
 ---
 
 ## 1. Summary
 
-This run completed non-destructive validation gates on the current local Supabase stack.
+This run completed a fresh local Supabase replay through Supabase CLI and re-ran security/workflow validation gates on the reset database.
 
-Fresh replay is not marked passed because `supabase db reset --local` was not run. The reset command would wipe and recreate the current local Supabase database, so it requires explicit owner approval.
+The replay used `supabase db reset --local`, which wipes and recreates the local Supabase database, then applies committed local migrations from `supabase/migrations`.
 
 ---
 
@@ -47,28 +47,25 @@ It was not required for the Postgres/RLS validation suites run here.
 Status:
 
 ```text
-NOT_PASSED
+PASS
 ```
 
-Safe attempt:
+Replay command:
 
 ```text
-Created a temporary raw PostgreSQL database inside the local DB container.
-Applied 001_extensions_helpers.sql successfully.
-002_organizations_auth.sql failed because schema "auth" does not exist.
+npx.cmd supabase db reset --local
 ```
 
-Interpretation:
+Baseline migration range:
 
 ```text
-This is not a migration defect by itself.
-A raw createdb database is not equivalent to a Supabase-prepared database because Supabase-managed schemas such as auth are missing.
+001_extensions_helpers.sql through 034_seed_data.sql
 ```
 
-Required next action:
+Result:
 
 ```text
-Run baseline/full replay through Supabase CLI local reset, or use a separate fresh Supabase development project.
+All baseline migrations applied successfully on a Supabase-prepared local database.
 ```
 
 ---
@@ -78,19 +75,32 @@ Run baseline/full replay through Supabase CLI local reset, or use a separate fre
 Status:
 
 ```text
-NOT_RUN
+PASS
 ```
 
-Reason:
+Replay command:
 
 ```text
-`supabase db reset --local` is destructive to local database state and was not executed.
+npx.cmd supabase db reset --local
 ```
 
-Gate A1 remains:
+Latest migration applied:
 
 ```text
-NOT_PASSED
+20260727104818_carrier_webhook_tracking_rpc.sql
+```
+
+Migration history check:
+
+```text
+npx.cmd supabase migration list --local
+```
+
+Result:
+
+```text
+Local migration history contains 45 migrations.
+Local and applied migration versions match from 001 through 20260727104818.
 ```
 
 ---
@@ -167,6 +177,19 @@ Duplicate webhook handling:
 PASS
 ```
 
+Warning observed:
+
+```text
+node: .tmp-carrier-webhook-e2e.env: not found
+```
+
+Interpretation:
+
+```text
+The workflow command exited successfully and reported carrier_webhook_e2e pass.
+The warning appears to be a cleanup/runtime stderr after successful validation, not a suite failure.
+```
+
 ---
 
 ## 7. Status Impact
@@ -174,37 +197,31 @@ PASS
 Safe status updates from this report:
 
 ```text
-SEC-001 can be marked VALIDATED.
-SEC-002 can be marked VALIDATED.
+CORE-DB-001 through CORE-DB-007 can be marked VALIDATED.
+Gate A1 can be marked PASSED.
+SEC-001 and SEC-002 remain VALIDATED.
 Security/workflow evidence can be recorded under Track A validation notes.
 ```
 
 Status that must not be promoted yet:
 
 ```text
-CORE-DB-002
-Gate A1
 Gate A2
 Track B B1/B2/B3
 ```
 
 ---
 
-## 8. Next Required Decision
+## 8. Next Required Work
 
-Choose one validation path:
+Recommended next task:
 
 ```text
-Option A:
-Approve running `supabase db reset --local` on the current local Supabase stack.
-
-Option B:
-Provide or create a separate fresh Supabase development project for replay validation.
+Start A2 Commerce Integration Test planning and implementation.
 ```
 
-After either option passes, update:
+Keep blocked:
 
 ```text
-CORE-DB-002 through CORE-DB-007 as supported by evidence.
-Gate A1 if all A1 requirements pass.
+Track B production implementation remains blocked until Business Rules Content/Retention V1 and ER V2 are approved/frozen.
 ```

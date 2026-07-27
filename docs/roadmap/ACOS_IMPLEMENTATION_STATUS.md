@@ -111,7 +111,7 @@ Track B Customer Engagement Platform
 | Implementation Status | `docs/roadmap/ACOS_IMPLEMENTATION_STATUS.md` | ACTIVE | This file |
 | Status Reconciliation Audit | `docs/roadmap/ACOS_STATUS_RECONCILIATION_AUDIT.md` | ACTIVE | Drift audit between repository evidence and this status file |
 | Supabase Migration Replay Protocol | `docs/migrations/SUPABASE_MIGRATION_REPLAY_PROTOCOL.md` | ACTIVE | Defines baseline/full replay evidence layers |
-| Supabase Migration Replay Report 2026-07-27 | `docs/migrations/SUPABASE_MIGRATION_REPLAY_REPORT_2026-07-27.md` | IN_REVIEW | Security/workflow gates passed; fresh replay not yet run |
+| Supabase Migration Replay Report 2026-07-27 | `docs/migrations/SUPABASE_MIGRATION_REPLAY_REPORT_2026-07-27.md` | VALIDATED | Fresh local replay and security/workflow gates passed |
 | Project Blueprint V13 | `reference/PROJECT_BLUEPRINT_V13.md` | APPROVED | Commerce Core baseline |
 | Business Rules V13 | `reference/BUSINESS_RULES_V13.md` | APPROVED | Commerce Core baseline |
 | Database Schema V1 Frozen V3 | `reference/DATABASE_SCHEMA_V1_FROZEN_V3.md` | APPROVED | Commerce Core frozen schema |
@@ -175,7 +175,7 @@ Do not generate Track B production migrations until Business Rules Content Reten
 
 | Track | Name | Current Status | Next Gate |
 |---|---|---:|---|
-| Track A | Commerce Core | APPROVED BASELINE | Fresh DB Validation |
+| Track A | Commerce Core | VALIDATED BASELINE | Commerce Integration Test |
 | Track B | Customer Engagement | APPROVED DIRECTION | Business Rule Review |
 | Shared | SaaS / Security / Cost Guardrails | IN_REVIEW | Implementation after module gates |
 | Shared | AI Governance | APPROVED | Use in every AI task |
@@ -199,19 +199,19 @@ Do not generate Track B production migrations until Business Rules Content Reten
 
 | Task ID | Task | Status | Blocker / Notes |
 |---|---|---:|---|
-| CORE-DB-001 | Create fresh Supabase dev project | IN_PROGRESS | Local Supabase stack exists; destructive local reset or separate fresh project still required for fresh evidence |
-| CORE-DB-002 | Replay migration `001–034` | BLOCKED | Raw PostgreSQL temp DB failed at 002 because Supabase `auth` schema is absent; requires Supabase-prepared fresh DB/reset |
-| CORE-DB-003 | Validate extension/function/trigger dependency | NOT_STARTED | Blocked by CORE-DB-002 fresh replay |
-| CORE-DB-004 | Validate FK / constraints / indexes | NOT_STARTED | Blocked by CORE-DB-002 fresh replay |
-| CORE-DB-005 | Validate RLS policies | VALIDATED | `npm.cmd run validate:supabase-security` passed on current local Supabase DB at 2026-07-27 |
-| CORE-DB-006 | Validate seed roles/permissions | VALIDATED | Permission layer and role matrix validation passed on current local Supabase DB at 2026-07-27 |
-| CORE-DB-007 | Document replay result | IMPLEMENTED | Partial replay report added; fresh replay result still pending |
+| CORE-DB-001 | Create fresh Supabase dev project | VALIDATED | Local Supabase stack reset through Supabase CLI at 2026-07-27 |
+| CORE-DB-002 | Replay migration `001–034` | VALIDATED | `supabase db reset --local` applied baseline migrations 001-034 successfully at 2026-07-27 |
+| CORE-DB-003 | Validate extension/function/trigger dependency | VALIDATED | Full local reset applied migrations 001-latest successfully |
+| CORE-DB-004 | Validate FK / constraints / indexes | VALIDATED | Full replay plus `supabase db lint --local` passed |
+| CORE-DB-005 | Validate RLS policies | VALIDATED | `npm.cmd run validate:supabase-security` passed after fresh local reset at 2026-07-27 |
+| CORE-DB-006 | Validate seed roles/permissions | VALIDATED | Permission layer and role matrix validation passed after fresh local reset at 2026-07-27 |
+| CORE-DB-007 | Document replay result | VALIDATED | Replay report updated with fresh replay and validation evidence |
 
 ### Gate A1
 
 ```text
 Status:
-NOT_PASSED
+PASSED
 
 Required for:
 Commerce Core implementation confidence
@@ -225,8 +225,9 @@ Latest evidence:
 docs/migrations/SUPABASE_MIGRATION_REPLAY_PROTOCOL.md
 docs/migrations/SUPABASE_MIGRATION_REPLAY_REPORT_2026-07-27.md
 
-Security/workflow validation passed on the current local Supabase DB.
-Fresh replay 001-034 and 001-latest are not yet passed.
+Fresh local Supabase replay passed for migrations 001-latest.
+Security/workflow validation passed after fresh reset.
+Latest applied migration: 20260727104818_carrier_webhook_tracking_rpc.sql.
 ```
 
 ---
@@ -798,7 +799,7 @@ All schema-impacting rules are APPROVED or DEFERRED
 
 | Blocker ID | Affected Area | Description | Required Decision |
 |---|---|---|---|
-| BLK-001 | Track A | Fresh migration replay not yet validated | Run validation |
+| BLK-001 | Track A A2 | Commerce integration test gate not yet validated | Start A2 Product-to-Return integration suite |
 | BLK-002 | Track B | Business Rules Content/Retention not frozen | Conduct review |
 | BLK-003 | Track B | ER V2 not frozen | Wait for business rule approval |
 | BLK-004 | Track B | Migration 035+ not generated | Wait for ER freeze |
@@ -932,8 +933,8 @@ ACOS Governance:
 READY
 
 Track A Commerce Core:
-BASELINE APPROVED
-NEXT: Fresh DB Validation fresh replay approval
+BASELINE VALIDATED
+NEXT: Commerce Integration Test A2
 
 Track B Customer Engagement:
 ARCHITECTURE DIRECTION APPROVED
@@ -943,8 +944,9 @@ Implementation:
 CONTROLLED START
 
 Latest validation:
-Security/RLS/workflow suites passed on current local Supabase DB at 2026-07-27.
-Gate A1 remains NOT_PASSED until Supabase-prepared fresh replay completes.
+Fresh local Supabase replay passed for migrations 001-latest at 2026-07-27.
+Security/RLS/workflow suites passed after fresh reset.
+Gate A1 is PASSED.
 ```
 
 ---
