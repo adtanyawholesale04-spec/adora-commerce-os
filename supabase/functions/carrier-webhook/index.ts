@@ -49,8 +49,10 @@ export default {
       return jsonResponse({ error: "missing_organization_id" }, 400);
     }
 
-    const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ??
+    const supabaseUrl = Deno.env.get("CARRIER_WEBHOOK_SUPABASE_URL") ??
+      Deno.env.get("SUPABASE_URL");
+    const serviceKey = Deno.env.get("CARRIER_WEBHOOK_SERVICE_ROLE_KEY") ??
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ??
       Deno.env.get("SUPABASE_SECRET_KEY");
 
     if (!supabaseUrl || !serviceKey) {
@@ -103,7 +105,7 @@ export default {
     }
 
     const { data: trackingEventId, error: rpcError } = await supabase.rpc(
-      "api_record_carrier_tracking_event",
+      "api_record_carrier_tracking_event_from_webhook",
       {
         p_organization_id: normalized.organizationId,
         p_shipment_id: shipmentId,
@@ -236,7 +238,10 @@ async function findShipmentIdByTrackingNumber(
       select: (columns: string) => {
         eq: (column: string, value: string) => {
           eq: (column: string, value: string) => {
-            maybeSingle: () => Promise<{ data: { id?: string } | null }>;
+            maybeSingle: () => Promise<{
+              data: { id?: string } | null;
+              error?: { message: string } | null;
+            }>;
           };
         };
       };
@@ -249,12 +254,16 @@ async function findShipmentIdByTrackingNumber(
     return undefined;
   }
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("shipments")
     .select("id")
     .eq("organization_id", organizationId)
     .eq("tracking_number", trackingNumber)
     .maybeSingle();
+
+  if (error) {
+    throw new Error(`Shipment lookup failed: ${error.message}`);
+  }
 
   return data?.id as string | undefined;
 }

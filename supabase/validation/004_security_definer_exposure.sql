@@ -62,6 +62,13 @@ shipping_workflow_api_wrappers as (
     'api_mark_shipment_ready_for_handoff',
     'api_record_carrier_tracking_event'
   )
+),
+carrier_webhook_api_wrappers as (
+  select oid
+  from security_definer_functions
+  where proname in (
+    'api_record_carrier_tracking_event_from_webhook'
+  )
 )
 select 'security_definer_total' as check_name,
        count(*)::text as result
@@ -112,4 +119,9 @@ select 'carrier_tracking_service_role_execute' as check_name,
 from shipping_workflow_api_wrappers
 where proname = 'api_record_carrier_tracking_event'
   and has_function_privilege('service_role', oid, 'EXECUTE')
+union all
+select 'carrier_webhook_api_wrappers_service_role_execute' as check_name,
+       count(*)::text as result
+from carrier_webhook_api_wrappers
+where has_function_privilege('service_role', oid, 'EXECUTE')
 order by check_name;

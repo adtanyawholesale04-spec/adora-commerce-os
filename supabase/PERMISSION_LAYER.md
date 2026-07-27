@@ -89,12 +89,13 @@ Migration `20260726202729_shipping_workflow_wrappers.sql` completes the post-lab
 
 Direct `authenticated` inserts into `tracking_events` are revoked. Tracking events now move through the wrapper so carrier status transitions can validate terminal states and keep fulfillment audit events aligned.
 
-Migration `20260726203930_carrier_webhook_boundary.sql` adds the database boundary for carrier webhooks:
+Migration `20260726203930_carrier_webhook_boundary.sql` adds the database boundary for carrier webhooks, and migration `20260727104818_carrier_webhook_tracking_rpc.sql` narrows the service-role tracking path to a dedicated webhook wrapper:
 
 | Object | Purpose |
 |---|---|
 | `public.carrier_webhook_events` | Stores idempotency keys, payload hashes, raw payloads, processing state, and linked tracking events |
-| `public.api_record_carrier_tracking_event` service-role path | Allows the verified Edge Function to route carrier events into the same tracking workflow without a user session |
+| `public.api_record_carrier_tracking_event` | Authenticated-user tracking RPC that still requires `shipping.create` |
+| `public.api_record_carrier_tracking_event_from_webhook` | Service-role-only wrapper for verified carrier webhook events without a user session |
 
 The `carrier-webhook` Edge Function is configured with `verify_jwt = false` because external carriers do not send Supabase JWTs. The function must verify the carrier HMAC signature before using the service role key. Configure one of:
 
@@ -130,7 +131,7 @@ End-to-end carrier webhook validation can be run locally with:
 npm run validate:carrier-webhook-e2e
 ```
 
-The runner seeds shipments with tracking numbers matching all four fixtures, starts the local `carrier-webhook` Edge Function, sends signed webhook requests, verifies `carrier_webhook_events`, `tracking_events`, `shipments`, and `fulfillments`, checks duplicate delivery idempotency, then cleans up its fixture rows.
+The runner seeds shipments with tracking numbers matching all four fixtures, starts the local `carrier-webhook` Edge Function, sends signed webhook requests through `api_record_carrier_tracking_event_from_webhook`, verifies `carrier_webhook_events`, `tracking_events`, `shipments`, and `fulfillments`, checks duplicate delivery idempotency, then cleans up its fixture rows.
 
 ## Policy Shape
 

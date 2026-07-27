@@ -22,6 +22,7 @@ All migrations replayed:
 20260726201809_guarded_operations_wrappers.sql
 20260726202729_shipping_workflow_wrappers.sql
 20260726203930_carrier_webhook_boundary.sql
+20260727104818_carrier_webhook_tracking_rpc.sql
 ```
 
 ## Baseline Checks
@@ -29,14 +30,14 @@ All migrations replayed:
 | Check | Result |
 |---|---:|
 | Public table count | 122 |
-| Migration count | 44 |
+| Migration count | 45 |
 | Permissions seeded | 44 |
 | Features seeded | 14 |
 | Plans seeded | 4 |
 | Tenant tables without RLS | 0 |
 | Public tables without RLS | 0 |
 | Append-only triggers | 4 |
-| Public SECURITY DEFINER functions | 20 |
+| Public SECURITY DEFINER functions | 21 |
 
 ## Supabase Advisory
 
@@ -78,6 +79,7 @@ api_create_shipment_label               postgres + authenticated
 api_complete_qc_session                 postgres + authenticated
 api_mark_shipment_ready_for_handoff     postgres + authenticated
 api_record_carrier_tracking_event       postgres + authenticated
+api_record_carrier_tracking_event_from_webhook postgres + service_role
 current_profile_id                      postgres + authenticated
 is_org_member                           postgres + authenticated
 has_org_permission                      postgres + authenticated
@@ -94,7 +96,7 @@ The low-level transaction-critical functions remain unavailable to browser roles
 
 | Check | Result |
 |---|---:|
-| SECURITY DEFINER functions total | 20 |
+| SECURITY DEFINER functions total | 21 |
 | SECURITY DEFINER functions executable by public | 0 |
 | SECURITY DEFINER functions executable by anon | 0 |
 | Transaction functions executable by authenticated | 0 |
@@ -103,7 +105,8 @@ The low-level transaction-critical functions remain unavailable to browser roles
 | Product cost API wrappers executable by authenticated | 2 |
 | Guarded operations API wrappers executable by authenticated | 3 |
 | Shipping workflow API wrappers executable by authenticated | 3 |
-| Carrier tracking RPC executable by service_role | 1 |
+| Carrier tracking RPC executable by service_role | 0 |
+| Carrier webhook wrapper executable by service_role | 1 |
 
 The helper functions remain executable by `authenticated` because they are used by RLS policies and membership/permission resolution. Transaction-critical functions remain restricted to `postgres`.
 
@@ -255,14 +258,14 @@ The test verifies:
 - `authenticated` users cannot insert directly into `carrier_webhook_events`.
 - `service_role` can store carrier webhook idempotency/audit records.
 - Duplicate `(organization_id, provider_code, idempotency_key)` webhook events are rejected.
-- The service-role path can route a verified carrier event into `api_record_carrier_tracking_event`.
+- The service-role path can route a verified carrier event through `api_record_carrier_tracking_event_from_webhook`.
 - Carrier tracking updates still produce shipment state changes and fulfillment audit events.
 
 ## Edge Function Boundary
 
 `supabase/functions/carrier-webhook/index.ts` implements the HTTP carrier webhook receiver.
 
-It verifies HMAC SHA-256 signatures before using the service role key, stores an idempotency record in `carrier_webhook_events`, normalizes provider payloads into canonical shipment statuses, and calls `api_record_carrier_tracking_event`.
+It verifies HMAC SHA-256 signatures before using the service role key, stores an idempotency record in `carrier_webhook_events`, normalizes provider payloads into canonical shipment statuses, and calls the service-role-only `api_record_carrier_tracking_event_from_webhook` wrapper.
 
 The function is configured with `verify_jwt = false` in `supabase/config.toml` because external carriers do not send Supabase JWTs. Signature verification is therefore mandatory before any database mutation.
 
@@ -295,3 +298,10 @@ npm run validate:carrier-webhook-e2e
 ```
 
 The runner seeds local shipments matching Flash, Kerry, J&T, and Thailand Post fixture tracking numbers, starts `carrier-webhook`, sends signed webhook requests, verifies shipment/fulfillment state changes, verifies `tracking_events` and `carrier_webhook_events`, sends duplicate events to confirm idempotency, and cleans up fixture rows.
+
+Latest local E2E result:
+
+```text
+npm run validate:carrier-webhook-e2e
+carrier_webhook_e2e pass
+```
