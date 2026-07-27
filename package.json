@@ -12,9 +12,10 @@
     "validate:static": "npm run lint && npm run typecheck && npm test && npm run build",
     "validate:carrier-webhook-e2e": "node supabase/validation/carrier-webhook-e2e.mjs",
     "validate:shipping-workflow": "node supabase/validation/shipping-workflow-suite.mjs",
+    "validate:commerce-integration": "node supabase/validation/commerce-integration-suite.mjs",
     "validate:supabase-security": "node supabase/validation/supabase-security-suite.mjs",
     "validate:supabase-workflows": "node supabase/validation/supabase-workflows-suite.mjs",
-    "validate:supabase": "npm run validate:supabase-security && npm run validate:supabase-workflows"
+    "validate:supabase": "npm run validate:supabase-security && npm run validate:supabase-workflows && npm run validate:commerce-integration"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.3",

@@ -236,20 +236,30 @@ Latest applied migration: 20260727104818_carrier_webhook_tracking_rpc.sql.
 
 | Task ID | Task | Status | Blocker / Notes |
 |---|---|---:|---|
-| CORE-INT-001 | Product → Variant → Inventory test | NOT_STARTED | Blocked by A1 |
-| CORE-INT-002 | Customer → Conversation → Cart test | NOT_STARTED | Blocked by A1 |
-| CORE-INT-003 | Cart → Purchase Session → Order test | NOT_STARTED | Blocked by A1 |
-| CORE-INT-004 | Promotion immutable snapshot test | NOT_STARTED | Blocked by A1 |
-| CORE-INT-005 | Payment / Credit / Loyalty test | NOT_STARTED | Blocked by A1 |
-| CORE-INT-006 | Fulfillment → QC → Shipping test | NOT_STARTED | Blocked by A1 |
-| CORE-INT-007 | Return / RTO test | NOT_STARTED | Blocked by A1 |
-| CORE-INT-008 | Audit completeness test | NOT_STARTED | Blocked by A1 |
+| CORE-INT-001 | Product → Variant → Inventory test | VALIDATED | `npm.cmd run validate:commerce-integration` passed at 2026-07-27 |
+| CORE-INT-002 | Customer → Conversation → Cart test | VALIDATED | `npm.cmd run validate:commerce-integration` passed at 2026-07-27 |
+| CORE-INT-003 | Cart → Purchase Session → Order test | VALIDATED | `npm.cmd run validate:commerce-integration` passed at 2026-07-27 |
+| CORE-INT-004 | Promotion immutable snapshot test | VALIDATED | Applied benefit snapshot stays immutable after campaign version state changes |
+| CORE-INT-005 | Payment / Credit / Loyalty test | VALIDATED | Payment, credit ledger, and loyalty ledger linkage/append-only checks passed |
+| CORE-INT-006 | Fulfillment → QC → Shipping test | VALIDATED | QC, label, handoff, tracking, delivery wrappers passed |
+| CORE-INT-007 | Return / RTO test | VALIDATED | Customer return/refund and RTO disposition coverage passed |
+| CORE-INT-008 | Audit completeness test | VALIDATED | Critical cart/order/promotion/payment/shipment/return audit coverage passed |
 
 ### Gate A2
 
 ```text
 Status:
-NOT_PASSED
+PASSED
+```
+
+Latest evidence:
+
+```text
+supabase/validation/016_commerce_integration_a2_test.sql
+supabase/validation/commerce-integration-suite.mjs
+npm.cmd run validate:supabase
+
+Security/RLS/workflow/commerce integration validation passed locally at 2026-07-27.
 ```
 
 ---
@@ -799,7 +809,6 @@ All schema-impacting rules are APPROVED or DEFERRED
 
 | Blocker ID | Affected Area | Description | Required Decision |
 |---|---|---|---|
-| BLK-001 | Track A A2 | Commerce integration test gate not yet validated | Start A2 Product-to-Return integration suite |
 | BLK-002 | Track B | Business Rules Content/Retention not frozen | Conduct review |
 | BLK-003 | Track B | ER V2 not frozen | Wait for business rule approval |
 | BLK-004 | Track B | Migration 035+ not generated | Wait for ER freeze |
@@ -933,8 +942,8 @@ ACOS Governance:
 READY
 
 Track A Commerce Core:
-BASELINE VALIDATED
-NEXT: Commerce Integration Test A2
+BASELINE + A2 INTEGRATION VALIDATED
+NEXT: Admin Application MVP planning / service-layer contracts
 
 Track B Customer Engagement:
 ARCHITECTURE DIRECTION APPROVED
@@ -945,8 +954,8 @@ CONTROLLED START
 
 Latest validation:
 Fresh local Supabase replay passed for migrations 001-latest at 2026-07-27.
-Security/RLS/workflow suites passed after fresh reset.
-Gate A1 is PASSED.
+Security/RLS/workflow/commerce integration suites passed after fresh reset.
+Gate A1 and Gate A2 are PASSED.
 ```
 
 ---

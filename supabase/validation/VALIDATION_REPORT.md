@@ -261,6 +261,22 @@ The test verifies:
 - The service-role-only wrapper can route a verified carrier event through `api_record_carrier_tracking_event_from_webhook`.
 - Carrier tracking updates still produce shipment state changes and fulfillment audit events.
 
+## Commerce Integration A2 Test
+
+`supabase/validation/016_commerce_integration_a2_test.sql` passes against the local Supabase stack.
+
+The test verifies the Track A A2 commerce integration gate:
+
+- Product, variant, warehouse, inventory movement, reservation, and allocation connect through guarded inventory wrappers.
+- Oversell attempts are rejected when available stock is exhausted.
+- Customer, conversation, cart, purchase session, order, and order item records remain FK-consistent.
+- Applied promotion benefits keep immutable historical snapshots after campaign version state changes.
+- Payment, credit ledger, and loyalty ledger records link to the same order/customer and append-only ledger guards reject mutation.
+- Fulfillment QC completion, shipment label creation, carrier handoff, carrier delivered tracking, and fulfillment completion pass through guarded wrappers.
+- Customer return/refund and RTO disposition records are covered.
+- Critical cart/order/promotion/payment/shipment/return audit coverage exists and audit logs remain append-only.
+- Users missing inventory adjustment or refund permission are denied at the wrapper boundary.
+
 ## Edge Function Boundary
 
 `supabase/functions/carrier-webhook/index.ts` implements the HTTP carrier webhook receiver.
@@ -345,10 +361,15 @@ shipping_workflow_suite pass
 - `015_carrier_webhook_boundary_test.sql`
 - `npm run validate:carrier-webhook-e2e`
 
+`supabase/validation/commerce-integration-suite.mjs` runs the Track A A2 commerce integration gate:
+
+- `016_commerce_integration_a2_test.sql`
+
 Local commands:
 
 ```text
 npm run validate:supabase-security
 npm run validate:supabase-workflows
+npm run validate:commerce-integration
 npm run validate:supabase
 ```
