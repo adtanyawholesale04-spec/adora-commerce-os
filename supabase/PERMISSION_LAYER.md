@@ -133,6 +133,14 @@ npm run validate:carrier-webhook-e2e
 
 The runner seeds shipments with tracking numbers matching all four fixtures, starts the local `carrier-webhook` Edge Function, sends signed webhook requests through `api_record_carrier_tracking_event_from_webhook`, verifies `carrier_webhook_events`, `tracking_events`, `shipments`, and `fulfillments`, checks duplicate delivery idempotency, then cleans up its fixture rows.
 
+The full shipping workflow regression suite can be run locally with:
+
+```text
+npm run validate:shipping-workflow
+```
+
+The suite verifies security-definer exposure, normal QC completion, shipment handoff, authenticated carrier tracking rules, carrier webhook storage/boundary rules, and the signed Edge Function webhook path.
+
 ## Policy Shape
 
 The existing migration `033_rls_policies.sql` creates permissive tenant policies for every `organization_id` table. The permission layer adds restrictive policies, so access is effectively:
@@ -156,6 +164,7 @@ This keeps tenant isolation and action authorization independent and reviewable.
 - `013_guarded_operations_wrappers_test.sql` validates guarded refund processing, QC override, and shipment label wrappers.
 - `014_shipping_workflow_wrappers_test.sql` validates normal QC completion, shipment handoff, and carrier tracking updates.
 - `015_carrier_webhook_boundary_test.sql` validates carrier webhook idempotency storage and service-role routing into tracking updates.
+- `shipping-workflow-suite.mjs` runs the shipping regression gate across security-definer exposure, SQL workflow validations, and Edge Function carrier webhook E2E.
 
 ## Next Expansion
 

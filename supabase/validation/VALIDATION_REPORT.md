@@ -258,7 +258,7 @@ The test verifies:
 - `authenticated` users cannot insert directly into `carrier_webhook_events`.
 - `service_role` can store carrier webhook idempotency/audit records.
 - Duplicate `(organization_id, provider_code, idempotency_key)` webhook events are rejected.
-- The service-role path can route a verified carrier event through `api_record_carrier_tracking_event_from_webhook`.
+- The service-role-only wrapper can route a verified carrier event through `api_record_carrier_tracking_event_from_webhook`.
 - Carrier tracking updates still produce shipment state changes and fulfillment audit events.
 
 ## Edge Function Boundary
@@ -304,4 +304,20 @@ Latest local E2E result:
 ```text
 npm run validate:carrier-webhook-e2e
 carrier_webhook_e2e pass
+```
+
+## Shipping Workflow Suite
+
+`supabase/validation/shipping-workflow-suite.mjs` runs the shipping workflow regression gate:
+
+- `004_security_definer_exposure.sql`
+- `014_shipping_workflow_wrappers_test.sql`
+- `015_carrier_webhook_boundary_test.sql`
+- `npm run validate:carrier-webhook-e2e`
+
+Latest local suite result:
+
+```text
+npm run validate:shipping-workflow
+shipping_workflow_suite pass
 ```

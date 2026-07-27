@@ -264,7 +264,7 @@ begin
     when unique_violation then null;
   end;
 
-  v_tracking_event_id := public.api_record_carrier_tracking_event(
+  v_tracking_event_id := public.api_record_carrier_tracking_event_from_webhook(
     'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbb1'::uuid,
     '19191919-1919-1919-1919-1919191919b1'::uuid,
     'PICKED_UP',
