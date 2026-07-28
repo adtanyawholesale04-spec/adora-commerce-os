@@ -6,12 +6,7 @@
 
 ## Decision Summary
 
-Track A gates A1 and A2 are validated. Track B schema and forward migrations through the current messaging delivery-attempt boundary are locally validated, but feature implementation must remain controlled because the status document contains an unresolved B1 gate conflict:
-
-- the overall status says Business Rules V1 is frozen;
-- the B1 gate still says `IN_REVIEW` and `BLOCKED UNTIL APPROVED`.
-
-Under the ACOS execution rules, this is a blocker until the Project Owner reconciles the status. No Content, Portal, Feed, Review, Attribution, Commission, Payout, Ads, or real provider runtime is started by this audit.
+Track A gates A1 and A2 are validated. Track B schema and forward migrations through the current messaging delivery-attempt boundary are locally validated. The previous B1 status conflict has now been reconciled by Owner approval on 2026-07-29: Business Rules V1 is validated/frozen for implementation planning. Downstream implementation still requires its own contract and validation gates. No Content, Portal, Feed, Review, Attribution, Commission, Payout, Ads, or real provider runtime is started by this audit.
 
 ## Priority Map
 
@@ -19,11 +14,11 @@ Under the ACOS execution rules, this is a blocker until the Project Owner reconc
 
 | Work | Phase | Why P0 | Dependencies | Likely files/modules | Migration | Controls | Validation |
 |---|---|---|---|---|---|---|---|
-| Reconcile Track B business-rule gate | Phase 0 | B1 is internally inconsistent; downstream implementation cannot safely rely on an approved rule set | Owner confirmation of B1 status and scope; no inferred approval | `docs/roadmap/ACOS_IMPLEMENTATION_STATUS.md`, `docs/business-rules/BUSINESS_RULES_CONTENT_RETENTION_V1.md`, `docs/er/ER_DIAGRAM_V2_CONTENT_RETENTION.md` | No | Audit required; consent, entitlement, moderation, and event implications must be confirmed | Document conflict, owner decision, then status reconciliation; no SQL change |
+| Reconcile Track B business-rule gate | Phase 0 | Completed to remove the B1 implementation blocker | Owner approval recorded 2026-07-29; no inferred rule changes | `docs/roadmap/ACOS_IMPLEMENTATION_STATUS.md`, `docs/business-rules/BUSINESS_RULES_CONTENT_RETENTION_V1.md`, `docs/er/ER_DIAGRAM_V2_CONTENT_RETENTION.md` | No | Audit required; consent, entitlement, moderation, and event implications remain implementation controls | Status reconciliation completed; no SQL change |
 | Complete Phase 0 foundation decision record | Phase 0 | Source-of-truth, public/private boundary, event catalog, entitlement, moderation, media provider, and identity-merge direction gate all later phases | B1 reconciliation; media provider and commercial decisions remain open | Track B contract docs, status, business rules, ER, existing `src/lib/messaging/*` | No for decision record | Audit required; consent and entitlement required as decisions; ledger required only for value movement | Checklist review, contradiction scan, tenant/RLS threat review |
 | Preserve provider-safe messaging boundary | Phase 0 / Phase 10 prerequisite | Reservation and delivery-attempt persistence exist, but real provider execution can create SMS/LINE/Email cost and private-data exposure | Selected provider, server-only secrets, queue runtime, retry/dead-letter policy, spend guardrail | `src/lib/messaging/*`, migration 050/051, provider adapter contracts, Edge/server boundary | No additional migration proposed in this audit | Consent, suppression, usage meter, entitlement, audit required; no refund of attempted spend | Fixture worker tests, idempotency, failure classification, secret-boundary review |
 
-### P1 — Next after P0 is reconciled
+### P1 — Next after Phase 0 foundation reconciliation
 
 | Work | Phase | Why P1 | Dependencies | Likely files/modules | Migration | Controls | Validation |
 |---|---|---|---|---|---|---|---|
@@ -56,14 +51,14 @@ Under the ACOS execution rules, this is a blocker until the Project Owner reconc
 **Ready to start now:**
 
 - this non-destructive priority/dependency audit;
-- status contradiction report and owner decision request;
+- remaining Phase 0 decision resolution and contract/checklist refinement;
 - contract/checklist refinement that does not alter schema, protected core, provider execution, payment, payout, ads, or private customer data;
 - validation-only work against existing boundaries.
 
 **Not ready / blocked:**
 
-- Content implementation, because B1 is still `IN_REVIEW` in the authoritative status table;
-- Customer Portal, because the customer identity/read contract and private-data boundary are not marked implemented;
+- Content implementation, until its own lifecycle, visibility, moderation, and service contract gates are completed;
+- Customer Portal, because the frozen schema has no verified customer-to-auth/profile ownership link and the private-data boundary cannot be safely enforced yet;
 - Feed, Review, Attribution, Commission, and Payout, because their upstream phases are not reconciled or complete;
 - real provider runtime, because provider selection, secrets, cost/spend guardrails, and production worker operation are not approved;
 - media upload production path, because the storage provider remains `IN_REVIEW`;
@@ -71,8 +66,8 @@ Under the ACOS execution rules, this is a blocker until the Project Owner reconc
 
 ## Uncommitted Work Observed
 
-At audit time, the repo is on `main`, aligned with `origin/main` at `bfd8e94`, with uncommitted messaging validation/provider-boundary changes and the two Customer Community Commerce instruction documents untracked. This audit does not stage, commit, push, or alter those unrelated pending changes.
+The audit was committed and pushed separately before this approval. This approval adds only the B1 status reconciliation edits; they remain uncommitted until explicitly requested.
 
 ## Next Gate
 
-Project Owner should reconcile the B1 contradiction first. After that, the next implementation candidate should be selected from the approved Phase 0/P1 contract work. Any choice involving payment, payout, ads, real provider cost, or private customer data requires a separate explicit approval before implementation.
+The B1 contradiction is reconciled. Phase 0 foundation mapping is recorded, but media provider, commercial quota, and identity-merge decisions remain open. Next, resolve those decisions and review the Customer Portal P1 contract. Any choice involving payment, payout, ads, real provider cost, or private customer data requires a separate explicit approval before implementation.
