@@ -91,6 +91,21 @@ runSqlSuite([
     file: "supabase/validation/035_message_delivery_attempt_boundary_test.sql",
     requiredRows: ["message_delivery_attempt_boundary|pass"],
   },
+  {
+    name: "customer_profile_ownership_boundary",
+    file: "supabase/validation/036_customer_profile_ownership_boundary_test.sql",
+    requiredRows: ["customer_profile_ownership_boundary|pass"],
+  },
+  {
+    name: "customer_profile_link_guarded_actions",
+    file: "supabase/validation/037_customer_profile_link_guarded_actions_test.sql",
+    requiredRows: ["customer_profile_link_guarded_actions|pass"],
+  },
+  {
+    name: "customer_portal_read_snapshot_boundary",
+    file: "supabase/validation/038_customer_portal_read_snapshot_boundary_test.sql",
+    requiredRows: ["customer_portal_read_snapshot_boundary|pass"],
+  },
 ]);
 
 runNpmScript("validate:carrier-webhook-e2e");

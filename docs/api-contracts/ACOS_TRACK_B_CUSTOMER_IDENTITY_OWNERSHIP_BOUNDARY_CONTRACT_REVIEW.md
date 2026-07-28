@@ -2,7 +2,7 @@
 
 **Task:** `PORTAL-P1-IDENTITY-OWNERSHIP-001`  
 **Phase:** Phase 1 — Customer Portal MVP  
-**Status:** CONTRACT REVIEW / MIGRATION NOT IMPLEMENTED  
+**Status:** OWNERSHIP TABLE VALIDATED / PORTAL READS GATED
 **Depends on:** `ACOS_TRACK_B_IDENTITY_MERGE_POLICY.md`
 
 ## Objective
@@ -108,4 +108,4 @@ The approved Identity Merge Policy remains in force:
 
 ## Current Gate
 
-**BLOCKED FOR IMPLEMENTATION.** The additive design is ready for Owner review, but the exact cardinality rule for one profile to one customer per organization, link creation proof, and migration/RLS implementation must be explicitly approved before creating migration or enabling private Portal reads.
+**Ownership table boundary validated.** The approved additive table, cardinality rule, tenant foreign keys, RLS enablement, and direct-role denial passed local replay and focused validation. Portal private reads, link creation/revocation, and merge-related reassignment remain gated behind separate guarded service contracts.

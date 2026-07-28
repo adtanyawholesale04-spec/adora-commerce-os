@@ -140,9 +140,14 @@ Track B Customer Engagement Platform
 | Migration 051 Message Delivery Attempt Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_051_MESSAGE_DELIVERY_ATTEMPT_VALIDATION_2026-07-29.md` | VALIDATED | Append-only delivery attempt persistence, job status update, sanitized failure fields, idempotent retry, and direct-role denial passed |
 | Track B Provider-Specific Adapter Contract Review | `docs/api-contracts/A3_TRACK_B_PROVIDER_SPECIFIC_ADAPTER_CONTRACT_REVIEW.md` | APPROVED | Owner approved recommended adapter, retry, payload, and secret-boundary values; fixture adapter added, real provider runtime remains pending |
 | Track B Phase 0 Foundation Alignment Contract | `docs/api-contracts/ACOS_TRACK_B_PHASE_0_FOUNDATION_ALIGNMENT_CONTRACT.md` | PARTIAL / DECISION REQUIRED | Canonical source, tenant/privacy, event, ledger, entitlement, and moderation directions reconciled; media provider, commercial quota policy, and identity merge policy remain open |
-| Track B Customer Portal P1 Contract Review | `docs/api-contracts/ACOS_TRACK_B_CUSTOMER_PORTAL_P1_CONTRACT_REVIEW.md` | BLOCKED | Frozen schema has `profiles.auth_user_id` and tenant-scoped `customers`, but no verified customer-to-auth/profile ownership link; do not infer by email/phone or browser customer_id |
+| Track B Customer Portal P1 Contract Review | `docs/api-contracts/ACOS_TRACK_B_CUSTOMER_PORTAL_P1_CONTRACT_REVIEW.md` | READ BOUNDARY IMPLEMENTED / UI DEFERRED | Customer ownership resolves only through active `customer_profile_links`; portal read RPC is validated; UI and writes remain separate |
 | Track B Identity Merge Policy | `docs/api-contracts/ACOS_TRACK_B_IDENTITY_MERGE_POLICY.md` | APPROVED / RUNTIME NOT ENABLED | Manual same-organization merge only; automatic and cross-organization merges forbidden; child-record rules and guarded runtime remain separate |
-| Track B Customer Identity Ownership Boundary Contract Review | `docs/api-contracts/ACOS_TRACK_B_CUSTOMER_IDENTITY_OWNERSHIP_BOUNDARY_CONTRACT_REVIEW.md` | CONTRACT REVIEW / MIGRATION NOT IMPLEMENTED | Proposed additive tenant-scoped customer-to-profile association; exact cardinality, proof, RLS, audit, and migration remain Owner approval gates |
+| Track B Customer Identity Ownership Boundary Contract Review | `docs/api-contracts/ACOS_TRACK_B_CUSTOMER_IDENTITY_OWNERSHIP_BOUNDARY_CONTRACT_REVIEW.md` | OWNERSHIP TABLE VALIDATED / PORTAL READS IMPLEMENTED | Additive tenant-scoped association and active-link cardinality validated; guarded link actions and read-only Portal RPC are validated |
+| Migration 052 Customer Profile Ownership Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_052_CUSTOMER_PROFILE_OWNERSHIP_BOUNDARY_VALIDATION_2026-07-29.md` | VALIDATED | Additive tenant-scoped ownership table, same-tenant composite keys, active-link uniqueness, RLS enablement, direct-role denial, fresh replay, security, workflow, and Commerce regression passed |
+| Track B Customer Profile Link Guarded Actions | `docs/api-contracts/ACOS_TRACK_B_CUSTOMER_PROFILE_LINK_GUARDED_ACTIONS.md` | IMPLEMENTED / VALIDATED | Request creates PENDING, service-only activation, permission-guarded revoke, idempotency, audit, and direct-write denial passed |
+| Migration 053 Customer Profile Link Guarded Actions Validation 2026-07-29 | `docs/migrations/MIGRATION_053_CUSTOMER_PROFILE_LINK_GUARDED_ACTIONS_VALIDATION_2026-07-29.md` | VALIDATED | Guarded request/activate/revoke functions, idempotency, tenant denial, audit, and direct-write denial passed |
+| Track B Customer Portal Read Boundary | `docs/api-contracts/ACOS_TRACK_B_CUSTOMER_PORTAL_READ_BOUNDARY.md` | IMPLEMENTED / VALIDATED | Auth/profile/link-scoped snapshot RPC with minimized customer/order/loyalty/coupon/consent reads and audit event passed focused, security, workflow, and replay gates |
+| Migration 054 Customer Portal Read Snapshot Validation 2026-07-29 | `docs/migrations/MIGRATION_054_CUSTOMER_PORTAL_READ_SNAPSHOT_VALIDATION_2026-07-29.md` | VALIDATED | Read-only RPC, active-link scope, cross-tenant denial, direct source RLS denial, anonymous denial, and audit recording passed |
 | Migration 046 Usage Meter Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_046_USAGE_METER_VALIDATION_2026-07-29.md` | VALIDATED | Fresh replay, idempotent aggregate upsert, high-cost fail-closed quota checks, RLS/direct-role denial, and all project gates passed |
 | Supabase Migration Replay Protocol | `docs/migrations/SUPABASE_MIGRATION_REPLAY_PROTOCOL.md` | ACTIVE | Defines baseline/full replay evidence layers |
 | Supabase Migration Replay Report 2026-07-27 | `docs/migrations/SUPABASE_MIGRATION_REPLAY_REPORT_2026-07-27.md` | VALIDATED | Fresh local replay and security/workflow gates passed |
@@ -700,7 +705,7 @@ MIG-PLAN-001 repository verification passed; each migration still requires its o
 
 | Task ID | Task | Status | Notes |
 |---|---|---:|---|
-| PORTAL-001 | Customer profile page | BLOCKED | Requires auth/customer identity |
+| PORTAL-001 | Customer profile page | READY AFTER UI CONTRACT | Read-only service boundary validated; UI route and server adapter remain |
 | PORTAL-002 | Followed merchants | BLOCKED | Requires Follow |
 | PORTAL-003 | Feed page | BLOCKED | Requires Feed |
 | PORTAL-004 | Coupons / points page | BLOCKED | Requires Loyalty contract |
@@ -1092,7 +1097,7 @@ Track B Customer Engagement:
 ARCHITECTURE DIRECTION APPROVED
 BUSINESS RULES V1 FROZEN
 ER V2 FROZEN FOR MIGRATION PLANNING
-NEXT: Resolve Phase 0 media/provider, commercial quota, and identity-merge decisions, then review the Customer Portal P1 contract; provider runtime remains separately blocked
+NEXT: Build the Customer Portal read-only UI/server adapter against the validated RPC; keep notification recipient mapping, consent writes, and provider runtime separately gated
 
 Implementation:
 CONTROLLED START

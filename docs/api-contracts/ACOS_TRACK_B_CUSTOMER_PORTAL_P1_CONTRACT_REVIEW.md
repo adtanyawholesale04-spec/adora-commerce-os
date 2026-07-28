@@ -2,12 +2,12 @@
 
 **Task:** `PORTAL-P1-CONTRACT-001`  
 **Phase:** Phase 1 — Customer Portal MVP  
-**Status:** BLOCKED / CUSTOMER-IDENTITY LINK REQUIRED  
+**Status:** READ BOUNDARY IMPLEMENTED / UI AND WRITE ACTIONS DEFERRED
 **Depends on:** `ACOS_TRACK_B_PHASE_0_FOUNDATION_ALIGNMENT_CONTRACT.md`
 
 ## Objective
 
-Define a read-first Customer Portal boundary where an authenticated customer can see only their own account, memberships, eligible tenant-scoped commerce history, consent state, and in-app notifications. This review does not add routes, tables, migrations, or private-data runtime behavior.
+Define a read-first Customer Portal boundary where an authenticated customer can see only their own account, memberships, eligible tenant-scoped commerce history, consent state, and in-app notifications. The read-only service boundary is implemented separately; routes and write actions remain deferred.
 
 ## Source-of-Truth Mapping
 
@@ -77,7 +77,7 @@ Public profile opt-in belongs to a later contract and is not inferred from porta
 
 ## Migration Position
 
-**Migration required for this review:** No.
+**Migration required for this review:** Yes, additive forward migration `20260728195007_customer_portal_read_snapshot_boundary.sql`.
 
 Implementation must stop if a missing link requires changing protected Commerce Core tables or creating a duplicate customer/order/payment table. Any forward migration needs a separate contract, RLS review, validation SQL, and Owner approval where the private-data boundary changes.
 
@@ -89,7 +89,7 @@ The current frozen schema does not contain a verified customer-to-auth/profile o
 - `customers` is tenant-scoped but has no `profile_id` or `auth_user_id`;
 - `customer_identities` links provider/external identities to `customers`, but does not establish authenticated Supabase ownership.
 
-Therefore the portal cannot safely select a customer row for the current authenticated user. It must not guess by email/phone, use staff `customer.view`, or query a browser-supplied `customer_id`.
+Migration 052 now provides the additive `customer_profile_links` association boundary. The portal selects a customer only through an `ACTIVE` link for the current authenticated profile and requested organization. It must not guess by email/phone, use staff `customer.view`, or query a browser-supplied `customer_id`.
 
 ## Validation Plan Before Implementation
 
@@ -104,4 +104,4 @@ Therefore the portal cannot safely select a customer row for the current authent
 
 ## Gate Result
 
-The Customer Portal P1 contract is **BLOCKED** until an Owner-approved customer-to-auth/profile ownership boundary exists. Identity merge follows the approved conservative policy: no automatic merge and no cross-organization customer-row equivalence. No migration or production code is started by this review.
+The Customer Portal P1 read boundary is **IMPLEMENTED AND VALIDATED**. Identity merge follows the approved conservative policy: no automatic merge and no cross-organization customer-row equivalence. Portal UI, notification recipient mapping, consent mutations, and all other writes remain separate contracts.
