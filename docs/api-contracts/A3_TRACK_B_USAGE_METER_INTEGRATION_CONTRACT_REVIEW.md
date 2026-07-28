@@ -94,7 +94,7 @@ The meter call must be part of the same guarded service decision as the action i
 - No billing, provider settlement, usage refunds, or `usage_meter_events` table.
 - No runtime workflow implementation until each owning service contract is approved.
 
-## Implemented First Integration
+## Implemented Integrations
 
 Migration `20260728182051_content_publish_usage_boundary.sql` implements the approved `POSTS` mapping:
 
@@ -106,4 +106,18 @@ Migration `20260728182051_content_publish_usage_boundary.sql` implements the app
 
 Remaining mappings stay workflow-specific and are not enabled by this implementation.
 
-**NEXT:** Review and implement the next approved workflow boundary separately, beginning with Media upload semantics or Audience snapshot creation.
+Migration `20260728182734_audience_snapshot_usage_boundary.sql` also implements the approved `AUDIENCE_SNAPSHOTS` mapping:
+
+- guarded service-role-only snapshot creation;
+- atomic snapshot member materialization;
+- one meter unit per immutable snapshot;
+- audit-backed idempotent retry and direct-role denial.
+
+Migration `20260728183541_media_upload_usage_boundary.sql` implements the approved additive Media mapping:
+
+- guarded service-role-only upload metadata registration;
+- one `MEDIA_UPLOADS` unit and additive `MEDIA_STORAGE_BYTES` volume per successful upload;
+- high-cost storage entitlement checked before commit;
+- provider calls and current-storage adjustment remain outside this boundary.
+
+**NEXT:** Review the next approved workflow boundary separately. Messaging and Feed remain gated by provider/event contracts.

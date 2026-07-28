@@ -64,4 +64,4 @@ Owner approval recorded on 2026-07-29: **all recommended values above approved**
 
 Approval authorizes the Content publish guarded boundary and `POSTS` integration only; all explicit non-goals remain outside scope.
 
-**NEXT:** Validate the implemented Content publish boundary, then review the next workflow-specific boundary separately.
+**NEXT:** Validate the implemented Content publish, Audience snapshot, and Media upload boundaries, then review the next workflow-specific boundary separately.

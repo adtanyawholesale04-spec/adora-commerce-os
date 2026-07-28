@@ -19,6 +19,8 @@
     "validate:attribution-service-boundary": "node supabase/validation/attribution-service-boundary-suite.mjs",
     "validate:usage-meter-boundary": "node supabase/validation/usage-meter-boundary-suite.mjs",
     "validate:content-publish-usage-boundary": "node supabase/validation/content-publish-usage-boundary-suite.mjs",
+    "validate:audience-snapshot-usage-boundary": "node supabase/validation/audience-snapshot-usage-boundary-suite.mjs",
+    "validate:media-upload-usage-boundary": "node supabase/validation/media-upload-usage-boundary-suite.mjs",
     "validate:supabase": "npm run validate:supabase-security && npm run validate:supabase-workflows && npm run validate:commerce-integration"
   },
   "dependencies": {

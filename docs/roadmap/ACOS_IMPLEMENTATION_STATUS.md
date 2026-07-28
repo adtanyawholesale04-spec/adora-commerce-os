@@ -129,9 +129,12 @@ Track B Customer Engagement Platform
 | Events / Attribution Guarded Service Boundary Review | `docs/api-contracts/A3_TRACK_B_EVENTS_ATTRIBUTION_GUARDED_SERVICE_BOUNDARY_REVIEW.md` | IMPLEMENTED | Attribution record boundary is implemented; reminder scheduling/customer identity/provider execution remain gated |
 | Migration 045 Attribution Service Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_045_ATTRIBUTION_SERVICE_BOUNDARY_VALIDATION_2026-07-29.md` | VALIDATED | Service-role-only attribution RPC, audit-backed idempotency, source validation, append-only and direct-role denial gates passed |
 | Track B Usage Meter Contract Review | `docs/api-contracts/A3_TRACK_B_USAGE_METER_CONTRACT_REVIEW.md` | VALIDATED | Approved aggregate reuse, metered feature seeds, period, idempotency, and quota policy implemented through Migration 046 |
-| Track B Usage Meter Integration Contract Review | `docs/api-contracts/A3_TRACK_B_USAGE_METER_INTEGRATION_CONTRACT_REVIEW.md` | IMPLEMENTED | Owner-approved mapping recorded; first `POSTS` Content publish integration implemented and remaining workflow mappings remain separately gated |
+| Track B Usage Meter Integration Contract Review | `docs/api-contracts/A3_TRACK_B_USAGE_METER_INTEGRATION_CONTRACT_REVIEW.md` | IMPLEMENTED | Owner-approved mapping recorded; `POSTS`, `AUDIENCE_SNAPSHOTS`, `MEDIA_UPLOADS`, and additive `MEDIA_STORAGE_BYTES` integrations implemented; remaining workflow mappings remain separately gated |
 | Track B Usage Meter Owner Approval | `docs/api-contracts/A3_TRACK_B_USAGE_METER_OWNER_APPROVAL.md` | APPROVED | Owner approved all recommended source mapping and integration guardrail values on 2026-07-29 |
 | Migration 047 Content Publish Usage Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_047_CONTENT_PUBLISH_USAGE_VALIDATION_2026-07-29.md` | VALIDATED | Guarded publish transition, atomic POSTS meter increment, idempotent retry, audit, and direct-role denial passed |
+| Migration 048 Audience Snapshot Usage Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_048_AUDIENCE_SNAPSHOT_USAGE_VALIDATION_2026-07-29.md` | VALIDATED | Guarded snapshot/member creation, atomic AUDIENCE_SNAPSHOTS meter increment, idempotent retry, audit, and direct-role denial passed |
+| Migration 049 Media Upload Usage Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_049_MEDIA_UPLOAD_USAGE_VALIDATION_2026-07-29.md` | VALIDATED | Guarded upload registration, atomic MEDIA_UPLOADS and additive MEDIA_STORAGE_BYTES meter increments, idempotent retry, high-cost entitlement, and direct-role denial passed |
+| Track B Messaging Usage Meter Integration Contract Review | `docs/api-contracts/A3_TRACK_B_MESSAGING_USAGE_METER_INTEGRATION_CONTRACT_REVIEW.md` | IN_REVIEW | Proposes recipient/channel reservation timing and attempted-spend behavior; runtime dispatch remains blocked pending provider and failure-policy decisions |
 | Migration 046 Usage Meter Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_046_USAGE_METER_VALIDATION_2026-07-29.md` | VALIDATED | Fresh replay, idempotent aggregate upsert, high-cost fail-closed quota checks, RLS/direct-role denial, and all project gates passed |
 | Supabase Migration Replay Protocol | `docs/migrations/SUPABASE_MIGRATION_REPLAY_PROTOCOL.md` | ACTIVE | Defines baseline/full replay evidence layers |
 | Supabase Migration Replay Report 2026-07-27 | `docs/migrations/SUPABASE_MIGRATION_REPLAY_REPORT_2026-07-27.md` | VALIDATED | Fresh local replay and security/workflow gates passed |
@@ -1081,7 +1084,7 @@ Track B Customer Engagement:
 ARCHITECTURE DIRECTION APPROVED
 BUSINESS RULES V1 FROZEN
 ER V2 FROZEN FOR MIGRATION PLANNING
-NEXT: Review the next workflow-specific Usage Meter boundary, beginning with Media upload semantics or Audience snapshot creation
+NEXT: Owner approval of Messaging Usage Meter reservation timing and provider-failure policy
 
 Implementation:
 CONTROLLED START
