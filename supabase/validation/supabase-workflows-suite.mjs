@@ -111,6 +111,11 @@ runSqlSuite([
     file: "supabase/validation/039_customer_portal_address_guarded_actions_test.sql",
     requiredRows: ["customer_portal_address_guarded_actions|pass"],
   },
+  {
+    name: "customer_portal_consent_guarded_action",
+    file: "supabase/validation/040_customer_portal_consent_guarded_action_test.sql",
+    requiredRows: ["customer_portal_consent_guarded_action|pass"],
+  },
 ]);
 
 runNpmScript("validate:carrier-webhook-e2e");

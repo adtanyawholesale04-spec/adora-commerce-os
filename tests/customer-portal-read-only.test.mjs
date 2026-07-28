@@ -6,6 +6,7 @@ import test from "node:test";
 const root = process.cwd();
 const pageSource = fs.readFileSync(path.join(root, "src", "app", "portal", "page.tsx"), "utf8");
 const adapterSource = fs.readFileSync(path.join(root, "src", "lib", "portal", "customer.ts"), "utf8");
+const actionSource = fs.readFileSync(path.join(root, "src", "app", "portal", "actions.ts"), "utf8");
 
 test("Customer Portal remains read-only and server-bound", () => {
   assert.match(adapterSource, /rpc\("api_get_customer_portal_snapshot"/);
@@ -13,6 +14,12 @@ test("Customer Portal remains read-only and server-bound", () => {
   assert.doesNotMatch(pageSource, /\.insert\(|\.update\(|\.delete\(/);
   assert.doesNotMatch(adapterSource, /\.from\(/);
   assert.doesNotMatch(adapterSource, /\.insert\(|\.update\(|\.delete\(/);
+  assert.match(actionSource, /^"use server";/);
+  assert.doesNotMatch(actionSource, /\.from\(/);
+  assert.doesNotMatch(actionSource, /\.insert\(|\.update\(|\.delete\(/);
+  assert.match(actionSource, /api_create_customer_portal_address/);
+  assert.match(actionSource, /api_update_customer_portal_address/);
+  assert.match(actionSource, /api_archive_customer_portal_address/);
   assert.match(pageSource, /readOnly:/);
   assert.match(pageSource, /notLinked:/);
 });

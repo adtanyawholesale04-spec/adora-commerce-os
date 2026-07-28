@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { getCustomerPortalReadModel, type PortalOrder } from "@/lib/portal/customer";
 import { getAdminPreferences } from "@/lib/admin/preferences";
+import { AddressManager } from "@/app/portal/address-manager";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +24,21 @@ const copy = {
     account: "บัญชีของฉัน",
     orders: "คำสั่งซื้อล่าสุด",
     addresses: "ที่อยู่จัดส่ง",
+    add: "เพิ่มที่อยู่",
+    edit: "แก้ไข",
+    archive: "เก็บถาวร",
+    cancel: "ยกเลิก",
+    save: "บันทึก",
+    recipient: "ผู้รับ",
+    phone: "โทรศัพท์",
+    address: "ที่อยู่",
+    district: "เขต/อำเภอ",
+    province: "จังหวัด",
+    postal: "รหัสไปรษณีย์",
+    label: "ชื่อที่อยู่",
+    defaultAddress: "ใช้เป็นที่อยู่หลัก",
+    confirmArchive: "ต้องการเก็บที่อยู่นี้หรือไม่?",
+    saved: "บันทึกแล้ว",
     loyalty: "คะแนนสะสม",
     coupons: "สิทธิประโยชน์",
     consents: "การสื่อสารที่อนุญาต",
@@ -31,6 +47,7 @@ const copy = {
     due: "ค้างชำระ",
     emptyOrders: "ยังไม่มีคำสั่งซื้อที่แสดงได้",
     emptyAddresses: "ยังไม่มีที่อยู่จัดส่ง",
+    empty: "ยังไม่มีที่อยู่จัดส่ง",
     emptyLoyalty: "ยังไม่มีบัญชีคะแนน",
     emptyCoupons: "ยังไม่มีสิทธิประโยชน์ที่ใช้งานอยู่",
     emptyConsents: "ยังไม่มีข้อมูลการสื่อสาร",
@@ -57,6 +74,21 @@ const copy = {
     account: "My account",
     orders: "Recent orders",
     addresses: "Delivery addresses",
+    add: "Add address",
+    edit: "Edit",
+    archive: "Archive",
+    cancel: "Cancel",
+    save: "Save",
+    recipient: "Recipient",
+    phone: "Phone",
+    address: "Address",
+    district: "District",
+    province: "Province",
+    postal: "Postal code",
+    label: "Address label",
+    defaultAddress: "Use as default address",
+    confirmArchive: "Archive this address?",
+    saved: "Saved",
     loyalty: "Loyalty points",
     coupons: "Benefits",
     consents: "Communication consent",
@@ -65,6 +97,7 @@ const copy = {
     due: "Due",
     emptyOrders: "No orders to show yet",
     emptyAddresses: "No delivery addresses yet",
+    empty: "No delivery addresses yet",
     emptyLoyalty: "No loyalty accounts yet",
     emptyCoupons: "No active benefits yet",
     emptyConsents: "No communication settings yet",
@@ -158,14 +191,9 @@ export default async function PortalPage() {
                 {(snapshot.orders ?? []).length === 0 ? <Empty text={text.emptyOrders} /> : <OrderList orders={snapshot.orders ?? []} text={text} />}
               </Panel>
               <div className="grid content-start gap-6">
-                <Panel title={text.addresses} icon={<MapPin aria-hidden className="h-4 w-4 text-brand" />}>
-                  {(snapshot.addresses ?? []).length === 0 ? <Empty text={text.emptyAddresses} /> : (snapshot.addresses ?? []).map((address) => (
-                    <div key={address.id} className="border-b border-line py-3 last:border-0 last:pb-0">
-                      <p className="text-sm font-semibold">{address.label ?? address.recipient_name}</p>
-                      <p className="mt-1 text-xs leading-5 text-muted">{[address.address_line1, address.district, address.province, address.postal_code].filter(Boolean).join(", ")}</p>
-                    </div>
-                  ))}
-                </Panel>
+                <section className="rounded-lg border border-line bg-panel p-5 shadow-[var(--shadow-panel)]">
+                  <AddressManager addresses={snapshot.addresses ?? []} copy={text} />
+                </section>
                 <Panel title={text.coupons} icon={<Gift aria-hidden className="h-4 w-4 text-accent" />}>
                   {(snapshot.coupons ?? []).length === 0 ? <Empty text={text.emptyCoupons} /> : (snapshot.coupons ?? []).map((coupon) => (
                     <div key={coupon.id} className="flex items-center justify-between gap-3 border-b border-line py-3 last:border-0 last:pb-0">
