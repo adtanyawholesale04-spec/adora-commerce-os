@@ -60,7 +60,7 @@ requestMemberRoleAssignmentServerAction
 
 ## Explicit Non-Scope
 
-- No role removal.
+- Role removal is implemented in the separate role removal UI contract.
 - No full role replacement.
 - No role catalog creation or editing.
 - No permission catalog editing.
@@ -79,4 +79,4 @@ requestMemberRoleAssignmentServerAction
 
 ## Next
 
-NEXT: A3 member role removal UI affordance and submit enablement.
+NEXT: A3 role management end-to-end QA and status reconciliation.

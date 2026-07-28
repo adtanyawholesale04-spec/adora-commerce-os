@@ -84,11 +84,11 @@ describe("A3 member role assignment guarded action boundary", () => {
 
     for (const required of [
       "A3-ACTION-ROLE-ASSIGN-001",
-      "No role removal",
+      "Role removal is implemented in the separate role removal boundary and UI contracts",
       "No full role replacement",
       "No system-role assignment",
       "No self-role assignment",
-      "NEXT: A3 member role removal UI affordance and submit enablement",
+      "NEXT: A3 role management end-to-end QA and status reconciliation",
       "020_member_role_assignment_boundary_test.sql"
     ]) {
       assert.match(

@@ -128,6 +128,7 @@ Track B Customer Engagement Platform
 | A3 Member Role Assignment Guarded Action Boundary | `docs/api-contracts/A3_MEMBER_ROLE_ASSIGNMENT_GUARDED_ACTION_BOUNDARY.md` | IMPLEMENTED | Adds guarded `admin.member.role.assign.request` server boundary and `api_assign_member_role` RPC for active non-system role assignment to active memberships, with `members.manage`, tenant validation, idempotency, and audit |
 | A3 Member Role Assignment UI Submit Enablement | `docs/api-contracts/A3_MEMBER_ROLE_ASSIGNMENT_UI_SUBMIT_ENABLEMENT.md` | IMPLEMENTED | `/admin/users` enables permission-aware member role assignment submit through the guarded server action, active member/active non-system role filtering, duplicate affordance suppression, result handling, and read model revalidation |
 | A3 Member Role Removal Guarded Action Boundary | `docs/api-contracts/A3_MEMBER_ROLE_REMOVAL_GUARDED_ACTION_BOUNDARY.md` | IMPLEMENTED | Adds guarded `admin.member.role.remove.request` server boundary and `api_remove_member_role` RPC for active non-system role removal from active memberships, with `members.manage`, tenant validation, already-removed no-op auditing, self/system/last-role guards, and audit |
+| A3 Role Management End-to-End QA Report | `docs/testing/A3_ROLE_MANAGEMENT_E2E_QA_REPORT.md` | VALIDATED | Focused Docker-backed lifecycle gate covers assignment, role-derived permission grant/removal, current-state deletion, and append-only audit evidence |
 | CORE-UI-001 Admin Shell Contract | `docs/api-contracts/CORE_UI_001_ADMIN_APP_SHELL_RBAC_NAVIGATION.md` | IMPLEMENTED | Admin shell, auth entry, organization switcher, and permission-aware navigation contract |
 | CORE-UI-002 Products Read Contract | `docs/api-contracts/CORE_UI_002_PRODUCTS_READ_ONLY_SCREEN.md` | IMPLEMENTED | Read-only Products screen and server read model contract |
 | CORE-UI-DESIGN-001 Admin Visual System Pass | `docs/api-contracts/CORE_UI_DESIGN_001_ADMIN_VISUAL_SYSTEM_PASS.md` | IMPLEMENTED | Admin light/dark theme and Thai/English UI preference foundation |
@@ -323,8 +324,10 @@ No UI, schema, migration, role, permission, status, or financial rule implementa
 | A3-ACTION-AUTH-ADMIN-001 | Supabase Auth Admin invite email-send boundary | IMPLEMENTED | Adds server-only Auth Admin client with `SUPABASE_SECRET_KEY`/legacy service-role fallback, requires configured invite redirect URL, sends `inviteUserByEmail` after DB persistence, and records email sent/failed audit events for retry-safe idempotency |
 | A3-ACTION-INVITE-ACCEPT-001 | Member invite acceptance callback and membership activation boundary | IMPLEMENTED | Adds `api_accept_member_invitation`, binds acceptance to authenticated Supabase email, creates/reuses active profile, activates `organization_memberships`, marks invitation `ACCEPTED`, records `admin.member.invite.accepted`, and leaves role assignment deferred |
 | A3-ACTION-ROLE-ASSIGN-001 | Member role assignment guarded action boundary | IMPLEMENTED | Adds `api_assign_member_role`, requires `members.manage`, assigns one active non-system role to one active target membership, rejects self/system/inactive/cross-tenant assignment, audits new and duplicate assignments, and keeps remove/replace role management deferred |
-| A3-ACTION-ROLE-ASSIGN-UI-001 | Member role management UI affordance and role assignment submit enablement | IMPLEMENTED | Enables `/admin/users` role assignment form through `requestMemberRoleAssignmentServerAction`, filters active assignable members and active non-system roles, suppresses already-assigned roles, surfaces success/error state, and keeps role removal/replacement deferred |
-| A3-ACTION-ROLE-REMOVE-001 | Member role removal guarded action boundary | IMPLEMENTED | Adds `api_remove_member_role`, requires `members.manage`, removes one active non-system role from one active target membership, rejects self/system/inactive/cross-tenant/last-role removal, audits removed and already-removed no-op requests, and keeps replacement/deactivation/UI submit affordance deferred |
+| A3-ACTION-ROLE-ASSIGN-UI-001 | Member role management UI affordance and role assignment submit enablement | IMPLEMENTED | Enables `/admin/users` role assignment form through `requestMemberRoleAssignmentServerAction`, filters active assignable members and active non-system roles, suppresses already-assigned roles, and surfaces success/error state |
+| A3-ACTION-ROLE-REMOVE-001 | Member role removal guarded action boundary | IMPLEMENTED | Adds `api_remove_member_role`, requires `members.manage`, removes one active non-system role from one active target membership, rejects self/system/inactive/cross-tenant/last-role removal, and audits removed and already-removed no-op requests |
+| A3-ACTION-ROLE-REMOVE-UI-001 | Member role removal UI affordance and submit enablement | IMPLEMENTED | Enables `/admin/users` removal submit through the guarded server action, filters active non-system assigned roles, blocks last-role removal in the UI, confirms the destructive action, surfaces result state, and revalidates the read model |
+| A3-ROLE-MANAGEMENT-E2E-QA-001 | Role management end-to-end QA and status reconciliation | VALIDATED | Supabase Docker gate verifies assignment -> role-derived permission -> removal -> permission removal -> current-state deletion -> append-only audit evidence; full workflow suite passed |
 
 ---
 
@@ -1016,7 +1019,8 @@ A3 MEMBER INVITE ACCEPTANCE + MEMBERSHIP ACTIVATION IMPLEMENTED
 A3 MEMBER ROLE ASSIGNMENT GUARDED ACTION BOUNDARY IMPLEMENTED
 A3 MEMBER ROLE ASSIGNMENT UI SUBMIT ENABLEMENT IMPLEMENTED
 A3 MEMBER ROLE REMOVAL GUARDED ACTION BOUNDARY IMPLEMENTED
-NEXT: A3 member role removal UI affordance and submit enablement
+A3 ROLE MANAGEMENT END-TO-END QA VALIDATED
+NEXT: A3 role replacement/deactivation contract review
 
 Track B Customer Engagement:
 ARCHITECTURE DIRECTION APPROVED
@@ -1027,7 +1031,8 @@ CONTROLLED START
 
 Latest validation:
 Fresh local Supabase replay passed for migrations 001-latest at 2026-07-27.
-Security/RLS/workflow/commerce integration suites passed after fresh reset.
+Focused A3 role-management Docker gate passed on 2026-07-28.
+Full Supabase workflow suite passed on 2026-07-28, including carrier webhook E2E after local Edge Runtime URL normalization.
 Gate A1 and Gate A2 are PASSED.
 ```
 

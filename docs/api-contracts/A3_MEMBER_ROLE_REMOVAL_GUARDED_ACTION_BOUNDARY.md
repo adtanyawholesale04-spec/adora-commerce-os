@@ -84,7 +84,7 @@ members.manage
 - No last-role removal.
 - No role hierarchy or owner-level authority model.
 - No platform support/admin role modeling.
-- No UI submit affordance yet.
+- UI submit enablement is implemented in the follow-up UI contract.
 
 These remain deferred because role authority, owner protection, platform support access, and destructive UX confirmation need explicit review before broader role management.
 
@@ -92,6 +92,7 @@ These remain deferred because role authority, owner protection, platform support
 
 - `tests/a3-member-role-removal-boundary.test.mjs`
 - `supabase/validation/021_member_role_removal_boundary_test.sql`
+- `supabase/validation/022_member_role_management_e2e_test.sql`
 - `supabase/validation/supabase-workflows-suite.mjs`
 
 The SQL validation covers:
@@ -118,4 +119,4 @@ The SQL validation covers:
 
 ## Next
 
-NEXT: A3 member role removal UI affordance and submit enablement.
+NEXT: A3 role management end-to-end QA and status reconciliation.

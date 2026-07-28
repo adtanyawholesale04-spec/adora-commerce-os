@@ -79,11 +79,11 @@ describe("A3 member role assignment UI submit enablement", () => {
 
     for (const required of [
       "A3-ACTION-ROLE-ASSIGN-UI-001",
-      "No role removal",
+      "Role removal is implemented in the separate role removal UI contract",
       "No full role replacement",
       "No system-role assignment",
       "No self-role assignment",
-      "NEXT: A3 member role removal UI affordance and submit enablement"
+      "NEXT: A3 role management end-to-end QA and status reconciliation"
     ]) {
       assert.match(
         `${contract}\n${boundaryContract}\n${status}`,

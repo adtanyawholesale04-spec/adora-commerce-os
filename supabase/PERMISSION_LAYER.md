@@ -133,6 +133,8 @@ npm run validate:carrier-webhook-e2e
 
 The runner seeds shipments with tracking numbers matching all four fixtures, starts the local `carrier-webhook` Edge Function, sends signed webhook requests through `api_record_carrier_tracking_event_from_webhook`, verifies `carrier_webhook_events`, `tracking_events`, `shipments`, and `fulfillments`, checks duplicate delivery idempotency, then cleans up its fixture rows.
 
+When the local Edge Runtime runs inside Docker, the webhook boundary normalizes a localhost Supabase URL to `host.docker.internal` so the function can reach the host-published local API. Deployed Supabase URLs are used unchanged.
+
 The full shipping workflow regression suite can be run locally with:
 
 ```text

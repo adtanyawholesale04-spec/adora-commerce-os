@@ -279,10 +279,16 @@ function buildFunctionEnvFile() {
 
   return [
     `CARRIER_WEBHOOK_SECRET=${webhookSecret}`,
-    `CARRIER_WEBHOOK_SUPABASE_URL=${values.API_URL}`,
+    `CARRIER_WEBHOOK_SUPABASE_URL=${containerReachableUrl(values.API_URL)}`,
     `CARRIER_WEBHOOK_SERVICE_ROLE_KEY=${values.SERVICE_ROLE_KEY}`,
     "",
   ].join("\n");
+}
+
+function containerReachableUrl(value) {
+  return value
+    .replace("127.0.0.1", "host.docker.internal")
+    .replace("localhost", "host.docker.internal");
 }
 
 function assertSeededShipments() {

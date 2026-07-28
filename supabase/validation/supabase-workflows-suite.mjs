@@ -51,6 +51,11 @@ runSqlSuite([
     file: "supabase/validation/021_member_role_removal_boundary_test.sql",
     requiredRows: ["member_role_removal_boundary|pass"],
   },
+  {
+    name: "member_role_management_e2e",
+    file: "supabase/validation/022_member_role_management_e2e_test.sql",
+    requiredRows: ["member_role_management_e2e|pass"],
+  },
 ]);
 
 runNpmScript("validate:carrier-webhook-e2e");

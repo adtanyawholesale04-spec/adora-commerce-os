@@ -74,7 +74,7 @@ members.manage
 
 ## Explicit Non-Scope
 
-- No role removal.
+- Role removal is implemented in the separate role removal boundary and UI contracts.
 - No full role replacement.
 - No role catalog creation or editing.
 - No permission catalog editing.
@@ -89,6 +89,7 @@ These remain deferred because role authority and platform support access are res
 
 - `tests/a3-member-role-assignment-boundary.test.mjs`
 - `supabase/validation/020_member_role_assignment_boundary_test.sql`
+- `supabase/validation/022_member_role_management_e2e_test.sql`
 - `supabase/validation/supabase-workflows-suite.mjs`
 
 The SQL validation covers:
@@ -113,4 +114,4 @@ The SQL validation covers:
 
 ## Next
 
-NEXT: A3 member role removal UI affordance and submit enablement.
+NEXT: A3 role management end-to-end QA and status reconciliation.

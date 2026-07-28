@@ -49,8 +49,10 @@ export default {
       return jsonResponse({ error: "missing_organization_id" }, 400);
     }
 
-    const supabaseUrl = Deno.env.get("CARRIER_WEBHOOK_SUPABASE_URL") ??
-      Deno.env.get("SUPABASE_URL");
+    const supabaseUrl = normalizeSupabaseUrl(
+      Deno.env.get("CARRIER_WEBHOOK_SUPABASE_URL") ??
+        Deno.env.get("SUPABASE_URL"),
+    );
     const serviceKey = Deno.env.get("CARRIER_WEBHOOK_SERVICE_ROLE_KEY") ??
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ??
       Deno.env.get("SUPABASE_SECRET_KEY");
@@ -100,6 +102,13 @@ export default {
       if (insertError.code === "23505") {
         return jsonResponse({ received: true, duplicate: true }, 200);
       }
+
+      console.error("carrier webhook event insert failed", {
+        code: insertError.code,
+        message: insertError.message,
+        details: insertError.details,
+        hint: insertError.hint,
+      });
 
       return jsonResponse({ error: "webhook_log_insert_failed" }, 500);
     }
@@ -153,6 +162,24 @@ function jsonResponse(body: JsonObject, status: number): Response {
     status,
     headers: jsonHeaders,
   });
+}
+
+function normalizeSupabaseUrl(value: string | undefined): string | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  try {
+    const url = new URL(value);
+
+    if (url.hostname === "127.0.0.1" || url.hostname === "localhost") {
+      url.hostname = "host.docker.internal";
+    }
+
+    return url.toString().replace(/\/$/, "");
+  } catch {
+    return value;
+  }
 }
 
 function resolveProviderCode(req: Request, body: string): string {

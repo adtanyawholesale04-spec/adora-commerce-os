@@ -15,6 +15,7 @@ import {
 import { AdminPreferenceSwitcher } from "@/app/admin/_components/admin-preference-switcher";
 import { MemberInviteForm } from "@/app/admin/users/member-invite-form";
 import { MemberRoleAssignmentForm } from "@/app/admin/users/member-role-assignment-form";
+import { MemberRoleRemovalForm } from "@/app/admin/users/member-role-removal-form";
 import { adminCopy } from "@/lib/admin/i18n";
 import { getAdminPreferences } from "@/lib/admin/preferences";
 import {
@@ -35,6 +36,7 @@ export default async function UsersPage() {
   const canReadUsers = model.state === "ready";
   const canRequestInvitation = canReadUsers && model.manageVisible;
   const canAssignRole = canReadUsers && model.manageVisible;
+  const canRemoveRole = canReadUsers && model.manageVisible;
 
   return (
     <main className="min-h-screen bg-surface text-ink">
@@ -109,6 +111,13 @@ export default async function UsersPage() {
                   roles={model.roles}
                   currentProfileId={model.context.profileId}
                 />
+                <MemberRoleRemovalForm
+                  copy={copy.users}
+                  canRemoveRole={canRemoveRole}
+                  members={model.members}
+                  roles={model.roles}
+                  currentProfileId={model.context.profileId}
+                />
                 <MembersTable copy={copy.users} members={model.members} locale={preferences.locale} />
                 <RolesTable copy={copy.users} roles={model.roles} locale={preferences.locale} />
                 <RolePermissionsTable copy={copy.users} rows={model.rolePermissions} />
@@ -145,6 +154,7 @@ export default async function UsersPage() {
               rows={[
                 [copy.users.inviteUser, copy.users.skeletonReady],
                 [copy.users.roleAssignment, copy.users.roleAssignmentServiceReady],
+                [copy.users.roleRemoval, copy.users.roleRemovalServiceReady],
                 [copy.users.requiredPermission, "members.manage"],
                 [
                   copy.users.permissionState,
@@ -160,7 +170,6 @@ export default async function UsersPage() {
               rows={[
                 [copy.users.inviteUser, copy.users.dbOnlyInviteBoundary],
                 [copy.users.deactivateMember, copy.users.adminServiceRequired],
-                [copy.users.roleRemoval, copy.users.adminServiceAuditRequired],
                 [copy.users.permissionCatalogEdit, copy.users.forbiddenNoNewPermission],
                 [copy.users.supportAccessGrant, copy.users.supportGrantWorkflowRequired]
               ]}
