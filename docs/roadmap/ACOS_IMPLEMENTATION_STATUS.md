@@ -116,6 +116,19 @@ Track B Customer Engagement Platform
 | Migration 035 Content Core Validation 2026-07-28 | `docs/migrations/MIGRATION_035_CONTENT_CORE_VALIDATION_2026-07-28.md` | VALIDATED | Fresh local replay, RLS, FK, constraint, and direct-role denial checks passed |
 | Track B Content Media Migration Contract Review | `docs/api-contracts/A3_TRACK_B_CONTENT_MEDIA_MIGRATION_CONTRACT_REVIEW.md` | VALIDATED | Owner decisions recorded; migration 036 replay and security boundary validation passed |
 | Migration 036 Content Media Validation 2026-07-28 | `docs/migrations/MIGRATION_036_CONTENT_MEDIA_VALIDATION_2026-07-28.md` | VALIDATED | Fresh local replay, metadata checks, RLS, FK, orphan index, and direct-role denial checks passed |
+| Track B Follow / Interest Migration Contract Review | `docs/api-contracts/A3_TRACK_B_FOLLOW_INTEREST_MIGRATION_CONTRACT_REVIEW.md` | IN_REVIEW | Owner decisions required before generating migration 037 SQL |
+| Migration 037 Follow / Interest Validation 2026-07-28 | `docs/migrations/MIGRATION_037_FOLLOW_INTEREST_VALIDATION_2026-07-28.md` | VALIDATED | Fresh local replay, tenant FK, uniqueness, lifecycle, RLS, and direct-role denial checks passed |
+| Track B Consent / Suppression Migration Contract Review | `docs/api-contracts/A3_TRACK_B_CONSENT_SUPPRESSION_MIGRATION_CONTRACT_REVIEW.md` | IN_REVIEW | Owner decisions required before generating migration 038 SQL |
+| Migration 038 Consent / Suppression Validation 2026-07-28 | `docs/migrations/MIGRATION_038_CONSENT_SUPPRESSION_VALIDATION_2026-07-28.md` | VALIDATED | Fresh local replay, consent/suppression checks, append-only trigger, RLS, and direct-role denial checks passed |
+| Track B Retention Metrics Migration Contract Review | `docs/api-contracts/A3_TRACK_B_RETENTION_METRICS_MIGRATION_CONTRACT_REVIEW.md` | IN_REVIEW | Owner decisions required before generating migration 040 SQL |
+| Migration 040 Retention Metrics Validation 2026-07-28 | `docs/migrations/MIGRATION_040_RETENTION_METRICS_VALIDATION_2026-07-28.md` | VALIDATED | Fresh local replay, projection constraints, RLS, updated-at trigger, and direct-role denial checks passed |
+| Track B Audience / Campaign Dependency Contract Review | `docs/api-contracts/A3_TRACK_B_AUDIENCE_CAMPAIGN_DEPENDENCY_CONTRACT_REVIEW.md` | IN_REVIEW | Owner decisions required before generating migration 041/042 SQL |
+| Migration 041 Audience Validation 2026-07-28 | `docs/migrations/MIGRATION_041_AUDIENCE_VALIDATION_2026-07-28.md` | VALIDATED | Fresh local replay, tenant/customer FKs, rule JSON checks, snapshot append-only triggers, RLS, and direct-role denial checks passed |
+| Campaign Core Migration Contract Review | `docs/api-contracts/A3_TRACK_B_CAMPAIGN_CORE_MIGRATION_CONTRACT_REVIEW.md` | VALIDATED | Campaign 042 implementation and Audience snapshot dependency validated |
+| Migration 042 Campaign Core Validation 2026-07-29 | `docs/migrations/MIGRATION_042_CAMPAIGN_CORE_VALIDATION_2026-07-29.md` | VALIDATED | Fresh local replay, snapshot gate, lifecycle, counters, RLS, and direct-role denial checks passed |
+| Events / Attribution Guarded Service Boundary Review | `docs/api-contracts/A3_TRACK_B_EVENTS_ATTRIBUTION_GUARDED_SERVICE_BOUNDARY_REVIEW.md` | IMPLEMENTED | Attribution record boundary is implemented; reminder scheduling/customer identity/provider execution remain gated |
+| Migration 045 Attribution Service Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_045_ATTRIBUTION_SERVICE_BOUNDARY_VALIDATION_2026-07-29.md` | VALIDATED | Service-role-only attribution RPC, audit-backed idempotency, source validation, append-only and direct-role denial gates passed |
+| Track B Usage Meter Contract Review | `docs/api-contracts/A3_TRACK_B_USAGE_METER_CONTRACT_REVIEW.md` | IN_REVIEW | Recommends reusing `subscription_usage` with idempotent metered feature seeds; no usage SQL or quota enforcement enabled |
 | Supabase Migration Replay Protocol | `docs/migrations/SUPABASE_MIGRATION_REPLAY_PROTOCOL.md` | ACTIVE | Defines baseline/full replay evidence layers |
 | Supabase Migration Replay Report 2026-07-27 | `docs/migrations/SUPABASE_MIGRATION_REPLAY_REPORT_2026-07-27.md` | VALIDATED | Fresh local replay and security/workflow gates passed |
 | Project Blueprint V13 | `reference/PROJECT_BLUEPRINT_V13.md` | APPROVED | Commerce Core baseline |
@@ -488,12 +501,12 @@ READY AFTER MIG-PLAN-001 REPOSITORY VERIFICATION
 | MIG-PLAN-001 | Repository verification | VALIDATED | Core schema, RLS, permission, and migration conventions verified on 2026-07-28 |
 | ENG-DB-035 | Content core migration | VALIDATED | `A3_TRACK_B_CONTENT_CORE_MIGRATION_CONTRACT_REVIEW.md`; migration `20260728161057_content_core_035.sql` replayed and validated |
 | ENG-DB-036 | Content Media migration | VALIDATED | `A3_TRACK_B_CONTENT_MEDIA_MIGRATION_CONTRACT_REVIEW.md`; migration `20260728162156_content_media_036.sql` replayed and validated |
-| ENG-DB-037 | Consent migration | READY | After migration dependency review |
-| ENG-DB-038 | Audience migration | READY | After Follow/Interest and Retention dependencies |
-| ENG-DB-039 | Retention metrics migration | READY | After verified Orders read contract |
-| ENG-DB-040 | Campaign migration | READY | After Audience and Content dependencies |
-| ENG-DB-041 | Messaging dispatch migration | READY | After Campaign and provider contract review |
-| ENG-DB-042 | Events / attribution migration | READY | After event and attribution dependency review |
+| ENG-DB-037 | Follow / Interest migration | VALIDATED | `A3_TRACK_B_FOLLOW_INTEREST_MIGRATION_CONTRACT_REVIEW.md`; migration `20260728163005_follow_interest_037.sql` replayed and validated |
+| ENG-DB-038 | Consent / Suppression migration | VALIDATED | `A3_TRACK_B_CONSENT_SUPPRESSION_MIGRATION_CONTRACT_REVIEW.md`; migration `20260728163536_consent_suppression_038.sql` replayed and validated |
+| ENG-DB-039 | Retention metrics migration | VALIDATED | `A3_TRACK_B_RETENTION_METRICS_MIGRATION_CONTRACT_REVIEW.md`; migration `20260728164249_retention_metrics_040.sql` replayed and validated |
+| ENG-DB-040 | Audience / Campaign dependency | VALIDATED | Audience 041 and Campaign 042 validated; no Messaging/provider surface introduced |
+| ENG-DB-041 | Messaging dispatch migration | VALIDATED | `A3_TRACK_B_MESSAGING_DISPATCH_MIGRATION_CONTRACT_REVIEW.md`; migration `20260728171400_message_dispatch_043.sql` replayed and validated; provider credentials/calls and worker remain out of scope |
+| ENG-DB-042 | Events / attribution migration | VALIDATED | `A3_TRACK_B_EVENTS_ATTRIBUTION_MIGRATION_CONTRACT_REVIEW.md`; migration `20260728172100_attribution_live_reminder_044.sql` replayed and validated; service dispatch/calculation remains out of scope |
 | ENG-DB-043 | Index / performance migration | READY | After table migrations and high-volume review |
 | ENG-DB-044 | RLS / permission seed migration | READY | After table contracts and permission review |
 
@@ -543,11 +556,11 @@ MIG-PLAN-001 repository verification passed; each migration still requires its o
 
 | Task ID | Task | Status | Notes |
 |---|---|---:|---|
-| FOLLOW-001 | Follow merchant | BLOCKED | Requires follow rules/schema |
-| FOLLOW-002 | Unfollow merchant | BLOCKED | Requires follow rules/schema |
-| FOLLOW-003 | Block/suppress merchant updates | BLOCKED | Requires suppression rules |
-| INTEREST-001 | Define interest topics | BLOCKED | Requires interest rules |
-| INTEREST-002 | Customer update interests | BLOCKED | Requires schema |
+| FOLLOW-001 | Follow merchant | IN_REVIEW | Requires approved Follow / Interest migration contract |
+| FOLLOW-002 | Unfollow merchant | IN_REVIEW | Requires approved Follow / Interest migration contract |
+| FOLLOW-003 | Block/suppress merchant updates | IN_REVIEW | Follow state is reviewed; suppression side effect remains deferred to migration 038 |
+| INTEREST-001 | Define interest topics | IN_REVIEW | Requires approved Follow / Interest migration contract |
+| INTEREST-002 | Customer update interests | IN_REVIEW | Requires approved Follow / Interest migration contract |
 | INTEREST-003 | Interest-based targeting read model | BLOCKED | Requires Audience rules |
 
 ---
@@ -569,13 +582,13 @@ MIG-PLAN-001 repository verification passed; each migration still requires its o
 
 | Task ID | Task | Status | Notes |
 |---|---|---:|---|
-| CONSENT-001 | Consent channel model | BLOCKED | Requires CONSENT-BR-001 |
-| CONSENT-002 | Consent purpose model | BLOCKED | Requires CONSENT-BR-002 |
-| CONSENT-003 | Grant consent | BLOCKED | Requires schema |
-| CONSENT-004 | Revoke consent | BLOCKED | Requires revoke rule |
-| CONSENT-005 | Consent event log | BLOCKED | Requires event rules |
+| CONSENT-001 | Consent channel model | VALIDATED | Channels constrained by migration 038 |
+| CONSENT-002 | Consent purpose model | VALIDATED | Purposes constrained by migration 038 |
+| CONSENT-003 | Grant consent | VALIDATED | Persistence boundary ready; guarded action remains required |
+| CONSENT-004 | Revoke consent | VALIDATED | Persistence boundary ready; guarded action remains required |
+| CONSENT-005 | Consent event log | VALIDATED | Append-only event table and trigger validated |
 | CONSENT-006 | Preference page | BLOCKED | Requires UI/API |
-| CONSENT-007 | Dispatch-time consent check | BLOCKED | Required before Campaign |
+| CONSENT-007 | Dispatch-time consent check | IN_REVIEW | Contracted dependency for Campaign; dispatch implementation remains later scope |
 
 ---
 
@@ -583,9 +596,9 @@ MIG-PLAN-001 repository verification passed; each migration still requires its o
 
 | Task ID | Task | Status | Notes |
 |---|---|---:|---|
-| RETENTION-001 | Customer metrics projection | BLOCKED | Requires orders read contract |
-| RETENTION-002 | RFM calculation | BLOCKED | Requires RETENTION-BR-001 |
-| RETENTION-003 | Segment classification | BLOCKED | Requires RETENTION-BR-002 |
+| RETENTION-001 | Customer metrics projection | VALIDATED | Projection persistence boundary validated; refresh service remains separate |
+| RETENTION-002 | RFM calculation | VALIDATED | Score range and segment schema boundary validated; calculation remains service-owned |
+| RETENTION-003 | Segment classification | IN_REVIEW | Requires approved Retention Metrics migration contract |
 | RETENTION-004 | Retention metrics refresh worker | BLOCKED | Requires schema |
 | RETENTION-005 | Retention dashboard cards | BLOCKED | Requires metrics |
 
@@ -595,10 +608,10 @@ MIG-PLAN-001 repository verification passed; each migration still requires its o
 
 | Task ID | Task | Status | Notes |
 |---|---|---:|---|
-| AUDIENCE-001 | Segment definition model | BLOCKED | Requires AUDIENCE-BR-001 |
-| AUDIENCE-002 | Segment preview count | BLOCKED | Requires customer/order read models |
-| AUDIENCE-003 | Audience snapshot creation | BLOCKED | Requires AUDIENCE-BR-002 |
-| AUDIENCE-004 | Snapshot member table | BLOCKED | Requires ER freeze |
+| AUDIENCE-001 | Segment definition model | VALIDATED | Migration 041 segment model validated |
+| AUDIENCE-002 | Segment preview count | READY | Service read model remains required before UI |
+| AUDIENCE-003 | Audience snapshot creation | VALIDATED | Snapshot persistence and append-only boundary validated |
+| AUDIENCE-004 | Snapshot member table | VALIDATED | Snapshot member persistence and tenant isolation validated |
 | AUDIENCE-005 | Audience audit | BLOCKED | Requires snapshot rules |
 
 ---
@@ -607,10 +620,10 @@ MIG-PLAN-001 repository verification passed; each migration still requires its o
 
 | Task ID | Task | Status | Notes |
 |---|---|---:|---|
-| CAMPAIGN-001 | Campaign lifecycle model | BLOCKED | Requires CAMPAIGN-BR-001 |
-| CAMPAIGN-002 | Draft campaign | BLOCKED | Requires schema |
-| CAMPAIGN-003 | Schedule campaign | BLOCKED | Requires schedule rules |
-| CAMPAIGN-004 | Prepare run | BLOCKED | Requires audience snapshot |
+| CAMPAIGN-001 | Campaign lifecycle model | VALIDATED | Campaign 042 lifecycle/status boundary validated |
+| CAMPAIGN-002 | Draft campaign | VALIDATED | Campaign definition persistence boundary validated |
+| CAMPAIGN-003 | Schedule campaign | VALIDATED | Structural schedule/timestamp boundary validated; guarded action remains required |
+| CAMPAIGN-004 | Prepare run | VALIDATED | Snapshot gate and campaign run persistence validated |
 | CAMPAIGN-005 | Pause/cancel campaign | BLOCKED | Requires cancellation rules |
 | CAMPAIGN-006 | Campaign audit | BLOCKED | Requires lifecycle |
 
@@ -620,13 +633,13 @@ MIG-PLAN-001 repository verification passed; each migration still requires its o
 
 | Task ID | Task | Status | Notes |
 |---|---|---:|---|
-| MSG-001 | Messaging canonical model | BLOCKED | Requires MSG-BR-001 |
-| MSG-002 | Message job queue | BLOCKED | Requires schema |
-| MSG-003 | Provider adapter interface | BLOCKED | Requires provider rules |
+| MSG-001 | Messaging canonical model | VALIDATED | Message job persistence boundary implemented and validated; lifecycle remains service-owned |
+| MSG-002 | Message job queue | IN_REVIEW | Persistence is validated; queue/worker implementation remains separate |
+| MSG-003 | Provider adapter interface | BLOCKED | Requires provider adapter and credential boundary |
 | MSG-004 | LINE adapter | BLOCKED | Requires provider contract |
 | MSG-005 | Email adapter | BLOCKED | Requires provider contract |
 | MSG-006 | SMS adapter | BLOCKED | Requires provider contract |
-| MSG-007 | Delivery attempts | BLOCKED | Requires retry/failure rules |
+| MSG-007 | Delivery attempts | VALIDATED | Append-only delivery-attempt persistence implemented; provider retry classifier remains service-owned |
 | MSG-008 | Dead-letter handling | BLOCKED | Requires failure rules |
 | MSG-009 | Usage metering | BLOCKED | Requires USAGE-BR-001 |
 
@@ -649,9 +662,9 @@ MIG-PLAN-001 repository verification passed; each migration still requires its o
 | Task ID | Task | Status | Notes |
 |---|---|---:|---|
 | LIVE-REM-001 | Live announcement content type | BLOCKED | Requires Content rules |
-| LIVE-REM-002 | Customer remind-me action | BLOCKED | Requires Feed + Consent |
-| LIVE-REM-003 | Reminder schedule rule | BLOCKED | Requires Business Rule |
-| LIVE-REM-004 | Dispatch reminders | BLOCKED | Requires Campaign + Messaging |
+| LIVE-REM-002 | Customer remind-me action | GATED | Requires authenticated customer identity/ownership boundary plus consent/suppression-safe scheduling |
+| LIVE-REM-003 | Reminder schedule rule | APPROVED RULE / VALIDATED | Offsets 1440, 60, and 10 minutes are frozen; persistence boundary validated; scheduling remains service-owned |
+| LIVE-REM-004 | Dispatch reminders | GATED | Requires guarded schedule boundary with consent, suppression, quota, provider readiness, idempotency, and audit |
 | LIVE-REM-005 | Reminder analytics | BLOCKED | Requires Attribution |
 
 ---
@@ -660,9 +673,9 @@ MIG-PLAN-001 repository verification passed; each migration still requires its o
 
 | Task ID | Task | Status | Notes |
 |---|---|---:|---|
-| ATTR-001 | Attribution model definition | BLOCKED | Requires ATTR-BR-001 |
-| ATTR-002 | Campaign click tracking | BLOCKED | Requires Events |
-| ATTR-003 | Order attribution read model | BLOCKED | Requires Order contract |
+| ATTR-001 | Attribution model definition | VALIDATED | V1 `LAST_CLICK_7D` contract and append-only persistence boundary validated |
+| ATTR-002 | Campaign click tracking | VALIDATED | Server/service-role-only attribution record boundary implemented and focused validation passed |
+| ATTR-003 | Order attribution read model | BLOCKED | Requires approved revenue projection and order/payment read contract |
 | ATTR-004 | Campaign revenue report | BLOCKED | Requires ATTR-BR-002 |
 | ATTR-005 | ROI dashboard | BLOCKED | Requires cost meter |
 
@@ -754,7 +767,7 @@ MIG-PLAN-001 repository verification passed; each migration still requires its o
 | COST-001 | Cost model 10 merchants | REFERENCE | Draft exists |
 | COST-002 | Cost model 1,000 merchants | REFERENCE | Draft exists |
 | COST-003 | Cost model 10,000 merchants | REFERENCE | Draft exists |
-| COST-004 | Usage meter list | IN_REVIEW | Needs Business Rule approval |
+| COST-004 | Usage meter list | IN_REVIEW | `A3_TRACK_B_USAGE_METER_CONTRACT_REVIEW.md`; Owner decision required on aggregate reuse, feature seeds, period, idempotency, and quota policy |
 | COST-005 | Per-tenant cost attribution | BLOCKED | Requires usage table |
 | COST-006 | Plan/Quota model | BLOCKED | Requires commercial decision |
 | SCALE-001 | High-volume event strategy | IN_REVIEW | Needs event retention rule |
@@ -1064,7 +1077,7 @@ Track B Customer Engagement:
 ARCHITECTURE DIRECTION APPROVED
 BUSINESS RULES V1 FROZEN
 ER V2 FROZEN FOR MIGRATION PLANNING
-NEXT: ENG-DB-037 Follow / Interest migration contract review
+NEXT: Owner approval of the Usage Meter contract decisions
 
 Implementation:
 CONTROLLED START

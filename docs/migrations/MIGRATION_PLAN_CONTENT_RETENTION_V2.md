@@ -5,7 +5,7 @@
 **Short Name:** ACOS  
 **Repository Slug:** `adora-commerce-os`  
 **Document:** `MIGRATION_PLAN_CONTENT_RETENTION_V2.md`  
-**Status:** MIGRATION 035 VALIDATED; NEXT MIGRATION CONTRACT REQUIRED
+**Status:** MIGRATIONS 035-045 VALIDATED; USAGE METER CONTRACT IN REVIEW
 **Track:** Track B — Customer Engagement Platform  
 **Depends On:**  
 - `ACOS_AI_CODING_CONSTITUTION.md`
@@ -504,7 +504,7 @@ Query unattached media older than threshold
 
 # 7. Migration 037 — Follow / Interest
 
-**File:** `037_follow_interest.sql`
+**File:** `20260728163005_follow_interest_037.sql`
 
 ## Purpose
 
@@ -557,7 +557,7 @@ Interest cannot cross tenant
 
 # 8. Migration 038 — Consent / Suppression
 
-**File:** `038_consent_suppression.sql`
+**File:** `20260728163536_consent_suppression_038.sql`
 
 ## Purpose
 
@@ -693,7 +693,7 @@ Query by org/time
 
 # 10. Migration 040 — Retention Metrics
 
-**File:** `040_retention_metrics.sql`
+**File:** `20260728164249_retention_metrics_040.sql`
 
 ## Purpose
 
@@ -752,7 +752,7 @@ Query high lifetime value customers
 
 # 11. Migration 041 — Audience Segments
 
-**File:** `041_audience_segments.sql`
+**File:** `20260728165559_audience_041.sql`
 
 ## Purpose
 
@@ -819,7 +819,7 @@ Verify duplicate member rejected
 
 # 12. Migration 042 — Campaign Core
 
-**File:** `042_campaign_core.sql`
+**File:** `20260728170527_campaign_core_042.sql`
 
 ## Purpose
 
@@ -883,7 +883,7 @@ Create campaign run
 
 # 13. Migration 043 — Message Dispatch
 
-**File:** `043_message_dispatch.sql`
+**File:** `20260728171400_message_dispatch_043.sql`
 
 ## Purpose
 
@@ -948,7 +948,7 @@ Query pending jobs by schedule
 
 # 14. Migration 044 — Attribution / Live Reminder
 
-**File:** `044_attribution_live_reminder.sql`
+**File:** `20260728172100_attribution_live_reminder_044.sql`
 
 ## Purpose
 
@@ -1009,9 +1009,54 @@ Reject duplicate reminder request
 
 ---
 
-# 15. Migration 045 — Usage Meter Extension
+# 15. Migration 045 — Guarded Attribution Service Boundary
 
-**File:** `045_usage_meter_extension.sql`
+**File:** `20260728172741_attribution_guarded_service_boundary_045.sql`
+
+## Purpose
+
+เพิ่ม server/service-role-only boundary สำหรับบันทึก attribution event
+
+## Creates
+
+```text
+api_record_attribution_event
+```
+
+## Key Rules Implemented
+
+```text
+service-role-only execution
+event/source/identity validation
+audit-backed idempotency
+append-only attribution history
+```
+
+## Must Not Include
+
+```text
+customer reminder submission
+reminder scheduling
+provider calls
+new permission seed
+order/payment mutation
+```
+
+## Validation
+
+```text
+initial event record
+idempotent retry
+conflicting request rejection
+append-only update denial
+authenticated direct denial
+```
+
+---
+
+# 16. Migration 046 — Usage Meter Extension
+
+**File:** `046_usage_meter_extension.sql`
 
 ## Purpose
 
@@ -1065,9 +1110,9 @@ Query monthly org usage
 
 ---
 
-# 16. Migration 046 — RLS Policies
+# 17. Migration 047 — RLS Policies
 
-**File:** `046_content_retention_rls.sql`
+**File:** `047_content_retention_rls.sql`
 
 ## Purpose
 
@@ -1579,10 +1624,10 @@ ER V2:
 FROZEN FOR MIGRATION PLANNING
 
 Migration Plan V2:
-MIGRATION 035 VALIDATED; NEXT MIGRATION CONTRACT REQUIRED
+MIGRATIONS 035-045 VALIDATED; USAGE METER CONTRACT IN REVIEW
 
 Next Required Work:
-Prepare and review the `ENG-DB-036` Content Media migration contract
+Obtain Owner approval of the Usage Meter contract, then implement the V1 aggregate meter boundary
 
 Then:
 Generate the next actual timestamped migration one file at a time after approval

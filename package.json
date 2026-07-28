@@ -16,6 +16,7 @@
     "validate:supabase-security": "node supabase/validation/supabase-security-suite.mjs",
     "validate:supabase-workflows": "node supabase/validation/supabase-workflows-suite.mjs",
     "validate:member-role-management": "node supabase/validation/member-role-management-suite.mjs",
+    "validate:attribution-service-boundary": "node supabase/validation/attribution-service-boundary-suite.mjs",
     "validate:supabase": "npm run validate:supabase-security && npm run validate:supabase-workflows && npm run validate:commerce-integration"
   },
   "dependencies": {
