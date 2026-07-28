@@ -155,6 +155,9 @@ Track B Customer Engagement Platform
 | Track B Customer Portal Part 3 Address UI | `src/app/portal/address-manager.tsx`, `src/app/portal/actions.ts` | IMPLEMENTED / VALIDATED | Bilingual add/edit/archive UI uses server actions and validated address RPCs; no direct browser writes |
 | Track B Customer Portal Part 4 Consent Guarded Action | `docs/api-contracts/ACOS_TRACK_B_CUSTOMER_PORTAL_CONSENT_GUARDED_ACTION.md` | IMPLEMENTED / VALIDATED | Consent update RPC normalizes destinations, appends immutable events, audits, is idempotent, and never dispatches messages |
 | Migration 056 Customer Portal Consent Guarded Action Validation 2026-07-29 | `docs/migrations/MIGRATION_056_CUSTOMER_PORTAL_CONSENT_GUARDED_ACTION_VALIDATION_2026-07-29.md` | VALIDATED | Consent grant/revoke, race safety, tenant isolation, direct table denial, anonymous denial and dispatch separation passed |
+| Track B Customer Portal Part 5 Profile Contact and Notification Dependency Review | `docs/api-contracts/ACOS_TRACK_B_CUSTOMER_PORTAL_PART5_PROFILE_CONTACT_NOTIFICATION_DEPENDENCY_REVIEW.md` | CONTRACT REVIEW COMPLETE / PROFILE CONTACT BLOCKED | Auth and CRM contact sources are distinct; verified change flow and customer notification recipient mapping require decisions before mutation |
+| Track B Customer Portal Part 5 Verified Contact and Notification Boundary | `docs/api-contracts/ACOS_TRACK_B_CUSTOMER_PORTAL_VERIFIED_CONTACT_NOTIFICATION_BOUNDARY.md` | IMPLEMENTED / VALIDATED / AUTH APPLY DEFERRED | 24-hour contact request, service-only verification, active-link notification mapping, idempotency, audit, tenant isolation and direct-role denial passed |
+| Migration 057 Customer Portal Verified Contact Notification Validation 2026-07-29 | `docs/migrations/MIGRATION_057_CUSTOMER_PORTAL_VERIFIED_CONTACT_NOTIFICATION_VALIDATION_2026-07-29.md` | VALIDATED | Contact request/verification and notification mapping passed fresh replay, focused, security and workflow gates |
 | Migration 046 Usage Meter Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_046_USAGE_METER_VALIDATION_2026-07-29.md` | VALIDATED | Fresh replay, idempotent aggregate upsert, high-cost fail-closed quota checks, RLS/direct-role denial, and all project gates passed |
 | Supabase Migration Replay Protocol | `docs/migrations/SUPABASE_MIGRATION_REPLAY_PROTOCOL.md` | ACTIVE | Defines baseline/full replay evidence layers |
 | Supabase Migration Replay Report 2026-07-27 | `docs/migrations/SUPABASE_MIGRATION_REPLAY_REPORT_2026-07-27.md` | VALIDATED | Fresh local replay and security/workflow gates passed |
@@ -611,8 +614,8 @@ MIG-PLAN-001 repository verification passed; each migration still requires its o
 |---|---|---:|---|
 | CONSENT-001 | Consent channel model | VALIDATED | Channels constrained by migration 038 |
 | CONSENT-002 | Consent purpose model | VALIDATED | Purposes constrained by migration 038 |
-| CONSENT-003 | Grant consent | VALIDATED | Persistence boundary ready; guarded action remains required |
-| CONSENT-004 | Revoke consent | VALIDATED | Persistence boundary ready; guarded action remains required |
+| CONSENT-003 | Grant consent | VALIDATED | Customer Portal guarded action implemented and validated |
+| CONSENT-004 | Revoke consent | VALIDATED | Customer Portal guarded action implemented and validated |
 | CONSENT-005 | Consent event log | VALIDATED | Append-only event table and trigger validated |
 | CONSENT-006 | Preference page | BLOCKED | Requires UI/API |
 | CONSENT-007 | Dispatch-time consent check | IN_REVIEW | Contracted dependency for Campaign; dispatch implementation remains later scope |
@@ -1104,7 +1107,7 @@ Track B Customer Engagement:
 ARCHITECTURE DIRECTION APPROVED
 BUSINESS RULES V1 FROZEN
 ER V2 FROZEN FOR MIGRATION PLANNING
-NEXT: Build the Customer Portal read-only UI/server adapter against the validated RPC; keep notification recipient mapping, consent writes, and provider runtime separately gated
+NEXT: Freeze Part 5 verified-contact and customer-notification decisions; then implement only the approved verification boundary while Live Commerce L0 remains the next broader Track B foundation
 
 Implementation:
 CONTROLLED START

@@ -28,6 +28,7 @@
     "validate:customer-portal-read-snapshot": "node supabase/validation/customer-portal-read-snapshot-suite.mjs",
     "validate:customer-portal-address-guarded-actions": "node supabase/validation/customer-portal-address-guarded-actions-suite.mjs",
     "validate:customer-portal-consent-guarded-action": "node supabase/validation/customer-portal-consent-guarded-action-suite.mjs",
+    "validate:customer-portal-verified-contact-notification": "node supabase/validation/customer-portal-verified-contact-notification-suite.mjs",
     "validate:supabase": "npm run validate:supabase-security && npm run validate:supabase-workflows && npm run validate:commerce-integration"
   },
   "dependencies": {
