@@ -66,6 +66,11 @@ runSqlSuite([
     file: "supabase/validation/030_usage_meter_boundary_test.sql",
     requiredRows: ["usage_meter_boundary|pass"],
   },
+  {
+    name: "content_publish_usage_boundary",
+    file: "supabase/validation/031_content_publish_usage_boundary_test.sql",
+    requiredRows: ["content_publish_usage_boundary|pass"],
+  },
 ]);
 
 runNpmScript("validate:carrier-webhook-e2e");

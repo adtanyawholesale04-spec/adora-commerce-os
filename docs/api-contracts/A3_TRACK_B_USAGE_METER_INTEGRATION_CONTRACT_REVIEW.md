@@ -1,7 +1,7 @@
 # Track B Usage Meter Integration Contract Review
 
 **Task:** `ENG-USAGE-002`
-**Status:** `IN_REVIEW`
+**Status:** `APPROVED / PARTIALLY IMPLEMENTED`
 **Track:** Track B — Customer Engagement Platform
 **Depends on:** Migration 046 Usage Meter Boundary and the frozen Content/Retention Business Rules
 
@@ -94,4 +94,16 @@ The meter call must be part of the same guarded service decision as the action i
 - No billing, provider settlement, usage refunds, or `usage_meter_events` table.
 - No runtime workflow implementation until each owning service contract is approved.
 
-**NEXT:** Owner approval of the source mapping and the five follow-up boundary decisions, then implement one workflow integration at a time with focused validation.
+## Implemented First Integration
+
+Migration `20260728182051_content_publish_usage_boundary.sql` implements the approved `POSTS` mapping:
+
+- guarded service-role-only publish RPC;
+- legal `DRAFT`/due `SCHEDULED` to `PUBLISHED` transition;
+- one `POSTS` unit per successful publish;
+- usage meter and content update in one transaction;
+- audit-backed idempotent retry and direct authenticated-role denial.
+
+Remaining mappings stay workflow-specific and are not enabled by this implementation.
+
+**NEXT:** Review and implement the next approved workflow boundary separately, beginning with Media upload semantics or Audience snapshot creation.
