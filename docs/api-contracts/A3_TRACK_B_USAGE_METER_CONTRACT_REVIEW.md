@@ -1,7 +1,7 @@
 # Track B Usage Meter Contract Review
 
 **Task:** `ENG-USAGE-001`
-**Status:** IN_REVIEW / SQL BLOCKED
+**Status:** APPROVED / IMPLEMENTED / VALIDATED
 **Track:** Track B - Customer Engagement Platform
 **Depends on:** Existing `subscription_usage` and `organization_entitlements` from Migration 004; validated Track B persistence through Migration 045
 
@@ -84,8 +84,20 @@ Usage updates must occur through a server/worker/service boundary that:
 - No direct browser writes to `subscription_usage` or `organization_entitlements`.
 - No `usage_meter_events` table unless Owner later approves event-level audit requirements.
 
+## Implemented Boundary
+
+Migration `20260728174238_usage_meter_boundary_046.sql` implements the approved V1 aggregate boundary:
+
+- seeds the 11 metered Track B feature codes idempotently;
+- adds service-role-only `api_record_usage_meter` with atomic period upsert;
+- uses audit-backed request idempotency and validates unit, period, source, and quantity;
+- fails closed for missing or exceeded high-cost entitlements;
+- denies authenticated/public RPC execution and direct usage/entitlement DML.
+
 ## Validation Gate After Approval
 
 After Owner approval, implement the feature seed and guarded usage upsert boundary, then validate fresh replay, idempotent retry, period uniqueness, entitlement lookup, high-cost fail-closed behavior, RLS/direct-role denial, security suite, integration suite, typecheck, lint, and full tests.
 
-**NEXT:** Owner approval of the Usage Meter contract decisions, then implement the V1 aggregate meter boundary.
+**VALIDATION:** Fresh local replay, focused boundary test, security/workflow/integration suites, lint, typecheck, and full tests passed on 2026-07-29.
+
+**NEXT:** Integrate the guarded meter boundary with approved Track B service workflows and review the quota read model before exposing usage controls in Admin.

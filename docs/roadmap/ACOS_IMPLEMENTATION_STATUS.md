@@ -128,7 +128,8 @@ Track B Customer Engagement Platform
 | Migration 042 Campaign Core Validation 2026-07-29 | `docs/migrations/MIGRATION_042_CAMPAIGN_CORE_VALIDATION_2026-07-29.md` | VALIDATED | Fresh local replay, snapshot gate, lifecycle, counters, RLS, and direct-role denial checks passed |
 | Events / Attribution Guarded Service Boundary Review | `docs/api-contracts/A3_TRACK_B_EVENTS_ATTRIBUTION_GUARDED_SERVICE_BOUNDARY_REVIEW.md` | IMPLEMENTED | Attribution record boundary is implemented; reminder scheduling/customer identity/provider execution remain gated |
 | Migration 045 Attribution Service Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_045_ATTRIBUTION_SERVICE_BOUNDARY_VALIDATION_2026-07-29.md` | VALIDATED | Service-role-only attribution RPC, audit-backed idempotency, source validation, append-only and direct-role denial gates passed |
-| Track B Usage Meter Contract Review | `docs/api-contracts/A3_TRACK_B_USAGE_METER_CONTRACT_REVIEW.md` | IN_REVIEW | Recommends reusing `subscription_usage` with idempotent metered feature seeds; no usage SQL or quota enforcement enabled |
+| Track B Usage Meter Contract Review | `docs/api-contracts/A3_TRACK_B_USAGE_METER_CONTRACT_REVIEW.md` | VALIDATED | Approved aggregate reuse, metered feature seeds, period, idempotency, and quota policy implemented through Migration 046 |
+| Migration 046 Usage Meter Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_046_USAGE_METER_VALIDATION_2026-07-29.md` | VALIDATED | Fresh replay, idempotent aggregate upsert, high-cost fail-closed quota checks, RLS/direct-role denial, and all project gates passed |
 | Supabase Migration Replay Protocol | `docs/migrations/SUPABASE_MIGRATION_REPLAY_PROTOCOL.md` | ACTIVE | Defines baseline/full replay evidence layers |
 | Supabase Migration Replay Report 2026-07-27 | `docs/migrations/SUPABASE_MIGRATION_REPLAY_REPORT_2026-07-27.md` | VALIDATED | Fresh local replay and security/workflow gates passed |
 | Project Blueprint V13 | `reference/PROJECT_BLUEPRINT_V13.md` | APPROVED | Commerce Core baseline |
@@ -641,7 +642,7 @@ MIG-PLAN-001 repository verification passed; each migration still requires its o
 | MSG-006 | SMS adapter | BLOCKED | Requires provider contract |
 | MSG-007 | Delivery attempts | VALIDATED | Append-only delivery-attempt persistence implemented; provider retry classifier remains service-owned |
 | MSG-008 | Dead-letter handling | BLOCKED | Requires failure rules |
-| MSG-009 | Usage metering | BLOCKED | Requires USAGE-BR-001 |
+| MSG-009 | Usage metering | VALIDATED | V1 aggregate meter boundary implemented; workflow integration remains separate |
 
 ---
 
@@ -767,7 +768,7 @@ MIG-PLAN-001 repository verification passed; each migration still requires its o
 | COST-001 | Cost model 10 merchants | REFERENCE | Draft exists |
 | COST-002 | Cost model 1,000 merchants | REFERENCE | Draft exists |
 | COST-003 | Cost model 10,000 merchants | REFERENCE | Draft exists |
-| COST-004 | Usage meter list | IN_REVIEW | `A3_TRACK_B_USAGE_METER_CONTRACT_REVIEW.md`; Owner decision required on aggregate reuse, feature seeds, period, idempotency, and quota policy |
+| COST-004 | Usage meter list | VALIDATED | `A3_TRACK_B_USAGE_METER_CONTRACT_REVIEW.md` and Migration 046; aggregate reuse, feature seeds, period, idempotency, and quota policy implemented and validated |
 | COST-005 | Per-tenant cost attribution | BLOCKED | Requires usage table |
 | COST-006 | Plan/Quota model | BLOCKED | Requires commercial decision |
 | SCALE-001 | High-volume event strategy | IN_REVIEW | Needs event retention rule |
@@ -1077,7 +1078,7 @@ Track B Customer Engagement:
 ARCHITECTURE DIRECTION APPROVED
 BUSINESS RULES V1 FROZEN
 ER V2 FROZEN FOR MIGRATION PLANNING
-NEXT: Owner approval of the Usage Meter contract decisions
+NEXT: Integrate the guarded Usage Meter boundary with approved Track B workflows and review the quota read model
 
 Implementation:
 CONTROLLED START
@@ -1086,6 +1087,7 @@ Latest validation:
 Fresh local Supabase replay passed for migrations 001-latest at 2026-07-27.
 Focused A3 role-management Docker gate passed on 2026-07-28, including role replacement boundary validation.
 Full Supabase workflow suite passed on 2026-07-28, including carrier webhook E2E after local Edge Runtime URL normalization.
+Usage Meter boundary and full project gates passed on 2026-07-29.
 Gate A1 and Gate A2 are PASSED.
 ```
 

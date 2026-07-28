@@ -5,7 +5,7 @@
 **Short Name:** ACOS  
 **Repository Slug:** `adora-commerce-os`  
 **Document:** `MIGRATION_PLAN_CONTENT_RETENTION_V2.md`  
-**Status:** MIGRATIONS 035-045 VALIDATED; USAGE METER CONTRACT IN REVIEW
+**Status:** MIGRATIONS 035-046 VALIDATED; NEXT USAGE METER INTEGRATION / QUOTA READ MODEL REVIEW
 **Track:** Track B — Customer Engagement Platform  
 **Depends On:**  
 - `ACOS_AI_CODING_CONSTITUTION.md`
@@ -1054,17 +1054,17 @@ authenticated direct denial
 
 ---
 
-# 16. Migration 046 — Usage Meter Extension
+# 16. Migration 046 — Usage Meter Boundary
 
-**File:** `046_usage_meter_extension.sql`
+**File:** `20260728174238_usage_meter_boundary_046.sql`
 
 ## Purpose
 
-รองรับ usage metering ของ Track B
+รองรับ V1 aggregate usage metering ของ Track B ผ่าน metered feature seeds และ service-role-only guarded upsert RPC โดย reuse `subscription_usage` และ `organization_entitlements`
 
-## Decision Required Before SQL
+## Approved Implementation Scope
 
-ตรวจว่า existing SaaS usage table รองรับ usage type ต่อไปนี้หรือไม่:
+ใช้ `subscription_usage` เป็น aggregate store และ seed usage type ต่อไปนี้แบบ idempotent:
 
 ```text
 CUSTOMERS
@@ -1080,21 +1080,13 @@ AUDIENCE_SNAPSHOTS
 RETENTION_REFRESHES
 ```
 
-## Option A — Extend Existing Usage Table
+## Implemented Boundary
 
-ถ้า existing table รองรับ:
+`api_record_usage_meter` ทำ atomic period upsert, audit-backed idempotency, unit/period/source validation และ high-cost fail-closed quota checks โดยปิด direct browser/authenticated DML และ RPC
 
-```text
-insert usage types / enum / seed only
-```
+## Deferred Non-Scope
 
-## Option B — Create usage_meter_events
-
-ถ้า existing table ไม่รองรับ granularity:
-
-```text
-create usage_meter_events
-```
+ยังไม่สร้าง `usage_meter_events`, billing, provider settlement หรือ Admin usage controls
 
 ## Recommendation
 
@@ -1624,10 +1616,10 @@ ER V2:
 FROZEN FOR MIGRATION PLANNING
 
 Migration Plan V2:
-MIGRATIONS 035-045 VALIDATED; USAGE METER CONTRACT IN REVIEW
+MIGRATIONS 035-046 VALIDATED; USAGE METER V1 AGGREGATE BOUNDARY IMPLEMENTED
 
 Next Required Work:
-Obtain Owner approval of the Usage Meter contract, then implement the V1 aggregate meter boundary
+Integrate the guarded Usage Meter boundary with approved Track B service workflows and review the quota read model
 
 Then:
 Generate the next actual timestamped migration one file at a time after approval
