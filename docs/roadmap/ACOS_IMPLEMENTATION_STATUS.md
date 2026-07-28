@@ -140,7 +140,7 @@ Track B Customer Engagement Platform
 | Migration 051 Message Delivery Attempt Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_051_MESSAGE_DELIVERY_ATTEMPT_VALIDATION_2026-07-29.md` | VALIDATED | Append-only delivery attempt persistence, job status update, sanitized failure fields, idempotent retry, and direct-role denial passed |
 | Track B Provider-Specific Adapter Contract Review | `docs/api-contracts/A3_TRACK_B_PROVIDER_SPECIFIC_ADAPTER_CONTRACT_REVIEW.md` | APPROVED | Owner approved recommended adapter, retry, payload, and secret-boundary values; fixture adapter added, real provider runtime remains pending |
 | Track B Phase 0 Foundation Alignment Contract | `docs/api-contracts/ACOS_TRACK_B_PHASE_0_FOUNDATION_ALIGNMENT_CONTRACT.md` | PARTIAL / DECISION REQUIRED | Canonical source, tenant/privacy, event, ledger, entitlement, and moderation directions reconciled; media provider, commercial quota policy, and identity merge policy remain open |
-| Track B Customer Portal P1 Contract Review | `docs/api-contracts/ACOS_TRACK_B_CUSTOMER_PORTAL_P1_CONTRACT_REVIEW.md` | READ BOUNDARY IMPLEMENTED / UI DEFERRED | Customer ownership resolves only through active `customer_profile_links`; portal read RPC is validated; UI and writes remain separate |
+| Track B Customer Portal P1 Contract Review | `docs/api-contracts/ACOS_TRACK_B_CUSTOMER_PORTAL_P1_CONTRACT_REVIEW.md` | READ-ONLY UI IMPLEMENTED / WRITES DEFERRED | Customer ownership resolves only through active `customer_profile_links`; server adapter and `/portal` route use the validated read RPC |
 | Track B Identity Merge Policy | `docs/api-contracts/ACOS_TRACK_B_IDENTITY_MERGE_POLICY.md` | APPROVED / RUNTIME NOT ENABLED | Manual same-organization merge only; automatic and cross-organization merges forbidden; child-record rules and guarded runtime remain separate |
 | Track B Customer Identity Ownership Boundary Contract Review | `docs/api-contracts/ACOS_TRACK_B_CUSTOMER_IDENTITY_OWNERSHIP_BOUNDARY_CONTRACT_REVIEW.md` | OWNERSHIP TABLE VALIDATED / PORTAL READS IMPLEMENTED | Additive tenant-scoped association and active-link cardinality validated; guarded link actions and read-only Portal RPC are validated |
 | Migration 052 Customer Profile Ownership Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_052_CUSTOMER_PROFILE_OWNERSHIP_BOUNDARY_VALIDATION_2026-07-29.md` | VALIDATED | Additive tenant-scoped ownership table, same-tenant composite keys, active-link uniqueness, RLS enablement, direct-role denial, fresh replay, security, workflow, and Commerce regression passed |
@@ -705,7 +705,7 @@ MIG-PLAN-001 repository verification passed; each migration still requires its o
 
 | Task ID | Task | Status | Notes |
 |---|---|---:|---|
-| PORTAL-001 | Customer profile page | READY AFTER UI CONTRACT | Read-only service boundary validated; UI route and server adapter remain |
+| PORTAL-001 | Customer profile page | IMPLEMENTED / READ-ONLY | `/portal` route and server adapter are implemented; profile edits remain a separate guarded contract |
 | PORTAL-002 | Followed merchants | BLOCKED | Requires Follow |
 | PORTAL-003 | Feed page | BLOCKED | Requires Feed |
 | PORTAL-004 | Coupons / points page | BLOCKED | Requires Loyalty contract |
