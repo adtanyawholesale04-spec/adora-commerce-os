@@ -31,4 +31,4 @@ The focused member-role suite passed after a fresh local Supabase migration repl
 
 This migration does not implement membership deactivation. The frozen schema has no canonical predicate for open assigned work, and the fulfillment model has no member assignment field. Deactivation remains blocked until that cross-module rule is defined without inventing ownership semantics.
 
-NEXT: Part 2C - Add approved member assignment coverage for Warehouse QC, Shipping, and Returns.
+NEXT: Part 2C - Add approved member assignment coverage for Shipping and Returns.

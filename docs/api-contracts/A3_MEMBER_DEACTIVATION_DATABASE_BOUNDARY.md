@@ -26,4 +26,4 @@
 
 The boundary is implemented, but an `ACTIVE -> SUSPENDED` transition will remain blocked until the remaining operational assignment domains have canonical coverage.
 
-NEXT: Warehouse QC assignment contract review.
+NEXT: Owner approval of the Shipping assignment decision table.

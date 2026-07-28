@@ -35,7 +35,7 @@ test("implementation status points to the approved review and Part 1", () => {
   const status = fs.readFileSync(statusPath, "utf8");
   assert.match(status, /A3-ROLE-MANAGEMENT-CONTRACT-REVIEW-001/);
   assert.match(status, /A3 role replacement\/deactivation contract review APPROVED/i);
-  assert.match(status, /NEXT: Warehouse QC assignment contract review/);
+  assert.match(status, /NEXT: Owner approval of the Shipping assignment decision table/);
 });
 
 test("Part 1 implementation contract stays write-disabled and hands off to Part 2", () => {
@@ -54,7 +54,7 @@ test("Part 1 implementation contract stays write-disabled and hands off to Part 
     "SUSPENDED",
     "IDEMPOTENCY_CONFLICT",
     "No reactivation action",
-    "NEXT: Warehouse QC assignment contract review",
+    "NEXT: Owner approval of the Shipping assignment decision table",
   ]) {
     assert.ok(contract.includes(required), `${required} missing`);
   }
@@ -75,7 +75,7 @@ test("Part 2B records the open-work coverage gap without enabling deactivation",
     "Fulfillment, QC, shipping, returns",
     "coverage_gaps",
     "database boundary remains `BLOCKED`",
-    "NEXT: Warehouse QC assignment contract review",
+    "NEXT: Owner approval of the Shipping assignment decision table",
   ]) {
     assert.ok(predicate.includes(required), `${required} missing`);
   }
@@ -98,7 +98,7 @@ test("Fulfillment assignment records approval and its implemented boundary", () 
     "Owner approval",
     "20260728135454_a3_fulfillment_assignment_boundary.sql",
     "api_assign_fulfillment",
-    "Proceed with the next approved assignment domain: Warehouse QC.",
+    "Proceed with the next approved assignment domain: Shipping.",
   ]) {
     assert.ok(contract.includes(required), `${required} missing`);
   }

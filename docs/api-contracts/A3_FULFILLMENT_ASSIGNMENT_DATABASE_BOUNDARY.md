@@ -21,4 +21,4 @@
 
 `supabase/validation/025_fulfillment_assignment_boundary_test.sql` covers assignment, idempotent retry, reassignment, direct-write denial, persisted assignee state, audit evidence, and deactivation blocking from unassigned open work.
 
-**NEXT:** Warehouse QC assignment contract review.
+**NEXT:** Owner approval of the Shipping assignment decision table.

@@ -136,4 +136,4 @@ Part 2 may implement the guarded database boundary only after confirming:
 PART 2A COMPLETE: role replacement database boundary implemented and validated.
 PART 2B COMPLETE: approved open-work predicate and guarded deactivation boundary implemented; ACTIVE members remain blocked while coverage gaps exist.
 
-NEXT: Warehouse QC assignment contract review.
+NEXT: Owner approval of the Shipping assignment decision table.

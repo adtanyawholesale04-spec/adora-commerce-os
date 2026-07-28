@@ -31,6 +31,11 @@ runSqlSuite([
     file: "supabase/validation/025_fulfillment_assignment_boundary_test.sql",
     requiredRows: ["fulfillment_assignment_boundary|pass"],
   },
+  {
+    name: "warehouse_qc_assignment_boundary",
+    file: "supabase/validation/026_warehouse_qc_assignment_boundary_test.sql",
+    requiredRows: ["warehouse_qc_assignment_boundary|pass"],
+  },
 ]);
 
 console.log("member_role_management_suite pass");

@@ -21,7 +21,7 @@ It does not provide an approved member assignment field or relation for:
 
 The current deactivation RPC therefore blocks `ACTIVE -> SUSPENDED` when these coverage gaps exist. This preserves the approved safety policy without claiming that unassigned operational work has been checked.
 
-Fulfillment-specific contract review is recorded in `A3_FULFILLMENT_ASSIGNMENT_CONTRACT_REVIEW.md` and is now approved and implemented. QC, Shipping, and Returns remain uncovered until their assignment contracts are approved.
+Fulfillment and Warehouse QC contract reviews are now approved and implemented. Shipping and Returns remain uncovered until their assignment contracts are approved.
 
 ## Decisions required
 
@@ -58,4 +58,4 @@ Each domain exposes a guarded read function that answers whether a profile has b
 
 No new assignment table, column, role, permission, status, or migration is authorized by this review. Part 2B remains safely guarded: known open work blocks deactivation, and unknown assignment coverage also blocks deactivation.
 
-NEXT: Warehouse QC assignment contract review.
+NEXT: Owner approval of the Shipping assignment decision table.

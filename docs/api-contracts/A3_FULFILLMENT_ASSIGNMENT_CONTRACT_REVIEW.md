@@ -56,4 +56,4 @@ After approval, implement and validate assign, reassign, and any allowed clear-a
 
 Implemented in `20260728135454_a3_fulfillment_assignment_boundary.sql` with `fulfillments.assigned_profile_id`, a membership-scoped foreign key, guarded `api_assign_fulfillment`, restricted direct updates, audit/idempotency, and Fulfillment coverage in `api_deactivate_member`.
 
-**NEXT:** Proceed with the next approved assignment domain: Warehouse QC.
+**NEXT:** Proceed with the next approved assignment domain: Shipping.
