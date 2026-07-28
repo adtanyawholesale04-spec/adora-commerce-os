@@ -106,6 +106,11 @@ runSqlSuite([
     file: "supabase/validation/038_customer_portal_read_snapshot_boundary_test.sql",
     requiredRows: ["customer_portal_read_snapshot_boundary|pass"],
   },
+  {
+    name: "customer_portal_address_guarded_actions",
+    file: "supabase/validation/039_customer_portal_address_guarded_actions_test.sql",
+    requiredRows: ["customer_portal_address_guarded_actions|pass"],
+  },
 ]);
 
 runNpmScript("validate:carrier-webhook-e2e");

@@ -26,6 +26,7 @@
     "validate:customer-profile-ownership-boundary": "node supabase/validation/customer-profile-ownership-boundary-suite.mjs",
     "validate:customer-profile-link-guarded-actions": "node supabase/validation/customer-profile-link-guarded-actions-suite.mjs",
     "validate:customer-portal-read-snapshot": "node supabase/validation/customer-portal-read-snapshot-suite.mjs",
+    "validate:customer-portal-address-guarded-actions": "node supabase/validation/customer-portal-address-guarded-actions-suite.mjs",
     "validate:supabase": "npm run validate:supabase-security && npm run validate:supabase-workflows && npm run validate:commerce-integration"
   },
   "dependencies": {
