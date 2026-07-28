@@ -121,6 +121,11 @@ runSqlSuite([
     file: "supabase/validation/041_customer_portal_verified_contact_notification_test.sql",
     requiredRows: ["customer_portal_verified_contact_notification|pass"],
   },
+  {
+    name: "customer_portal_auth_admin_apply",
+    file: "supabase/validation/042_customer_portal_auth_admin_apply_boundary_test.sql",
+    requiredRows: ["customer_portal_auth_admin_apply|pass"],
+  },
 ]);
 
 runNpmScript("validate:carrier-webhook-e2e");
