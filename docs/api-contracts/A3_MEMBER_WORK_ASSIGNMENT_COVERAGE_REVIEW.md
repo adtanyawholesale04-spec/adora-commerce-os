@@ -54,4 +54,4 @@ Each domain exposes a guarded read function that answers whether a profile has b
 
 No shared assignment table or new role is required. Domain-local assignment boundaries are implemented for all four approved domains. Known assigned and unassigned open work blocks deactivation; with no blocking work and no coverage gaps, the guarded transition may proceed with audit/idempotency protection.
 
-NEXT: Final Part 2C status reconciliation, then Track B Business Rule Review.
+NEXT: Track B Business Rule Review.

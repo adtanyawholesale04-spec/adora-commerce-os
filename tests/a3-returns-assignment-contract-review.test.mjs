@@ -31,5 +31,5 @@ test("Returns implementation is ready after Owner approval", () => {
   const status = fs.readFileSync(statusPath, "utf8");
   assert.match(review, /Owner approval.*Recorded/);
   assert.match(status, /A3-RETURNS-ASSIGNMENT-001.*APPROVED/);
-  assert.match(status, /NEXT: Final Part 2C status reconciliation, then Track B Business Rule Review/);
+  assert.match(status, /NEXT: Track B Business Rule Review/);
 });

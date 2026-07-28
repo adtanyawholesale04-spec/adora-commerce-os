@@ -80,4 +80,4 @@ If `blocking_work_found` is true, return `OPEN_WORK_BLOCKS_DEACTIVATION`. If `co
 
 No function, migration, deactivation RPC, or UI enablement is added by this design artifact. The database boundary remains `BLOCKED` until the coverage policy is approved and the predicate can be implemented without inventing ownership semantics.
 
-NEXT: Final Part 2C status reconciliation, then Track B Business Rule Review.
+NEXT: Track B Business Rule Review.

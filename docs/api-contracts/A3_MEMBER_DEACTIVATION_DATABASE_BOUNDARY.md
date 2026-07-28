@@ -1,7 +1,7 @@
 # A3 Member Deactivation Database Boundary
 
 **Task ID:** `A3-MEMBER-DEACTIVATION-DATABASE-BOUNDARY-001`  
-**Status:** `IMPLEMENTED`  
+**Status:** `VALIDATED`
 **Migration:** `supabase/migrations/20260728133224_a3_member_deactivation_boundary.sql`
 
 ## Delivered
@@ -26,4 +26,4 @@
 
 The boundary is implemented, but an `ACTIVE -> SUSPENDED` transition will remain blocked until the remaining operational assignment domains have canonical coverage.
 
-NEXT: Final Part 2C status reconciliation, then Track B Business Rule Review.
+NEXT: Track B Business Rule Review.

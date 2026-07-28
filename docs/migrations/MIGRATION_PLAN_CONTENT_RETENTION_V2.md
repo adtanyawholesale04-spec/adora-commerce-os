@@ -5,7 +5,7 @@
 **Short Name:** ACOS  
 **Repository Slug:** `adora-commerce-os`  
 **Document:** `MIGRATION_PLAN_CONTENT_RETENTION_V2.md`  
-**Status:** READY FOR SQL DRAFTING AFTER REPOSITORY VERIFICATION  
+**Status:** MIGRATION 035 VALIDATED; NEXT MIGRATION CONTRACT REQUIRED
 **Track:** Track B — Customer Engagement Platform  
 **Depends On:**  
 - `ACOS_AI_CODING_CONSTITUTION.md`
@@ -358,7 +358,7 @@ Validation after everything exists
 
 # 5. Migration 035 — Content Core
 
-**File:** `035_content_core.sql`
+**File:** `20260728161057_content_core_035.sql`
 
 ## Purpose
 
@@ -367,7 +367,7 @@ Validation after everything exists
 ```text
 content_posts
 content_product_links
-content_promotion_links
+content_promotion_links deferred until promotions master is verified
 content_live_links
 ```
 
@@ -376,8 +376,8 @@ content_live_links
 ```text
 content_posts
 content_product_links
-content_promotion_links
 content_live_links
+content_promotion_links deferred until promotions master is verified
 ```
 
 ## Depends On Core Tables
@@ -387,7 +387,7 @@ organizations
 users/profiles
 products
 product_variants
-promotions/coupons
+coupons; promotions not present in verified repository
 live_sessions optional
 ```
 
@@ -439,7 +439,7 @@ Reject invalid product FK
 
 # 6. Migration 036 — Content Media
 
-**File:** `036_content_media.sql`
+**File:** `20260728162156_content_media_036.sql`
 
 ## Purpose
 
@@ -1087,7 +1087,7 @@ existing membership model
 content_posts
 content_media
 content_product_links
-content_promotion_links
+content_promotion_links deferred until promotions master is verified
 content_live_links
 
 merchant_follows
@@ -1523,7 +1523,7 @@ MIGRATION_PLAN_CONTENT_RETENTION_V2.md:
 READY FOR SQL DRAFTING AFTER REPOSITORY VERIFICATION
 
 ENG-DB-035 to ENG-DB-044:
-READY AFTER REPOSITORY VERIFICATION
+READY AFTER MIG-PLAN-001
 
 ENG-DB-046 RLS:
 READY AFTER TABLE MIGRATIONS
@@ -1531,8 +1531,8 @@ READY AFTER TABLE MIGRATIONS
 ENG-DB-047 permissions:
 READY AFTER PERMISSION PATTERN VERIFICATION
 
-Current Blocker:
-Core repository schema verification not yet done
+Repository verification:
+MIG-PLAN-001 VALIDATED on 2026-07-28; see `MIGRATION_PLAN_REPOSITORY_VERIFICATION_2026-07-28.md`
 ```
 
 ---
@@ -1573,20 +1573,19 @@ return STATUS: BLOCKED and identify the required decision.
 
 ```text
 Business Rules:
-APPROVED FOR ER V2 DESIGN
+FROZEN FOR ER V2 / MIGRATION PLANNING
 
 ER V2:
 FROZEN FOR MIGRATION PLANNING
 
 Migration Plan V2:
-READY FOR SQL DRAFTING AFTER REPOSITORY VERIFICATION
+MIGRATION 035 VALIDATED; NEXT MIGRATION CONTRACT REQUIRED
 
 Next Required Work:
-MIG-PLAN-001
-Verify repository migration baseline and exact core schema names
+Prepare and review the `ENG-DB-036` Content Media migration contract
 
 Then:
-Generate migration 035 one file at a time
+Generate the next actual timestamped migration one file at a time after approval
 ```
 
 ---

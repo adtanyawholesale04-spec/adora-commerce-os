@@ -18,4 +18,4 @@
 
 The focused SQL validation covers initial assignment, idempotent retry, reassignment, terminal-status denial, direct-write denial, unassigned Returns deactivation blocking, persisted assignee, and audit evidence. Fresh replay, security/RLS validation, workflow regression, commerce integration, typecheck, lint, and the full test suite all pass.
 
-**NEXT:** Final Part 2C status reconciliation, then Track B Business Rule Review.
+**NEXT:** Track B Business Rule Review.

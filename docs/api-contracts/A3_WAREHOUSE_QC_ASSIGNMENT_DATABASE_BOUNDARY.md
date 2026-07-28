@@ -1,7 +1,7 @@
 # A3 Warehouse QC Assignment Database Boundary
 
 **Task ID:** `A3-WAREHOUSE-QC-ASSIGNMENT-001`  
-**Status:** `IMPLEMENTED`  
+**Status:** `VALIDATED`
 **Migration:** `supabase/migrations/20260728143613_a3_warehouse_qc_assignment_boundary.sql`
 
 ## Delivered boundary

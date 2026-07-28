@@ -5,7 +5,7 @@
 **Short Name:** ACOS  
 **Repository Slug:** `adora-commerce-os`  
 **Document:** `BUSINESS_RULES_CONTENT_RETENTION_V1.md`  
-**Status:** APPROVED FOR ER V2 DESIGN  
+**Status:** FROZEN FOR ER V2 / MIGRATION PLANNING
 **Track:** Track B — Customer Engagement Platform  
 **Scope:** Content, Media, Follow, Interest, Customer Feed, Consent, Suppression, Retention, Audience, Campaign, Messaging, Attribution, Usage/Quota  
 **Out of Scope V1:** Native video hosting, social graph, public comments, customer-to-customer DM, creator marketplace, ML recommendation, automation engine production release
@@ -1947,7 +1947,7 @@ After this file is accepted:
 
 ```text
 Business Rules:
-APPROVED FOR ER V2 DESIGN
+FROZEN FOR ER V2 / MIGRATION PLANNING
 
 Next:
 ER_DIAGRAM_V2_CONTENT_RETENTION.md
@@ -1987,7 +1987,7 @@ Do not invent rules silently
 
 | Version | Date | Status | Notes |
 |---|---|---|---|
-| V1 | 2026-07-27 | APPROVED FOR ER V2 DESIGN | Initial Content + Customer Feed + Retention business rules |
+| V1 | 2026-07-28 | FROZEN FOR ER V2 / MIGRATION PLANNING | Owner freeze confirmation; initial Content + Customer Feed + Retention business rules |
 
 ---
 

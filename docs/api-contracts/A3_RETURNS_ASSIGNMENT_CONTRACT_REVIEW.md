@@ -72,4 +72,4 @@ This approval authorizes the implementation design handoff. It does not itself a
 
 ## 6. Next Step
 
-**NEXT: Final Part 2C status reconciliation, then Track B Business Rule Review.**
+**NEXT: Track B Business Rule Review.**

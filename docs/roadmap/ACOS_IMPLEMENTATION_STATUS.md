@@ -109,7 +109,13 @@ Track B Customer Engagement Platform
 | AI Coding Constitution | `docs/governance/ACOS_AI_CODING_CONSTITUTION.md` | APPROVED | Mandatory AI execution rules |
 | Master Development Roadmap | `docs/roadmap/ACOS_MASTER_DEVELOPMENT_ROADMAP_V2.md` | APPROVED | Master execution map |
 | Implementation Status | `docs/roadmap/ACOS_IMPLEMENTATION_STATUS.md` | ACTIVE | This file |
-| Status Reconciliation Audit | `docs/roadmap/ACOS_STATUS_RECONCILIATION_AUDIT.md` | ACTIVE | Drift audit between repository evidence and this status file |
+| Status Reconciliation Audit | `docs/roadmap/ACOS_STATUS_RECONCILIATION_AUDIT.md` | PART 2C RECONCILED | Drift audit between repository evidence and this status file |
+| Track B Business Rule Review 2026-07-28 | `docs/roadmap/ACOS_TRACK_B_BUSINESS_RULE_REVIEW_2026-07-28.md` | FROZEN | Documents rule coverage, Owner freeze confirmation, repository verification checkpoint, and implementation guardrails |
+| MIG-PLAN-001 Repository Verification 2026-07-28 | `docs/migrations/MIGRATION_PLAN_REPOSITORY_VERIFICATION_2026-07-28.md` | VALIDATED | Verified current migration history, Core schema conventions, RLS helpers, permission seed pattern, and timestamp rule |
+| Track B Content Core Migration Contract Review | `docs/api-contracts/A3_TRACK_B_CONTENT_CORE_MIGRATION_CONTRACT_REVIEW.md` | VALIDATED | Owner decisions recorded; migration 035 replay and security boundary validation passed |
+| Migration 035 Content Core Validation 2026-07-28 | `docs/migrations/MIGRATION_035_CONTENT_CORE_VALIDATION_2026-07-28.md` | VALIDATED | Fresh local replay, RLS, FK, constraint, and direct-role denial checks passed |
+| Track B Content Media Migration Contract Review | `docs/api-contracts/A3_TRACK_B_CONTENT_MEDIA_MIGRATION_CONTRACT_REVIEW.md` | VALIDATED | Owner decisions recorded; migration 036 replay and security boundary validation passed |
+| Migration 036 Content Media Validation 2026-07-28 | `docs/migrations/MIGRATION_036_CONTENT_MEDIA_VALIDATION_2026-07-28.md` | VALIDATED | Fresh local replay, metadata checks, RLS, FK, orphan index, and direct-role denial checks passed |
 | Supabase Migration Replay Protocol | `docs/migrations/SUPABASE_MIGRATION_REPLAY_PROTOCOL.md` | ACTIVE | Defines baseline/full replay evidence layers |
 | Supabase Migration Replay Report 2026-07-27 | `docs/migrations/SUPABASE_MIGRATION_REPLAY_REPORT_2026-07-27.md` | VALIDATED | Fresh local replay and security/workflow gates passed |
 | Project Blueprint V13 | `reference/PROJECT_BLUEPRINT_V13.md` | APPROVED | Commerce Core baseline |
@@ -133,12 +139,12 @@ Track B Customer Engagement Platform
 | A3 Role Replacement / Deactivation Implementation Contract | `docs/api-contracts/A3_ROLE_REPLACEMENT_DEACTIVATION_IMPLEMENTATION_CONTRACT.md` | IMPLEMENTED | Defines server-only request envelopes, guards, transaction order, idempotency, audit actions, controlled errors, suspension semantics, and Part 2 database handoff gates without enabling writes |
 | A3 Role Replacement Database Boundary | `docs/api-contracts/A3_ROLE_REPLACEMENT_DATABASE_BOUNDARY.md` | IMPLEMENTED | Adds `api_replace_member_role` in migration `20260728120110_a3_role_replacement_boundary.sql`; fresh replay and focused role-management validation passed |
 | A3 Membership Deactivation Open-Work Predicate | `docs/api-contracts/A3_MEMBER_DEACTIVATION_OPEN_WORK_PREDICATE.md` | APPROVED | Owner approved known assigned work plus coverage-gap blocking policy |
-| A3 Member Deactivation Database Boundary | `docs/api-contracts/A3_MEMBER_DEACTIVATION_DATABASE_BOUNDARY.md` | IMPLEMENTED | Adds `api_deactivate_member` with open-work checks, coverage-gap blocking, suspended retry handling, role retention, audit, and restricted execute grants |
+| A3 Member Deactivation Database Boundary | `docs/api-contracts/A3_MEMBER_DEACTIVATION_DATABASE_BOUNDARY.md` | VALIDATED | Adds `api_deactivate_member` with open-work checks, coverage-gap blocking, suspended retry handling, role retention, audit, restricted execute grants, and closed assignment coverage gaps |
 | A3 Member Work Assignment Coverage Review | `docs/api-contracts/A3_MEMBER_WORK_ASSIGNMENT_COVERAGE_REVIEW.md` | VALIDATED | Fulfillment, Warehouse QC, Shipping, and Returns assignment sources are validated; deactivation coverage gaps are closed |
 | A3 Fulfillment Assignment Contract Review | `docs/api-contracts/A3_FULFILLMENT_ASSIGNMENT_CONTRACT_REVIEW.md` | APPROVED | Owner approved one fulfillment-level active assignee, existing warehouse.pick permission, blocking statuses, unassigned-work guard, audit/idempotency, and forward migration |
-| A3 Fulfillment Assignment Database Boundary | `docs/api-contracts/A3_FULFILLMENT_ASSIGNMENT_DATABASE_BOUNDARY.md` | IMPLEMENTED | Adds membership-scoped assignee, guarded assign/reassign RPC, direct-write denial, audit/idempotency, and Fulfillment deactivation coverage |
+| A3 Fulfillment Assignment Database Boundary | `docs/api-contracts/A3_FULFILLMENT_ASSIGNMENT_DATABASE_BOUNDARY.md` | VALIDATED | Adds membership-scoped assignee, guarded assign/reassign RPC, direct-write denial, audit/idempotency, and Fulfillment deactivation coverage; validation gates pass |
 | A3 Warehouse QC Assignment Contract Review | `docs/api-contracts/A3_WAREHOUSE_QC_ASSIGNMENT_CONTRACT_REVIEW.md` | APPROVED | Owner approved QC-session assignee, blocking statuses, independent QC ownership, warehouse.qc guard, unassigned-work block, audit/idempotency, and forward migration |
-| A3 Warehouse QC Assignment Database Boundary | `docs/api-contracts/A3_WAREHOUSE_QC_ASSIGNMENT_DATABASE_BOUNDARY.md` | IMPLEMENTED | Adds QC-session assignee, guarded assign/reassign RPC, direct-write denial, audit/idempotency, and QC deactivation coverage |
+| A3 Warehouse QC Assignment Database Boundary | `docs/api-contracts/A3_WAREHOUSE_QC_ASSIGNMENT_DATABASE_BOUNDARY.md` | VALIDATED | Adds QC-session assignee, guarded assign/reassign RPC, direct-write denial, audit/idempotency, and QC deactivation coverage; validation gates pass |
 | A3 Shipping Assignment Contract Review | `docs/api-contracts/A3_SHIPPING_ASSIGNMENT_CONTRACT_REVIEW.md` | APPROVED | Owner approved the shipment assignee model, blocking statuses, independent ownership, guarded RPC, audit/idempotency, and forward migration |
 | A3 Shipping Assignment Database Boundary | `docs/api-contracts/A3_SHIPPING_ASSIGNMENT_DATABASE_BOUNDARY.md` | VALIDATED | Adds shipment assignee, guarded assign/reassign RPC, direct-write denial, audit/idempotency, and Shipping deactivation coverage; replay and regression gates passed |
 | A3 Returns Assignment Contract Review | `docs/api-contracts/A3_RETURNS_ASSIGNMENT_CONTRACT_REVIEW.md` | APPROVED | Owner approved the return assignee model, blocking statuses, return.manage boundary, audit/idempotency, and forward migration |
@@ -400,42 +406,42 @@ No UI, schema, migration, role, permission, status, or financial rule implementa
 Current Gate:
 
 ```text
-NEXT REQUIRED WORK
+VALIDATED
 ```
 
 | Task ID | Rule Area | Status | Notes |
 |---|---|---:|---|
-| CONTENT-BR-001 | Content types and lifecycle | NOT_STARTED | Draft / Scheduled / Published / Archived |
-| CONTENT-BR-002 | Content visibility rules | NOT_STARTED | Public / follower / member / segment |
-| CONTENT-BR-003 | Product-linked content rules | NOT_STARTED | Product references only; no duplicate catalog |
-| MEDIA-BR-001 | Media upload limits | NOT_STARTED | File type, size, quota, processing |
+| CONTENT-BR-001 | Content types and lifecycle | APPROVED | Draft / Scheduled / Published / Archived |
+| CONTENT-BR-002 | Content visibility rules | APPROVED | Public / follower / member / segment |
+| CONTENT-BR-003 | Product-linked content rules | APPROVED | Product references only; no duplicate catalog |
+| MEDIA-BR-001 | Media upload limits | APPROVED | File type, size, quota, processing |
 | MEDIA-BR-002 | Native video policy | DEFERRED | V1 should not host video directly |
-| FOLLOW-BR-001 | Merchant follow semantics | NOT_STARTED | Follow / unfollow / block |
-| INTEREST-BR-001 | Customer interest topics | NOT_STARTED | Category/interest model |
-| FEED-BR-001 | Feed ranking V1 rules | NOT_STARTED | Deterministic first |
-| FEED-BR-002 | Feed event tracking policy | NOT_STARTED | Event type and retention |
-| CONSENT-BR-001 | Consent channels | NOT_STARTED | LINE / SMS / Email / Phone |
-| CONSENT-BR-002 | Consent purposes | NOT_STARTED | Promotion / Live / Order / Loyalty |
-| CONSENT-BR-003 | Consent revoke behavior | NOT_STARTED | Must block dispatch |
-| SUPPRESSION-BR-001 | Suppression list rules | NOT_STARTED | Bounce, unsubscribe, block |
-| RETENTION-BR-001 | RFM calculation rules | NOT_STARTED | Recency/Frequency/Monetary |
-| RETENTION-BR-002 | Customer segment definitions | NOT_STARTED | Champion / Loyal / At Risk |
-| AUDIENCE-BR-001 | Segment rule model | NOT_STARTED | Static/dynamic |
-| AUDIENCE-BR-002 | Audience snapshot behavior | NOT_STARTED | Freeze recipients |
-| CAMPAIGN-BR-001 | Campaign lifecycle | NOT_STARTED | Draft/Scheduled/Running/etc. |
-| CAMPAIGN-BR-002 | Campaign cancellation/retry | NOT_STARTED | Required before dispatch |
-| MSG-BR-001 | Channel dispatch priority | NOT_STARTED | LINE/SMS/Email |
-| MSG-BR-002 | Provider failure handling | NOT_STARTED | Retry/dead-letter |
-| ATTR-BR-001 | Attribution window | NOT_STARTED | Click/order mapping |
-| ATTR-BR-002 | ROI calculation | NOT_STARTED | Revenue/cost definition |
-| USAGE-BR-001 | Quota and metered usage | NOT_STARTED | Customer/message/storage/events |
+| FOLLOW-BR-001 | Merchant follow semantics | APPROVED | Follow / unfollow / block |
+| INTEREST-BR-001 | Customer interest topics | APPROVED | Category/interest model |
+| FEED-BR-001 | Feed ranking V1 rules | APPROVED | Deterministic first |
+| FEED-BR-002 | Feed event tracking policy | APPROVED | Event type and retention |
+| CONSENT-BR-001 | Consent channels | APPROVED | LINE / SMS / Email / Phone |
+| CONSENT-BR-002 | Consent purposes | APPROVED | Promotion / Live / Order / Loyalty |
+| CONSENT-BR-003 | Consent revoke behavior | APPROVED | Must block dispatch |
+| SUPPRESSION-BR-001 | Suppression list rules | APPROVED | Bounce, unsubscribe, block |
+| RETENTION-BR-001 | RFM calculation rules | APPROVED | Recency/Frequency/Monetary |
+| RETENTION-BR-002 | Customer segment definitions | APPROVED | Champion / Loyal / At Risk |
+| AUDIENCE-BR-001 | Segment rule model | APPROVED | Static/dynamic |
+| AUDIENCE-BR-002 | Audience snapshot behavior | APPROVED | Freeze recipients |
+| CAMPAIGN-BR-001 | Campaign lifecycle | APPROVED | Draft/Scheduled/Running/etc. |
+| CAMPAIGN-BR-002 | Campaign cancellation/retry | APPROVED | Required before dispatch |
+| MSG-BR-001 | Channel dispatch priority | APPROVED | LINE/SMS/Email |
+| MSG-BR-002 | Provider failure handling | APPROVED | Retry/dead-letter |
+| ATTR-BR-001 | Attribution window | APPROVED | Click/order mapping |
+| ATTR-BR-002 | ROI calculation | APPROVED | Revenue/cost definition |
+| USAGE-BR-001 | Quota and metered usage | APPROVED | Customer/message/storage/events |
 | AUTO-BR-001 | Automation trigger policy | DEFERRED | Do after manual campaign stable |
 
 ### Gate B1
 
 ```text
 Status:
-NOT_PASSED
+IN_REVIEW
 
 Required Output:
 BUSINESS_RULES_CONTENT_RETENTION_V1.md
@@ -450,27 +456,27 @@ BLOCKED UNTIL APPROVED
 
 | Task ID | Area | Status | Notes |
 |---|---|---:|---|
-| ENG-ER-001 | Content tables | PROPOSED | Waiting B1 |
-| ENG-ER-002 | Media tables | PROPOSED | Waiting B1 |
-| ENG-ER-003 | Follow / Interest tables | PROPOSED | Waiting B1 |
-| ENG-ER-004 | Consent tables | PROPOSED | Waiting B1 |
-| ENG-ER-005 | Audience tables | PROPOSED | Waiting B1 |
-| ENG-ER-006 | Retention metrics tables | PROPOSED | Waiting B1 |
-| ENG-ER-007 | Campaign tables | PROPOSED | Waiting B1 |
-| ENG-ER-008 | Messaging tables | PROPOSED | Waiting B1 |
-| ENG-ER-009 | Event / Attribution tables | PROPOSED | Waiting B1 |
-| ENG-ER-010 | RLS review | NOT_STARTED | Waiting ER freeze |
-| ENG-ER-011 | Index review | NOT_STARTED | Waiting ER freeze |
-| ENG-ER-012 | Retention/partition review | NOT_STARTED | Waiting event rules |
+| ENG-ER-001 | Content tables | VALIDATED | Frozen for migration planning |
+| ENG-ER-002 | Media tables | VALIDATED | Frozen for migration planning |
+| ENG-ER-003 | Follow / Interest tables | VALIDATED | Frozen for migration planning |
+| ENG-ER-004 | Consent tables | VALIDATED | Frozen for migration planning |
+| ENG-ER-005 | Audience tables | VALIDATED | Frozen for migration planning |
+| ENG-ER-006 | Retention metrics tables | VALIDATED | Frozen for migration planning |
+| ENG-ER-007 | Campaign tables | VALIDATED | Frozen for migration planning |
+| ENG-ER-008 | Messaging tables | VALIDATED | Frozen for migration planning |
+| ENG-ER-009 | Event / Attribution tables | VALIDATED | Frozen for migration planning |
+| ENG-ER-010 | RLS review | READY | Required in migration planning verification |
+| ENG-ER-011 | Index review | READY | Required in migration planning verification |
+| ENG-ER-012 | Retention/partition review | READY | Required in migration planning verification |
 
 ### Gate B2
 
 ```text
 Status:
-NOT_PASSED
+VALIDATED
 
 Implementation:
-BLOCKED UNTIL BUSINESS RULES APPROVED
+READY AFTER MIG-PLAN-001 REPOSITORY VERIFICATION
 ```
 
 ---
@@ -479,25 +485,26 @@ BLOCKED UNTIL BUSINESS RULES APPROVED
 
 | Task ID | Migration Area | Status | Notes |
 |---|---|---:|---|
-| ENG-DB-035 | Content core migration | BLOCKED | Requires B1/B2 |
-| ENG-DB-036 | Follow / interest migration | BLOCKED | Requires B1/B2 |
-| ENG-DB-037 | Consent migration | BLOCKED | Requires B1/B2 |
-| ENG-DB-038 | Audience migration | BLOCKED | Requires B1/B2 |
-| ENG-DB-039 | Retention metrics migration | BLOCKED | Requires B1/B2 |
-| ENG-DB-040 | Campaign migration | BLOCKED | Requires B1/B2 |
-| ENG-DB-041 | Messaging dispatch migration | BLOCKED | Requires B1/B2 |
-| ENG-DB-042 | Events / attribution migration | BLOCKED | Requires B1/B2 |
-| ENG-DB-043 | Index / performance migration | BLOCKED | Requires B1/B2 |
-| ENG-DB-044 | RLS / permission seed migration | BLOCKED | Requires B1/B2 |
+| MIG-PLAN-001 | Repository verification | VALIDATED | Core schema, RLS, permission, and migration conventions verified on 2026-07-28 |
+| ENG-DB-035 | Content core migration | VALIDATED | `A3_TRACK_B_CONTENT_CORE_MIGRATION_CONTRACT_REVIEW.md`; migration `20260728161057_content_core_035.sql` replayed and validated |
+| ENG-DB-036 | Content Media migration | VALIDATED | `A3_TRACK_B_CONTENT_MEDIA_MIGRATION_CONTRACT_REVIEW.md`; migration `20260728162156_content_media_036.sql` replayed and validated |
+| ENG-DB-037 | Consent migration | READY | After migration dependency review |
+| ENG-DB-038 | Audience migration | READY | After Follow/Interest and Retention dependencies |
+| ENG-DB-039 | Retention metrics migration | READY | After verified Orders read contract |
+| ENG-DB-040 | Campaign migration | READY | After Audience and Content dependencies |
+| ENG-DB-041 | Messaging dispatch migration | READY | After Campaign and provider contract review |
+| ENG-DB-042 | Events / attribution migration | READY | After event and attribution dependency review |
+| ENG-DB-043 | Index / performance migration | READY | After table migrations and high-volume review |
+| ENG-DB-044 | RLS / permission seed migration | READY | After table contracts and permission review |
 
 ### Gate B3
 
 ```text
 Status:
-BLOCKED
+READY
 
 Reason:
-Business Rules and ER V2 are not frozen.
+MIG-PLAN-001 repository verification passed; each migration still requires its own contract review and validation gate.
 ```
 
 ---
@@ -880,9 +887,9 @@ All schema-impacting rules are APPROVED or DEFERRED
 
 | Blocker ID | Affected Area | Description | Required Decision |
 |---|---|---|---|
-| BLK-002 | Track B | Business Rules Content/Retention not frozen | Conduct review |
-| BLK-003 | Track B | ER V2 not frozen | Wait for business rule approval |
-| BLK-004 | Track B | Migration 035+ not generated | Wait for ER freeze |
+| BLK-002 | Track B | Business Rules Content/Retention freeze confirmation | Owner confirmed 2026-07-28; B1 validated |
+| BLK-003 | Track B | ER V2 freeze confirmation | Owner confirmed 2026-07-28; B2 validated |
+| BLK-004 | Track B | Migration 035+ not generated | MIG-PLAN-001 passed; prepare the first migration contract |
 | BLK-005 | Messaging | Provider contract not frozen | Decide LINE/SMS/Email integration strategy |
 | BLK-006 | Cost | Plan/quota/commercial rules not frozen | Decide pricing/usage model later |
 | BLK-007 | Media | Object storage provider not finalized | Decide Supabase Storage vs Cloudflare R2 strategy |
@@ -1050,12 +1057,14 @@ PART 1 COMPLETE: implementation contract recorded without enabling writes
 PART 2A COMPLETE: role replacement database boundary implemented and validated
 PART 2B COMPLETE: approved open-work predicate and guarded deactivation boundary implemented
 OPERATIONAL GUARD: ACTIVE -> SUSPENDED is allowed only when assigned/unassigned blocking work is absent and coverage gaps are empty
-PART 2C COMPLETE: Fulfillment, Warehouse QC, Shipping, and Returns assignment coverage validated; deactivation coverage gaps are closed
-NEXT: Final Part 2C status reconciliation, then Track B Business Rule Review
+PART 2C RECONCILED: Fulfillment, Warehouse QC, Shipping, and Returns assignment boundaries and deactivation coverage are validated; no coverage gaps remain
+NEXT: Track B Business Rule Review
 
 Track B Customer Engagement:
 ARCHITECTURE DIRECTION APPROVED
-NEXT: Business Rule Review
+BUSINESS RULES V1 FROZEN
+ER V2 FROZEN FOR MIGRATION PLANNING
+NEXT: ENG-DB-037 Follow / Interest migration contract review
 
 Implementation:
 CONTROLLED START

@@ -1,7 +1,7 @@
 # A3 Fulfillment Assignment Database Boundary
 
 **Task ID:** `A3-FULFILLMENT-ASSIGNMENT-001`  
-**Status:** `IMPLEMENTED`  
+**Status:** `VALIDATED`
 **Migration:** `supabase/migrations/20260728135454_a3_fulfillment_assignment_boundary.sql`
 
 ## Delivered boundary
