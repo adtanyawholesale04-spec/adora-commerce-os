@@ -129,6 +129,14 @@ Track B Customer Engagement Platform
 | A3 Member Role Assignment UI Submit Enablement | `docs/api-contracts/A3_MEMBER_ROLE_ASSIGNMENT_UI_SUBMIT_ENABLEMENT.md` | IMPLEMENTED | `/admin/users` enables permission-aware member role assignment submit through the guarded server action, active member/active non-system role filtering, duplicate affordance suppression, result handling, and read model revalidation |
 | A3 Member Role Removal Guarded Action Boundary | `docs/api-contracts/A3_MEMBER_ROLE_REMOVAL_GUARDED_ACTION_BOUNDARY.md` | IMPLEMENTED | Adds guarded `admin.member.role.remove.request` server boundary and `api_remove_member_role` RPC for active non-system role removal from active memberships, with `members.manage`, tenant validation, already-removed no-op auditing, self/system/last-role guards, and audit |
 | A3 Role Management End-to-End QA Report | `docs/testing/A3_ROLE_MANAGEMENT_E2E_QA_REPORT.md` | VALIDATED | Focused Docker-backed lifecycle gate covers assignment, role-derived permission grant/removal, current-state deletion, and append-only audit evidence |
+| A3 Role Replacement / Deactivation Contract Review | `docs/api-contracts/A3_ROLE_REPLACEMENT_DEACTIVATION_CONTRACT_REVIEW.md` | APPROVED | Owner approved the decision table: atomic one-role replacement, active non-system roles, self/owner/last-role guards, `SUSPENDED` deactivation, role retention, server-side membership checks, and separate reactivation contract |
+| A3 Role Replacement / Deactivation Implementation Contract | `docs/api-contracts/A3_ROLE_REPLACEMENT_DEACTIVATION_IMPLEMENTATION_CONTRACT.md` | IMPLEMENTED | Defines server-only request envelopes, guards, transaction order, idempotency, audit actions, controlled errors, suspension semantics, and Part 2 database handoff gates without enabling writes |
+| A3 Role Replacement Database Boundary | `docs/api-contracts/A3_ROLE_REPLACEMENT_DATABASE_BOUNDARY.md` | IMPLEMENTED | Adds `api_replace_member_role` in migration `20260728120110_a3_role_replacement_boundary.sql`; fresh replay and focused role-management validation passed |
+| A3 Membership Deactivation Open-Work Predicate | `docs/api-contracts/A3_MEMBER_DEACTIVATION_OPEN_WORK_PREDICATE.md` | APPROVED | Owner approved known assigned work plus coverage-gap blocking policy |
+| A3 Member Deactivation Database Boundary | `docs/api-contracts/A3_MEMBER_DEACTIVATION_DATABASE_BOUNDARY.md` | IMPLEMENTED | Adds `api_deactivate_member` with open-work checks, coverage-gap blocking, suspended retry handling, role retention, audit, and restricted execute grants |
+| A3 Member Work Assignment Coverage Review | `docs/api-contracts/A3_MEMBER_WORK_ASSIGNMENT_COVERAGE_REVIEW.md` | BLOCKED | Fulfillment/QC/Shipping/Returns have no approved member assignment source; owner must select a domain-local, shared, or workflow-owned coverage model |
+| A3 Fulfillment Assignment Contract Review | `docs/api-contracts/A3_FULFILLMENT_ASSIGNMENT_CONTRACT_REVIEW.md` | APPROVED | Owner approved one fulfillment-level active assignee, existing warehouse.pick permission, blocking statuses, unassigned-work guard, audit/idempotency, and forward migration |
+| A3 Fulfillment Assignment Database Boundary | `docs/api-contracts/A3_FULFILLMENT_ASSIGNMENT_DATABASE_BOUNDARY.md` | IMPLEMENTED | Adds membership-scoped assignee, guarded assign/reassign RPC, direct-write denial, audit/idempotency, and Fulfillment deactivation coverage |
 | CORE-UI-001 Admin Shell Contract | `docs/api-contracts/CORE_UI_001_ADMIN_APP_SHELL_RBAC_NAVIGATION.md` | IMPLEMENTED | Admin shell, auth entry, organization switcher, and permission-aware navigation contract |
 | CORE-UI-002 Products Read Contract | `docs/api-contracts/CORE_UI_002_PRODUCTS_READ_ONLY_SCREEN.md` | IMPLEMENTED | Read-only Products screen and server read model contract |
 | CORE-UI-DESIGN-001 Admin Visual System Pass | `docs/api-contracts/CORE_UI_DESIGN_001_ADMIN_VISUAL_SYSTEM_PASS.md` | IMPLEMENTED | Admin light/dark theme and Thai/English UI preference foundation |
@@ -328,6 +336,12 @@ No UI, schema, migration, role, permission, status, or financial rule implementa
 | A3-ACTION-ROLE-REMOVE-001 | Member role removal guarded action boundary | IMPLEMENTED | Adds `api_remove_member_role`, requires `members.manage`, removes one active non-system role from one active target membership, rejects self/system/inactive/cross-tenant/last-role removal, and audits removed and already-removed no-op requests |
 | A3-ACTION-ROLE-REMOVE-UI-001 | Member role removal UI affordance and submit enablement | IMPLEMENTED | Enables `/admin/users` removal submit through the guarded server action, filters active non-system assigned roles, blocks last-role removal in the UI, confirms the destructive action, surfaces result state, and revalidates the read model |
 | A3-ROLE-MANAGEMENT-E2E-QA-001 | Role management end-to-end QA and status reconciliation | VALIDATED | Supabase Docker gate verifies assignment -> role-derived permission -> removal -> permission removal -> current-state deletion -> append-only audit evidence; full workflow suite passed |
+| A3-ROLE-MANAGEMENT-CONTRACT-REVIEW-001 | Role replacement/deactivation contract review | APPROVED | Owner approval recorded; Part 1 implementation contract is now the next gate and no runtime write behavior is enabled by this approval |
+| A3-ROLE-MANAGEMENT-IMPLEMENTATION-CONTRACT-001 | Role replacement/deactivation implementation contract | IMPLEMENTED | Part 1 contract is complete; no migration, RPC, permission, role, status, or UI write behavior added |
+| A3-ROLE-REPLACEMENT-DATABASE-BOUNDARY-001 | Role replacement database boundary | IMPLEMENTED | Part 2A migration adds atomic one-role replacement with owner/self guards, idempotency, append-only audit, authenticated execute grant, and focused validation |
+| A3-MEMBER-DEACTIVATION-DATABASE-BOUNDARY-001 | Membership deactivation database boundary | IMPLEMENTED | Guarded RPC and validation are implemented; ACTIVE -> SUSPENDED remains operationally blocked by the approved coverage-gap policy until assignment coverage is added |
+| A3-MEMBER-WORK-ASSIGNMENT-COVERAGE-001 | Member work assignment coverage | BLOCKED | Requires owner selection of assignment model and domain open-status/reassignment rules before any protected core schema or migration change |
+| A3-FULFILLMENT-ASSIGNMENT-001 | Fulfillment assignment | IMPLEMENTED | Owner-approved forward migration adds fulfillment assignment boundary and validation 025; QC/Shipping/Returns remain future coverage gaps |
 
 ---
 
@@ -1020,7 +1034,14 @@ A3 MEMBER ROLE ASSIGNMENT GUARDED ACTION BOUNDARY IMPLEMENTED
 A3 MEMBER ROLE ASSIGNMENT UI SUBMIT ENABLEMENT IMPLEMENTED
 A3 MEMBER ROLE REMOVAL GUARDED ACTION BOUNDARY IMPLEMENTED
 A3 ROLE MANAGEMENT END-TO-END QA VALIDATED
-NEXT: A3 role replacement/deactivation contract review
+A3 ROLE REPLACEMENT/DEACTIVATION CONTRACT REVIEW APPROVED
+PART 0 COMPLETE: owner approval recorded for role replacement/deactivation decisions
+PART 1 COMPLETE: implementation contract recorded without enabling writes
+PART 2A COMPLETE: role replacement database boundary implemented and validated
+PART 2B COMPLETE: approved open-work predicate and guarded deactivation boundary implemented
+OPERATIONAL GUARD: ACTIVE -> SUSPENDED remains blocked until Fulfillment/QC/Shipping/Returns assignment coverage exists
+PART 2C IN PROGRESS: Fulfillment assignment coverage implemented; QC, Shipping, and Returns assignment coverage remain blocked pending their contracts
+NEXT: Warehouse QC assignment contract review
 
 Track B Customer Engagement:
 ARCHITECTURE DIRECTION APPROVED
@@ -1031,7 +1052,7 @@ CONTROLLED START
 
 Latest validation:
 Fresh local Supabase replay passed for migrations 001-latest at 2026-07-27.
-Focused A3 role-management Docker gate passed on 2026-07-28.
+Focused A3 role-management Docker gate passed on 2026-07-28, including role replacement boundary validation.
 Full Supabase workflow suite passed on 2026-07-28, including carrier webhook E2E after local Edge Runtime URL normalization.
 Gate A1 and Gate A2 are PASSED.
 ```

@@ -47,4 +47,4 @@ The browser does not call Supabase directly. It submits `membershipId`, `roleId`
 
 ## Next
 
-NEXT: A3 role management end-to-end QA and status reconciliation.
+NEXT: A3 role replacement/deactivation contract review.

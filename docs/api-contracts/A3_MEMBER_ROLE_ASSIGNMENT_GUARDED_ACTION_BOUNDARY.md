@@ -114,4 +114,4 @@ The SQL validation covers:
 
 ## Next
 
-NEXT: A3 role management end-to-end QA and status reconciliation.
+NEXT: A3 role replacement/deactivation contract review.

@@ -90,7 +90,7 @@ describe("A3 member role removal guarded action boundary", () => {
       "No system-role removal",
       "No self-role removal",
       "No last-role removal",
-      "NEXT: A3 role management end-to-end QA and status reconciliation",
+      "NEXT: A3 role replacement/deactivation contract review",
       "021_member_role_removal_boundary_test.sql"
     ]) {
       assert.match(

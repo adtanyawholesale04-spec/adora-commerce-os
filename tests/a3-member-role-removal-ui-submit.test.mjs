@@ -52,7 +52,7 @@ describe("A3 member role removal UI submit enablement", () => {
       "No system-role removal",
       "No last-role removal",
       "Member role removal UI affordance and submit enablement",
-      "A3 role management end-to-end QA and status reconciliation"
+      "A3 role replacement/deactivation contract review"
     ]) {
       assert.match(`${contract}\n${status}`, new RegExp(escapeRegExp(required)), `${required} missing`);
     }

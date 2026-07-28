@@ -88,7 +88,7 @@ describe("A3 member role assignment guarded action boundary", () => {
       "No full role replacement",
       "No system-role assignment",
       "No self-role assignment",
-      "NEXT: A3 role management end-to-end QA and status reconciliation",
+      "NEXT: A3 role replacement/deactivation contract review",
       "020_member_role_assignment_boundary_test.sql"
     ]) {
       assert.match(
