@@ -129,6 +129,7 @@ Track B Customer Engagement Platform
 | Events / Attribution Guarded Service Boundary Review | `docs/api-contracts/A3_TRACK_B_EVENTS_ATTRIBUTION_GUARDED_SERVICE_BOUNDARY_REVIEW.md` | IMPLEMENTED | Attribution record boundary is implemented; reminder scheduling/customer identity/provider execution remain gated |
 | Migration 045 Attribution Service Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_045_ATTRIBUTION_SERVICE_BOUNDARY_VALIDATION_2026-07-29.md` | VALIDATED | Service-role-only attribution RPC, audit-backed idempotency, source validation, append-only and direct-role denial gates passed |
 | Track B Usage Meter Contract Review | `docs/api-contracts/A3_TRACK_B_USAGE_METER_CONTRACT_REVIEW.md` | VALIDATED | Approved aggregate reuse, metered feature seeds, period, idempotency, and quota policy implemented through Migration 046 |
+| Track B Usage Meter Integration Contract Review | `docs/api-contracts/A3_TRACK_B_USAGE_METER_INTEGRATION_CONTRACT_REVIEW.md` | IN_REVIEW | Proposes source-event mapping, idempotency, quota sequencing, and workflow follow-up boundaries; runtime integration remains disabled pending Owner decisions |
 | Migration 046 Usage Meter Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_046_USAGE_METER_VALIDATION_2026-07-29.md` | VALIDATED | Fresh replay, idempotent aggregate upsert, high-cost fail-closed quota checks, RLS/direct-role denial, and all project gates passed |
 | Supabase Migration Replay Protocol | `docs/migrations/SUPABASE_MIGRATION_REPLAY_PROTOCOL.md` | ACTIVE | Defines baseline/full replay evidence layers |
 | Supabase Migration Replay Report 2026-07-27 | `docs/migrations/SUPABASE_MIGRATION_REPLAY_REPORT_2026-07-27.md` | VALIDATED | Fresh local replay and security/workflow gates passed |
@@ -1078,7 +1079,7 @@ Track B Customer Engagement:
 ARCHITECTURE DIRECTION APPROVED
 BUSINESS RULES V1 FROZEN
 ER V2 FROZEN FOR MIGRATION PLANNING
-NEXT: Integrate the guarded Usage Meter boundary with approved Track B workflows and review the quota read model
+NEXT: Owner approval of the Usage Meter Integration Contract source mapping and follow-up boundary decisions
 
 Implementation:
 CONTROLLED START
