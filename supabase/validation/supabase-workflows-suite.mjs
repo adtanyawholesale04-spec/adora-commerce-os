@@ -86,6 +86,11 @@ runSqlSuite([
     file: "supabase/validation/034_messaging_usage_reservation_boundary_test.sql",
     requiredRows: ["messaging_usage_reservation_boundary|pass"],
   },
+  {
+    name: "message_delivery_attempt_boundary",
+    file: "supabase/validation/035_message_delivery_attempt_boundary_test.sql",
+    requiredRows: ["message_delivery_attempt_boundary|pass"],
+  },
 ]);
 
 runNpmScript("validate:carrier-webhook-e2e");

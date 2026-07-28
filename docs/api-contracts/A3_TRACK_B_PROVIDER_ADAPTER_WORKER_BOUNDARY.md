@@ -1,7 +1,7 @@
 # Track B Provider Adapter / Worker Boundary
 
 **Task:** `ENG-MSG-001`
-**Status:** `IMPLEMENTED SKELETON / PROVIDER RUNTIME BLOCKED`
+**Status:** `IMPLEMENTED / PROVIDER RUNTIME BLOCKED`
 **Track:** Track B — Customer Engagement Platform
 
 ## Boundary
@@ -11,6 +11,7 @@ The provider worker contract is implemented as a typed, dependency-injected skel
 - `src/lib/messaging/provider-adapter.ts` defines channel-specific adapter inputs and sanitized results;
 - `src/lib/messaging/worker.ts` reserves usage before calling an adapter;
 - provider failure is recorded as a delivery attempt while the prior quota reservation remains attempted spend;
+- `api_record_message_delivery_attempt` persists append-only delivery evidence and updates job status;
 - no provider SDK, credentials, endpoint, or browser bundle integration is added.
 
 ## Required Sequence
@@ -29,7 +30,6 @@ The worker does not bypass reservation, does not retry the meter, and does not e
 
 - provider-specific contracts for LINE, SMS, and Email;
 - server-only credentials/secret configuration;
-- guarded RPC for append-only `message_delivery_attempts` persistence;
 - worker scheduling/queue runtime;
 - integration tests against approved provider adapters.
 
@@ -41,4 +41,4 @@ The worker does not bypass reservation, does not retry the meter, and does not e
 - no direct table write;
 - no billing or quota refund behavior.
 
-**NEXT:** Approve a provider-specific adapter contract, then add the guarded delivery-attempt persistence boundary before enabling a worker runtime.
+**NEXT:** Connect a selected provider through server-only configuration and provider fixtures, then enable a queue worker after end-to-end validation.

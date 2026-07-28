@@ -137,6 +137,8 @@ Track B Customer Engagement Platform
 | Track B Messaging Usage Meter Integration Contract Review | `docs/api-contracts/A3_TRACK_B_MESSAGING_USAGE_METER_INTEGRATION_CONTRACT_REVIEW.md` | IMPLEMENTED | Owner-approved reservation timing and attempted-spend policy implemented and validated; provider adapter/worker runtime remains blocked |
 | Migration 050 Messaging Usage Reservation Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_050_MESSAGING_USAGE_RESERVATION_VALIDATION_2026-07-29.md` | VALIDATED | Consent/suppression recheck, pre-SENDING quota reservation, attempted-spend policy, idempotent retry, audit, and direct-role denial passed |
 | Track B Provider Adapter / Worker Boundary | `docs/api-contracts/A3_TRACK_B_PROVIDER_ADAPTER_WORKER_BOUNDARY.md` | IMPLEMENTED | Typed dependency-injected adapter/worker skeleton reserves before provider send and sanitizes failures; provider-specific runtime remains blocked |
+| Migration 051 Message Delivery Attempt Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_051_MESSAGE_DELIVERY_ATTEMPT_VALIDATION_2026-07-29.md` | VALIDATED | Append-only delivery attempt persistence, job status update, sanitized failure fields, idempotent retry, and direct-role denial passed |
+| Track B Provider-Specific Adapter Contract Review | `docs/api-contracts/A3_TRACK_B_PROVIDER_SPECIFIC_ADAPTER_CONTRACT_REVIEW.md` | APPROVED | Owner approved recommended adapter, retry, payload, and secret-boundary values; fixture adapter added, real provider runtime remains pending |
 | Migration 046 Usage Meter Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_046_USAGE_METER_VALIDATION_2026-07-29.md` | VALIDATED | Fresh replay, idempotent aggregate upsert, high-cost fail-closed quota checks, RLS/direct-role denial, and all project gates passed |
 | Supabase Migration Replay Protocol | `docs/migrations/SUPABASE_MIGRATION_REPLAY_PROTOCOL.md` | ACTIVE | Defines baseline/full replay evidence layers |
 | Supabase Migration Replay Report 2026-07-27 | `docs/migrations/SUPABASE_MIGRATION_REPLAY_REPORT_2026-07-27.md` | VALIDATED | Fresh local replay and security/workflow gates passed |
@@ -1086,7 +1088,7 @@ Track B Customer Engagement:
 ARCHITECTURE DIRECTION APPROVED
 BUSINESS RULES V1 FROZEN
 ER V2 FROZEN FOR MIGRATION PLANNING
-NEXT: Approve provider-specific adapter contracts, then implement guarded delivery-attempt persistence before enabling a worker runtime
+NEXT: Connect a selected provider through server-only configuration and provider fixtures, then validate queue worker runtime
 
 Implementation:
 CONTROLLED START
