@@ -26,4 +26,4 @@ QC assignment is independent from `fulfillments.assigned_profile_id`. `started_b
 
 `supabase/validation/026_warehouse_qc_assignment_boundary_test.sql` covers assignment, idempotent retry, reassignment, terminal-state denial, direct-write denial, persisted assignee state, audit evidence, and deactivation blocking from unassigned open QC work.
 
-**NEXT:** Shipping assignment contract review.
+**NEXT:** Implement the approved Returns assignment database boundary.

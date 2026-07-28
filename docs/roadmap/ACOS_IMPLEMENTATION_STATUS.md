@@ -134,12 +134,15 @@ Track B Customer Engagement Platform
 | A3 Role Replacement Database Boundary | `docs/api-contracts/A3_ROLE_REPLACEMENT_DATABASE_BOUNDARY.md` | IMPLEMENTED | Adds `api_replace_member_role` in migration `20260728120110_a3_role_replacement_boundary.sql`; fresh replay and focused role-management validation passed |
 | A3 Membership Deactivation Open-Work Predicate | `docs/api-contracts/A3_MEMBER_DEACTIVATION_OPEN_WORK_PREDICATE.md` | APPROVED | Owner approved known assigned work plus coverage-gap blocking policy |
 | A3 Member Deactivation Database Boundary | `docs/api-contracts/A3_MEMBER_DEACTIVATION_DATABASE_BOUNDARY.md` | IMPLEMENTED | Adds `api_deactivate_member` with open-work checks, coverage-gap blocking, suspended retry handling, role retention, audit, and restricted execute grants |
-| A3 Member Work Assignment Coverage Review | `docs/api-contracts/A3_MEMBER_WORK_ASSIGNMENT_COVERAGE_REVIEW.md` | BLOCKED | Fulfillment and Warehouse QC assignment sources are implemented; Shipping and Returns still require approved assignment contracts before coverage is complete |
+| A3 Member Work Assignment Coverage Review | `docs/api-contracts/A3_MEMBER_WORK_ASSIGNMENT_COVERAGE_REVIEW.md` | VALIDATED | Fulfillment, Warehouse QC, Shipping, and Returns assignment sources are validated; deactivation coverage gaps are closed |
 | A3 Fulfillment Assignment Contract Review | `docs/api-contracts/A3_FULFILLMENT_ASSIGNMENT_CONTRACT_REVIEW.md` | APPROVED | Owner approved one fulfillment-level active assignee, existing warehouse.pick permission, blocking statuses, unassigned-work guard, audit/idempotency, and forward migration |
 | A3 Fulfillment Assignment Database Boundary | `docs/api-contracts/A3_FULFILLMENT_ASSIGNMENT_DATABASE_BOUNDARY.md` | IMPLEMENTED | Adds membership-scoped assignee, guarded assign/reassign RPC, direct-write denial, audit/idempotency, and Fulfillment deactivation coverage |
 | A3 Warehouse QC Assignment Contract Review | `docs/api-contracts/A3_WAREHOUSE_QC_ASSIGNMENT_CONTRACT_REVIEW.md` | APPROVED | Owner approved QC-session assignee, blocking statuses, independent QC ownership, warehouse.qc guard, unassigned-work block, audit/idempotency, and forward migration |
 | A3 Warehouse QC Assignment Database Boundary | `docs/api-contracts/A3_WAREHOUSE_QC_ASSIGNMENT_DATABASE_BOUNDARY.md` | IMPLEMENTED | Adds QC-session assignee, guarded assign/reassign RPC, direct-write denial, audit/idempotency, and QC deactivation coverage |
-| A3 Shipping Assignment Contract Review | `docs/api-contracts/A3_SHIPPING_ASSIGNMENT_CONTRACT_REVIEW.md` | BLOCKED | Design recorded; Owner approval is required for the shipment assignee model, blocking statuses, independent ownership, guarded RPC, audit/idempotency, and forward migration |
+| A3 Shipping Assignment Contract Review | `docs/api-contracts/A3_SHIPPING_ASSIGNMENT_CONTRACT_REVIEW.md` | APPROVED | Owner approved the shipment assignee model, blocking statuses, independent ownership, guarded RPC, audit/idempotency, and forward migration |
+| A3 Shipping Assignment Database Boundary | `docs/api-contracts/A3_SHIPPING_ASSIGNMENT_DATABASE_BOUNDARY.md` | VALIDATED | Adds shipment assignee, guarded assign/reassign RPC, direct-write denial, audit/idempotency, and Shipping deactivation coverage; replay and regression gates passed |
+| A3 Returns Assignment Contract Review | `docs/api-contracts/A3_RETURNS_ASSIGNMENT_CONTRACT_REVIEW.md` | APPROVED | Owner approved the return assignee model, blocking statuses, return.manage boundary, audit/idempotency, and forward migration |
+| A3 Returns Assignment Database Boundary | `docs/api-contracts/A3_RETURNS_ASSIGNMENT_DATABASE_BOUNDARY.md` | VALIDATED | Adds return assignee, guarded assign/reassign RPC, direct-write denial, audit/idempotency, and Returns deactivation coverage; all validation gates pass |
 | CORE-UI-001 Admin Shell Contract | `docs/api-contracts/CORE_UI_001_ADMIN_APP_SHELL_RBAC_NAVIGATION.md` | IMPLEMENTED | Admin shell, auth entry, organization switcher, and permission-aware navigation contract |
 | CORE-UI-002 Products Read Contract | `docs/api-contracts/CORE_UI_002_PRODUCTS_READ_ONLY_SCREEN.md` | IMPLEMENTED | Read-only Products screen and server read model contract |
 | CORE-UI-DESIGN-001 Admin Visual System Pass | `docs/api-contracts/CORE_UI_DESIGN_001_ADMIN_VISUAL_SYSTEM_PASS.md` | IMPLEMENTED | Admin light/dark theme and Thai/English UI preference foundation |
@@ -343,10 +346,12 @@ No UI, schema, migration, role, permission, status, or financial rule implementa
 | A3-ROLE-MANAGEMENT-IMPLEMENTATION-CONTRACT-001 | Role replacement/deactivation implementation contract | IMPLEMENTED | Part 1 contract is complete; no migration, RPC, permission, role, status, or UI write behavior added |
 | A3-ROLE-REPLACEMENT-DATABASE-BOUNDARY-001 | Role replacement database boundary | IMPLEMENTED | Part 2A migration adds atomic one-role replacement with owner/self guards, idempotency, append-only audit, authenticated execute grant, and focused validation |
 | A3-MEMBER-DEACTIVATION-DATABASE-BOUNDARY-001 | Membership deactivation database boundary | IMPLEMENTED | Guarded RPC and validation are implemented; ACTIVE -> SUSPENDED remains operationally blocked by the approved coverage-gap policy until assignment coverage is added |
-| A3-MEMBER-WORK-ASSIGNMENT-COVERAGE-001 | Member work assignment coverage | BLOCKED | Requires owner selection of assignment model and domain open-status/reassignment rules before any protected core schema or migration change |
-| A3-FULFILLMENT-ASSIGNMENT-001 | Fulfillment assignment | IMPLEMENTED | Owner-approved forward migration adds fulfillment assignment boundary and validation 025; QC/Shipping/Returns remain future coverage gaps |
-| A3-WAREHOUSE-QC-ASSIGNMENT-001 | Warehouse QC assignment | IMPLEMENTED | Owner-approved forward migration adds QC-session assignment boundary and validation 026; Shipping and Returns remain future coverage gaps |
-| A3-SHIPPING-ASSIGNMENT-001 | Shipping assignment contract review | BLOCKED | Contract review is designed; implementation is blocked pending Owner approval of the Shipping assignment decision table |
+| A3-MEMBER-WORK-ASSIGNMENT-COVERAGE-001 | Member work assignment coverage | VALIDATED | Domain-local assignment boundaries are validated for Fulfillment, Warehouse QC, Shipping, and Returns; deactivation coverage gaps are closed |
+| A3-FULFILLMENT-ASSIGNMENT-001 | Fulfillment assignment | VALIDATED | Owner-approved forward migration adds fulfillment assignment boundary and validation 025; fresh replay and regression gates pass |
+| A3-WAREHOUSE-QC-ASSIGNMENT-001 | Warehouse QC assignment | VALIDATED | Owner-approved forward migration adds QC-session assignment boundary and validation 026; fresh replay and regression gates pass |
+| A3-SHIPPING-ASSIGNMENT-001 | Shipping assignment boundary | VALIDATED | Owner-approved forward migration adds shipment assignment boundary and validation 027; fresh replay, security, workflow, and commerce integration gates passed |
+| A3-RETURNS-ASSIGNMENT-001 | Returns assignment contract review | APPROVED | Owner approval recorded; ready for forward migration, guarded assignment RPC, validation, and deactivation coverage implementation |
+| A3-RETURNS-ASSIGNMENT-002 | Returns assignment database boundary | VALIDATED | Owner-approved forward migration adds Returns assignment boundary and validation 028; fresh replay, security, workflow, commerce, typecheck, lint, and full tests pass |
 
 ---
 
@@ -1044,9 +1049,9 @@ PART 0 COMPLETE: owner approval recorded for role replacement/deactivation decis
 PART 1 COMPLETE: implementation contract recorded without enabling writes
 PART 2A COMPLETE: role replacement database boundary implemented and validated
 PART 2B COMPLETE: approved open-work predicate and guarded deactivation boundary implemented
-OPERATIONAL GUARD: ACTIVE -> SUSPENDED remains blocked until Fulfillment/QC/Shipping/Returns assignment coverage exists
-PART 2C IN PROGRESS: Fulfillment and Warehouse QC assignment coverage implemented; Shipping assignment contract review is blocked pending Owner approval, and Returns remains future coverage
-NEXT: Owner approval of the Shipping assignment decision table
+OPERATIONAL GUARD: ACTIVE -> SUSPENDED is allowed only when assigned/unassigned blocking work is absent and coverage gaps are empty
+PART 2C COMPLETE: Fulfillment, Warehouse QC, Shipping, and Returns assignment coverage validated; deactivation coverage gaps are closed
+NEXT: Final Part 2C status reconciliation, then Track B Business Rule Review
 
 Track B Customer Engagement:
 ARCHITECTURE DIRECTION APPROVED

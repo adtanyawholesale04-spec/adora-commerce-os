@@ -27,7 +27,7 @@ test("Warehouse QC assignment review records approval and implementation boundar
     "Owner approval",
     "20260728143613_a3_warehouse_qc_assignment_boundary.sql",
     "api_deactivate_member",
-    "NEXT:** Owner approval of the Shipping assignment decision table.",
+    "NEXT:** Implement the approved Returns assignment database boundary.",
   ]) {
     assert.ok(contract.includes(required), `${required} missing`);
   }
@@ -37,5 +37,5 @@ test("implementation status records the implemented QC assignment boundary", () 
   const status = fs.readFileSync(statusPath, "utf8");
   assert.match(status, /A3 Warehouse QC Assignment Contract Review/);
   assert.match(status, /A3-WAREHOUSE-QC-ASSIGNMENT-001/);
-  assert.match(status, /NEXT: Owner approval of the Shipping assignment decision table/);
+  assert.match(status, /NEXT: Final Part 2C status reconciliation, then Track B Business Rule Review/);
 });

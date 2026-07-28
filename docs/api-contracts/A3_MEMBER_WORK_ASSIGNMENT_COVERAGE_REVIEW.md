@@ -1,29 +1,25 @@
 # A3 Member Work Assignment Coverage Review
 
 **Task ID:** `A3-MEMBER-WORK-ASSIGNMENT-COVERAGE-001`  
-**Status:** `BLOCKED`  
+**Status:** `VALIDATED`
 **Purpose:** Define the missing assignment source required to remove the deactivation coverage guard.
 
-## Verified schema gap
+## Verified assignment coverage
 
-The frozen schema currently provides member assignment data for:
+The approved forward-only assignment boundaries now provide member assignment data for:
 
 - `conversations.assigned_profile_id`;
 - active rows in `conversation_assignments`;
 - `notifications.assigned_profile_id`.
 
-It does not provide an approved member assignment field or relation for:
+ - fulfillment-level work and picking;
+ - warehouse QC sessions/scans;
+ - shipment handoff work;
+ - Returns cases.
 
-- `fulfillments` and fulfillment picking;
-- warehouse QC sessions/scans;
-- `shipments` and handoff work;
-- returns/RMA inspection and disposition.
+Each source has a guarded assignment/reassignment boundary, tenant-scoped membership validation, direct-write denial, audit/idempotency handling, and deactivation coverage for its approved blocking statuses. The deactivation RPC now reports no coverage gaps after fresh replay.
 
-The current deactivation RPC therefore blocks `ACTIVE -> SUSPENDED` when these coverage gaps exist. This preserves the approved safety policy without claiming that unassigned operational work has been checked.
-
-Fulfillment and Warehouse QC contract reviews are now approved and implemented. Shipping and Returns remain uncovered until their assignment contracts are approved.
-
-## Decisions required
+## Historical decisions
 
 ### Option A: Domain-local assignees
 
@@ -56,6 +52,6 @@ Each domain exposes a guarded read function that answers whether a profile has b
 
 ## Current implementation boundary
 
-No new assignment table, column, role, permission, status, or migration is authorized by this review. Part 2B remains safely guarded: known open work blocks deactivation, and unknown assignment coverage also blocks deactivation.
+No shared assignment table or new role is required. Domain-local assignment boundaries are implemented for all four approved domains. Known assigned and unassigned open work blocks deactivation; with no blocking work and no coverage gaps, the guarded transition may proceed with audit/idempotency protection.
 
-NEXT: Owner approval of the Shipping assignment decision table.
+NEXT: Final Part 2C status reconciliation, then Track B Business Rule Review.

@@ -68,4 +68,4 @@ The owner approved all recommended values:
 
 Implemented in `20260728143613_a3_warehouse_qc_assignment_boundary.sql` with a QC-session assignee, guarded assign/reassign RPC, restricted direct updates, audit/idempotency, and QC coverage in `api_deactivate_member`.
 
-**NEXT:** Owner approval of the Shipping assignment decision table.
+**NEXT:** Implement the approved Returns assignment database boundary.

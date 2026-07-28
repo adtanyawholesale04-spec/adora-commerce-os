@@ -26,4 +26,4 @@
 
 The boundary is implemented, but an `ACTIVE -> SUSPENDED` transition will remain blocked until the remaining operational assignment domains have canonical coverage.
 
-NEXT: Owner approval of the Shipping assignment decision table.
+NEXT: Final Part 2C status reconciliation, then Track B Business Rule Review.

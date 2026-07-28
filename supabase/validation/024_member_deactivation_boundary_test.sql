@@ -176,7 +176,7 @@ begin
      or v_retry.previous_status <> 'SUSPENDED'
      or v_retry.idempotency_reused is not false
      or v_retry.audit_log_id is null
-     or cardinality(v_retry.coverage_gaps) <> 2 then
+     or cardinality(v_retry.coverage_gaps) <> 0 then
     raise exception 'suspended retry failed: %', row_to_json(v_retry);
   end if;
 end $$;

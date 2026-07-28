@@ -3,8 +3,9 @@
 **Project:** ADORA Commerce OS (ACOS)  
 **Track:** A - Commerce Core  
 **Phase:** A3 - Commerce Admin MVP  
-**Status:** BLOCKED  
+**Status:** APPROVED
 **Date:** 2026-07-28
+**Owner approval:** Recorded 2026-07-28 for all recommended decision values below.
 
 ## 1. Purpose
 
@@ -27,21 +28,21 @@ CANCELLED
 
 `shipment_packages` are package data below a shipment. `tracking_events` are append-only provider events and are not assignment records. Existing shipping writes already cross guarded boundaries for label creation, handoff, and tracking/webhook ingestion.
 
-## 3. Recommended Decision Table
+## 3. Approved Decision Table
 
 | Decision | Recommended value | Owner decision |
 |---|---|---|
-| Assignment storage | Add nullable `shipments.assigned_profile_id` with the same-organization membership FK pattern used by Fulfillment and QC | PENDING |
-| Assignment scope | One assignee owns the whole shipment, including its package handoff workflow | PENDING |
-| Fulfillment inheritance | Keep Shipping assignment independent from `fulfillments.assigned_profile_id`; do not silently copy or clear it | PENDING |
-| Blocking statuses | `LABEL_CREATED`, `READY_FOR_HANDOFF`, `EXCEPTION`, and `RTO` are open Shipping work; `DRAFT` is excluded until a label/handoff task exists | PENDING |
-| Non-blocking statuses | `IN_TRANSIT`, `DELIVERED`, and `CANCELLED` do not block member suspension | PENDING |
-| Tracking actor separation | Carrier webhook/service actor and authenticated tracking operator remain event actors; they do not become the shipment assignee | PENDING |
-| Assignment permission | Reuse existing `shipping.create` until a separately approved assignment permission exists | PENDING |
-| Reassignment guard | Require active target membership/profile, reason, idempotency key, and optimistic expected assignee | PENDING |
-| Unassigned open work | An unassigned blocking shipment prevents `ACTIVE -> SUSPENDED` | PENDING |
-| Audit | Record assign/reassign, actor, target profile, previous profile, reason, and idempotency outcome in the existing audit boundary | PENDING |
-| Migration policy | Forward-only migration; revoke direct browser assignment writes; expose a guarded RPC | PENDING |
+| Assignment storage | Add nullable `shipments.assigned_profile_id` with the same-organization membership FK pattern used by Fulfillment and QC | APPROVED |
+| Assignment scope | One assignee owns the whole shipment, including its package handoff workflow | APPROVED |
+| Fulfillment inheritance | Keep Shipping assignment independent from `fulfillments.assigned_profile_id`; do not silently copy or clear it | APPROVED |
+| Blocking statuses | `LABEL_CREATED`, `READY_FOR_HANDOFF`, `EXCEPTION`, and `RTO` are open Shipping work; `DRAFT` is excluded until a label/handoff task exists | APPROVED |
+| Non-blocking statuses | `IN_TRANSIT`, `DELIVERED`, and `CANCELLED` do not block member suspension | APPROVED |
+| Tracking actor separation | Carrier webhook/service actor and authenticated tracking operator remain event actors; they do not become the shipment assignee | APPROVED |
+| Assignment permission | Reuse existing `shipping.create` until a separately approved assignment permission exists | APPROVED |
+| Reassignment guard | Require active target membership/profile, reason, idempotency key, and optimistic expected assignee | APPROVED |
+| Unassigned open work | An unassigned blocking shipment prevents `ACTIVE -> SUSPENDED` | APPROVED |
+| Audit | Record assign/reassign, actor, target profile, previous profile, reason, and idempotency outcome in the existing audit boundary | APPROVED |
+| Migration policy | Forward-only migration; revoke direct browser assignment writes; expose a guarded RPC | APPROVED |
 
 The blocking-status recommendation is intentionally conservative around `EXCEPTION` and `RTO`: these states still require operational ownership even though carrier movement may already have occurred.
 
@@ -62,16 +63,16 @@ Out of scope:
 - assigning tracking events to a human actor
 - enabling label creation, handoff, or tracking UI in the read-only Shipping screen
 
-## 5. Blocker / Required Approval
+## 5. Approval Record
 
-Implementation is **BLOCKED** until the Owner approves the decision table above, especially:
+The Owner approved the decision table above, including:
 
 1. the canonical `shipments.assigned_profile_id` model;
 2. the exact blocking status set; and
 3. independent Shipping ownership versus Fulfillment ownership.
 
-No migration or protected write behavior should be added before that approval.
+The approved design is implemented in `20260728150119_a3_shipping_assignment_boundary.sql`; validation remains the final gate.
 
 ## 6. Next Step
 
-**NEXT: Owner approval of the Shipping assignment decision table.** After approval, create the forward migration, guarded assignment RPC, validation, and deactivation coverage update.
+**NEXT: Fresh replay, security validation, and Shipping workflow regression validation.**
