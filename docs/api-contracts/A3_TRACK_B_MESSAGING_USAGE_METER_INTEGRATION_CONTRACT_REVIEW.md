@@ -1,7 +1,7 @@
 # Track B Messaging Usage Meter Integration Contract Review
 
 **Task:** `ENG-USAGE-003`
-**Status:** `IN_REVIEW / RUNTIME BLOCKED`
+**Status:** `PARTIALLY IMPLEMENTED / PROVIDER RUNTIME BLOCKED`
 **Track:** Track B — Customer Engagement Platform
 **Depends on:** Messaging Dispatch 043, Usage Meter 046, and the Owner-approved Usage Meter Integration Contract
 
@@ -59,6 +59,8 @@ The current meter is additive and has no refund/adjustment operation. Therefore:
 | Message job cancelled before reservation | No usage increment | PENDING |
 | Duplicate worker retry | Reuse reservation request ID; no second increment | PENDING |
 
+Owner approval recorded on 2026-07-29: provider failure after reservation is treated as attempted spend and quota is not refunded.
+
 ## Consent and Privacy Guards
 
 - Consent and active suppression must be checked immediately before reservation.
@@ -66,15 +68,25 @@ The current meter is additive and has no refund/adjustment operation. Therefore:
 - Raw destination values and provider secrets must not enter meter metadata, audit payloads, or browser responses.
 - Provider failure text must use safe error codes/summaries only.
 
+## Implemented Boundary
+
+Migration `20260728184427_messaging_usage_reservation_boundary.sql` implements `api_reserve_message_job_usage`:
+
+- verifies trusted service role and provider-readiness assertion;
+- re-checks granted consent and active suppression;
+- reserves campaign recipient usage when the job belongs to a campaign/run;
+- reserves the channel meter before transitioning the job to `SENDING`;
+- treats quota reservation as attempted spend; no refund path is added;
+- handles idempotent worker retry and denies direct client access.
+
 ## Runtime Blockers
 
 Implementation remains blocked until these boundaries exist:
 
-1. guarded message-job lifecycle mutation;
-2. provider adapter/worker contract for LINE, SMS, and Email;
-3. consent/suppression recheck service;
-4. Owner decision on attempted-spend behavior after provider failure;
-5. focused validation with duplicate worker retry and cross-tenant denial.
+1. provider-specific adapter contracts for LINE, SMS, and Email;
+2. guarded RPC for append-only delivery-attempt persistence;
+3. consent/suppression recheck service integration;
+4. focused provider validation with duplicate worker retry and cross-tenant denial.
 
 ## Explicit Non-Goals
 
@@ -84,4 +96,4 @@ Implementation remains blocked until these boundaries exist:
 - No billing or provider settlement.
 - No database trigger integration.
 
-**NEXT:** Owner approval of the proposed reservation timing and provider-failure policy, then implement the guarded message-job reservation boundary before connecting channel meters.
+**NEXT:** Approve provider-specific adapter contracts and add guarded delivery-attempt persistence before enabling a worker runtime.

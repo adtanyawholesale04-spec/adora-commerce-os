@@ -134,7 +134,9 @@ Track B Customer Engagement Platform
 | Migration 047 Content Publish Usage Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_047_CONTENT_PUBLISH_USAGE_VALIDATION_2026-07-29.md` | VALIDATED | Guarded publish transition, atomic POSTS meter increment, idempotent retry, audit, and direct-role denial passed |
 | Migration 048 Audience Snapshot Usage Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_048_AUDIENCE_SNAPSHOT_USAGE_VALIDATION_2026-07-29.md` | VALIDATED | Guarded snapshot/member creation, atomic AUDIENCE_SNAPSHOTS meter increment, idempotent retry, audit, and direct-role denial passed |
 | Migration 049 Media Upload Usage Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_049_MEDIA_UPLOAD_USAGE_VALIDATION_2026-07-29.md` | VALIDATED | Guarded upload registration, atomic MEDIA_UPLOADS and additive MEDIA_STORAGE_BYTES meter increments, idempotent retry, high-cost entitlement, and direct-role denial passed |
-| Track B Messaging Usage Meter Integration Contract Review | `docs/api-contracts/A3_TRACK_B_MESSAGING_USAGE_METER_INTEGRATION_CONTRACT_REVIEW.md` | IN_REVIEW | Proposes recipient/channel reservation timing and attempted-spend behavior; runtime dispatch remains blocked pending provider and failure-policy decisions |
+| Track B Messaging Usage Meter Integration Contract Review | `docs/api-contracts/A3_TRACK_B_MESSAGING_USAGE_METER_INTEGRATION_CONTRACT_REVIEW.md` | IMPLEMENTED | Owner-approved reservation timing and attempted-spend policy implemented and validated; provider adapter/worker runtime remains blocked |
+| Migration 050 Messaging Usage Reservation Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_050_MESSAGING_USAGE_RESERVATION_VALIDATION_2026-07-29.md` | VALIDATED | Consent/suppression recheck, pre-SENDING quota reservation, attempted-spend policy, idempotent retry, audit, and direct-role denial passed |
+| Track B Provider Adapter / Worker Boundary | `docs/api-contracts/A3_TRACK_B_PROVIDER_ADAPTER_WORKER_BOUNDARY.md` | IMPLEMENTED | Typed dependency-injected adapter/worker skeleton reserves before provider send and sanitizes failures; provider-specific runtime remains blocked |
 | Migration 046 Usage Meter Boundary Validation 2026-07-29 | `docs/migrations/MIGRATION_046_USAGE_METER_VALIDATION_2026-07-29.md` | VALIDATED | Fresh replay, idempotent aggregate upsert, high-cost fail-closed quota checks, RLS/direct-role denial, and all project gates passed |
 | Supabase Migration Replay Protocol | `docs/migrations/SUPABASE_MIGRATION_REPLAY_PROTOCOL.md` | ACTIVE | Defines baseline/full replay evidence layers |
 | Supabase Migration Replay Report 2026-07-27 | `docs/migrations/SUPABASE_MIGRATION_REPLAY_REPORT_2026-07-27.md` | VALIDATED | Fresh local replay and security/workflow gates passed |
@@ -641,14 +643,14 @@ MIG-PLAN-001 repository verification passed; each migration still requires its o
 | Task ID | Task | Status | Notes |
 |---|---|---:|---|
 | MSG-001 | Messaging canonical model | VALIDATED | Message job persistence boundary implemented and validated; lifecycle remains service-owned |
-| MSG-002 | Message job queue | IN_REVIEW | Persistence is validated; queue/worker implementation remains separate |
-| MSG-003 | Provider adapter interface | BLOCKED | Requires provider adapter and credential boundary |
+| MSG-002 | Message job queue | IN_REVIEW | Typed worker orchestration skeleton exists; queue runtime remains separate |
+| MSG-003 | Provider adapter interface | IMPLEMENTED | Dependency-injected adapter interface and sanitized result contract added; provider-specific contracts remain gated |
 | MSG-004 | LINE adapter | BLOCKED | Requires provider contract |
 | MSG-005 | Email adapter | BLOCKED | Requires provider contract |
 | MSG-006 | SMS adapter | BLOCKED | Requires provider contract |
 | MSG-007 | Delivery attempts | VALIDATED | Append-only delivery-attempt persistence implemented; provider retry classifier remains service-owned |
 | MSG-008 | Dead-letter handling | BLOCKED | Requires failure rules |
-| MSG-009 | Usage metering | VALIDATED | V1 aggregate meter boundary implemented; workflow integration remains separate |
+| MSG-009 | Usage metering | VALIDATED | V1 aggregate meter and pre-SENDING messaging reservation boundary implemented; provider runtime remains separate |
 
 ---
 
@@ -1084,7 +1086,7 @@ Track B Customer Engagement:
 ARCHITECTURE DIRECTION APPROVED
 BUSINESS RULES V1 FROZEN
 ER V2 FROZEN FOR MIGRATION PLANNING
-NEXT: Owner approval of Messaging Usage Meter reservation timing and provider-failure policy
+NEXT: Approve provider-specific adapter contracts, then implement guarded delivery-attempt persistence before enabling a worker runtime
 
 Implementation:
 CONTROLLED START

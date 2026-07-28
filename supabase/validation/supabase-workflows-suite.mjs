@@ -81,6 +81,11 @@ runSqlSuite([
     file: "supabase/validation/033_media_upload_usage_boundary_test.sql",
     requiredRows: ["media_upload_usage_boundary|pass"],
   },
+  {
+    name: "messaging_usage_reservation_boundary",
+    file: "supabase/validation/034_messaging_usage_reservation_boundary_test.sql",
+    requiredRows: ["messaging_usage_reservation_boundary|pass"],
+  },
 ]);
 
 runNpmScript("validate:carrier-webhook-e2e");
