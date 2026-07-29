@@ -23,6 +23,9 @@ export async function signInWithEmailAction(formData: FormData) {
   const email = String(formData.get("email") ?? "")
     .trim()
     .toLowerCase();
+  const captchaToken = String(
+    formData.get("cf-turnstile-response") ?? ""
+  ).trim();
   const { supabaseUrl, supabasePublishableKey } = getPublicEnv();
 
   if (!supabaseUrl || !supabasePublishableKey) {
@@ -32,6 +35,9 @@ export async function signInWithEmailAction(formData: FormData) {
   if (!email) {
     redirect(`${adminPath}?auth=missing_email`);
   }
+  if (!captchaToken || captchaToken.length > 2048) {
+    redirect(`${adminPath}?auth=sign_in_error`);
+  }
 
   const requestHeaders = await headers();
   const origin = requestHeaders.get("origin") ?? "http://localhost:3000";
@@ -39,6 +45,8 @@ export async function signInWithEmailAction(formData: FormData) {
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
+      captchaToken,
+      shouldCreateUser: false,
       emailRedirectTo: `${origin}/auth/callback?next=${adminPath}`
     }
   });

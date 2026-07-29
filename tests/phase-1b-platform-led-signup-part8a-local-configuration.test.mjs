@@ -47,6 +47,6 @@ test("Part 8A records readiness and stops before protected migration", () => {
   );
   assert.match(
     status,
-    /NEXT: Phase 1B Part 8C Server Provider Adapters/,
+    /NEXT: Owner Decision Freeze for Part 8F inputs P01-P16/,
   );
 });

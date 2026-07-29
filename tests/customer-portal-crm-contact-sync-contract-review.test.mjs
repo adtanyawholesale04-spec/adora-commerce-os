@@ -31,6 +31,6 @@ test("implementation status records the Owner freeze and keeps Part 2 explicit",
   assert.match(status, /PHASE 1B PART 0 REPOSITORY & DEPENDENCY AUDIT VALIDATED/);
   assert.match(
     status,
-    /NEXT: Phase 1B Part 8C Server Provider Adapters/,
+    /NEXT: Owner Decision Freeze for Part 8F inputs P01-P16/,
   );
 });

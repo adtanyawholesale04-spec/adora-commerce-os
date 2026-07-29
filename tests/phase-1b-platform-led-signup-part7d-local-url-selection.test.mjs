@@ -37,6 +37,6 @@ test("Part 7D remains reconciled after email provider selection", () => {
   );
   assert.match(
     status,
-    /NEXT: Phase 1B Part 8C Server Provider Adapters/,
+    /NEXT: Owner Decision Freeze for Part 8F inputs P01-P16/,
   );
 });

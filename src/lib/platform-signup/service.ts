@@ -101,7 +101,7 @@ export function createPlatformSignupService(dependencies: ServiceDependencies = 
   ): Promise<PlatformSignupResult> {
     if (!availability()) return disabled();
     if (!isUuid(verifiedAuthUserId)) return persistenceFailure();
-    return callRpc(client(), "api_get_platform_onboarding_snapshot", {
+    return callSnapshotRpc(client(), {
       p_auth_user_id: verifiedAuthUserId,
     });
   }
@@ -228,6 +228,44 @@ async function callRpc(
     ) {
       return persistenceFailure();
     }
+    return { ok: true, code, data: payload };
+  } catch {
+    return persistenceFailure();
+  }
+}
+
+async function callSnapshotRpc(
+  client: RpcClient,
+  parameters: Record<string, unknown>,
+): Promise<PlatformSignupResult> {
+  try {
+    const { data, error } = await client.rpc(
+      "api_get_platform_onboarding_snapshot",
+      parameters,
+    );
+    if (error) return mapPersistenceError(error.message);
+    const payload = normalizeRpcPayload(data);
+    const onboarding =
+      payload?.onboarding && typeof payload.onboarding === "object"
+        ? (payload.onboarding as Record<string, unknown>)
+        : null;
+    const status = onboarding?.status;
+    if (
+      !payload ||
+      !isUuid(String(payload.profile_id ?? "")) ||
+      (status !== "NOT_STARTED" &&
+        status !== "IN_PROGRESS" &&
+        status !== "COMPLETED") ||
+      !Array.isArray(payload.active_interests)
+    ) {
+      return persistenceFailure();
+    }
+    const code =
+      status === "COMPLETED"
+        ? "onboarding_completed"
+        : status === "IN_PROGRESS"
+          ? "onboarding_in_progress"
+          : "account_ready";
     return { ok: true, code, data: payload };
   } catch {
     return persistenceFailure();

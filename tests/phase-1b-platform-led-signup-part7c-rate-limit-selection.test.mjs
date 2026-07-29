@@ -39,6 +39,6 @@ test("Part 7C remains reconciled after local URL selection", () => {
   );
   assert.match(
     status,
-    /NEXT: Phase 1B Part 8C Server Provider Adapters/,
+    /NEXT: Owner Decision Freeze for Part 8F inputs P01-P16/,
   );
 });

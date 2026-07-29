@@ -47,5 +47,8 @@ test("Part 8B reconciles status to server provider adapters", () => {
     status,
     /PHASE 1B PART 8B DURABLE RATE-LIMIT BOUNDARY IMPLEMENTED \/ VALIDATED/,
   );
-  assert.match(status, /NEXT: Phase 1B Part 8C Server Provider Adapters/);
+  assert.match(
+    status,
+    /NEXT: Owner Decision Freeze for Part 8F inputs P01-P16/,
+  );
 });

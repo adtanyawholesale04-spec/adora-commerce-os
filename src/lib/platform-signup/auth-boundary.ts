@@ -41,8 +41,8 @@ export type PlatformAuthResult<T = undefined> =
 export type PlatformSignupRateLimiter = {
   consume(input: {
     scope: "platform_signup";
-    ipHash: string;
-    destinationHash: string;
+    ipAddress: string;
+    destination: string;
   }): Promise<{ allowed: boolean }>;
 };
 
@@ -81,8 +81,8 @@ export type PlatformAccountBootstrapPort = {
     requestId: string;
     displayName: string;
     acquisition: PlatformAcquisitionEvidence;
-    ipHash: string;
-    destinationHash: string;
+    ipAddress: string;
+    destination: string;
   }): Promise<
     | { ok: true; profileId: string }
     | {
@@ -120,8 +120,7 @@ export type PlatformSignupRequest = {
   acquisition: PlatformAcquisitionEvidence;
   captchaToken: string;
   requestId: string;
-  ipHash: string;
-  destinationHash: string;
+  ipAddress: string;
 };
 
 export function isValidTurnstileTokenShape(token: string) {
@@ -131,8 +130,7 @@ export function isValidTurnstileTokenShape(token: string) {
 export type PlatformCallbackRequest = {
   code: string;
   sealedState: string;
-  ipHash: string;
-  destinationHash: string;
+  ipAddress: string;
 };
 
 export function isFixedPlatformRedirectPath(path: string) {

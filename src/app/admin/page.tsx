@@ -6,9 +6,9 @@ import {
   Gauge,
   LogOut,
   LockKeyhole,
-  Mail,
   ShieldCheck
 } from "lucide-react";
+import { AdminMagicLinkForm } from "@/app/admin/_components/admin-magic-link-form";
 import { AdminPreferenceSwitcher } from "@/app/admin/_components/admin-preference-switcher";
 import {
   signInWithEmailAction,
@@ -310,28 +310,19 @@ function SessionPanel({
 
   if (mode === "anonymous") {
     return (
-      <form action={signInWithEmailAction} className="grid gap-3">
-        <label className="grid gap-1 text-sm">
-          <span className="font-medium">{copy.shell.email}</span>
-          <input
-            name="email"
-            type="email"
-            required
-            className="h-10 rounded-lg border border-line bg-panel px-3 text-sm text-ink outline-hidden focus:border-brand"
-            placeholder="admin@example.com"
-          />
-        </label>
-        <button
-          type="submit"
-          className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-brand px-3 text-sm font-semibold text-white shadow-sm hover:brightness-95"
-        >
-          <Mail aria-hidden className="h-4 w-4" />
-          {copy.shell.sendMagicLink}
-        </button>
-        {authState === "missing_email" ? (
-          <p className="text-xs text-danger">{copy.shell.emailRequired}</p>
-        ) : null}
-      </form>
+      <AdminMagicLinkForm
+        action={signInWithEmailAction}
+        siteKey={String(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "").trim()}
+        emailLabel={copy.shell.email}
+        submitLabel={copy.shell.sendMagicLink}
+        unavailableLabel={
+          locale === "th"
+            ? "ยังไม่ได้ตั้งค่าการตรวจสอบความปลอดภัย"
+            : "Security verification is not configured."
+        }
+        emailRequiredLabel={copy.shell.emailRequired}
+        showEmailRequired={authState === "missing_email"}
+      />
     );
   }
 
