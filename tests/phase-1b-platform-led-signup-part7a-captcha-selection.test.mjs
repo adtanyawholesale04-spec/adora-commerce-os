@@ -29,6 +29,6 @@ test("Part 7A advances the provider selection sequence", () => {
   assert.match(status, /PHASE 1B PART 7A CAPTCHA SELECTION OWNER APPROVED \/ FROZEN/);
   assert.match(
     status,
-    /NEXT: Owner Decision Freeze for Part 8F inputs P01-P16/,
+    /NEXT: Part 8F External Values And Evidence Collection/,
   );
 });

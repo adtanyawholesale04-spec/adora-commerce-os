@@ -36,5 +36,5 @@ test("Part 8E validates the approved Admin Auth CAPTCHA compatibility", () => {
     status,
     /PHASE 1B PART 8E LOCAL END-TO-END VALIDATION COMPLETE \/ VALIDATED/,
   );
-  assert.match(status, /NEXT: Owner Decision Freeze for Part 8F inputs P01-P16/);
+  assert.match(status, /NEXT: Part 8F External Values And Evidence Collection/);
 });

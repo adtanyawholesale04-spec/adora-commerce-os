@@ -37,6 +37,6 @@ test("Part 8 remains reconciled after local configuration readiness", () => {
   );
   assert.match(
     status,
-    /NEXT: Owner Decision Freeze for Part 8F inputs P01-P16/,
+    /NEXT: Part 8F External Values And Evidence Collection/,
   );
 });

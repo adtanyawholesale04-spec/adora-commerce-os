@@ -34,6 +34,6 @@ test("Part 4 maps exactly the frozen guarded operations without UI exposure", ()
   assert.match(status, /PHASE 1B PART 4 SERVER APPLICATION SERVICE BOUNDARY IMPLEMENTED \/ VALIDATED/);
   assert.match(
     status,
-    /NEXT: Owner Decision Freeze for Part 8F inputs P01-P16/,
+    /NEXT: Part 8F External Values And Evidence Collection/,
   );
 });

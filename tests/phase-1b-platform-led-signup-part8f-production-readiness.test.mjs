@@ -38,5 +38,5 @@ test("implementation status records the Part 8F blocker without guessing", () =>
     status,
     /PHASE 1B PART 8F PRODUCTION READINESS REVIEW COMPLETE \/ BLOCKED/,
   );
-  assert.match(status, /NEXT: Owner Decision Freeze for Part 8F inputs P01-P16/);
+  assert.match(status, /NEXT: Part 8F External Values And Evidence Collection/);
 });

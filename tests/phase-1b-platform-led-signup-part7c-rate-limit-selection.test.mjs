@@ -39,6 +39,6 @@ test("Part 7C remains reconciled after local URL selection", () => {
   );
   assert.match(
     status,
-    /NEXT: Owner Decision Freeze for Part 8F inputs P01-P16/,
+    /NEXT: Part 8F External Values And Evidence Collection/,
   );
 });

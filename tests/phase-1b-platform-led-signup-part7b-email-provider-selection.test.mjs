@@ -36,6 +36,6 @@ test("Part 7B remains reconciled after implementation planning", () => {
   );
   assert.match(
     status,
-    /NEXT: Owner Decision Freeze for Part 8F inputs P01-P16/,
+    /NEXT: Part 8F External Values And Evidence Collection/,
   );
 });

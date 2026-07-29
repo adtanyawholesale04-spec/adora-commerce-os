@@ -47,6 +47,6 @@ test("Part 8A records readiness and stops before protected migration", () => {
   );
   assert.match(
     status,
-    /NEXT: Owner Decision Freeze for Part 8F inputs P01-P16/,
+    /NEXT: Part 8F External Values And Evidence Collection/,
   );
 });

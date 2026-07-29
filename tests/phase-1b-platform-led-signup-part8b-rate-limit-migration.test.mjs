@@ -49,6 +49,6 @@ test("Part 8B reconciles status to server provider adapters", () => {
   );
   assert.match(
     status,
-    /NEXT: Owner Decision Freeze for Part 8F inputs P01-P16/,
+    /NEXT: Part 8F External Values And Evidence Collection/,
   );
 });
