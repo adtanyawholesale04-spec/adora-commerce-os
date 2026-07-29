@@ -53,6 +53,21 @@ runSqlSuite([
     file: "supabase/validation/012_role_matrix_validation.sql",
     requiredRows: ["role_matrix_validation|pass"],
   },
+  {
+    name: "active_profile_permission_guard",
+    file: "supabase/validation/036_active_profile_permission_guard_test.sql",
+    requiredRows: ["active_profile_permission_guard|pass"],
+  },
+  {
+    name: "extension_relocation",
+    file: "supabase/validation/037_extension_relocation_dry_run.sql",
+    requiredRows: ["extension_relocation_dry_run|pass"],
+  },
+  {
+    name: "profiles_rls_initplan",
+    file: "supabase/validation/038_profiles_rls_initplan_dry_run.sql",
+    requiredRows: ["profiles_rls_initplan_dry_run|pass"],
+  },
 ]);
 
 console.log("supabase_security_suite pass");
