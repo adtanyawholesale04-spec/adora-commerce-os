@@ -26,7 +26,16 @@ Supabase region: ap-northeast-1 (Tokyo)
 Postgres: 17
 production migration/advisor database gate: CLOSED
 registered domain owned by Owner: adora-commerce.com
-Vercel repository link: ABSENT
+Vercel team/project: adora1/adora-commerce-os
+Vercel project ID: prj_toXXCAFY8ajeBJPlDHWby3in7jaI
+connected repository: adtanyawholesale04-spec/adora-commerce-os
+production branch: main
+production deployment: READY at commit ab91128
+production custom domain: adora-commerce.com (VALID CONFIGURATION)
+production DNS: apex CNAME -> a82fe037db6c1071.vercel-dns-017.com (DNS only)
+Supabase Auth Site URL: https://adora-commerce.com
+Supabase Auth redirect allowlist: https://adora-commerce.com/auth/platform/callback
+project environment variables: NONE
 ```
 
 The local environment contains the expected variable names and local E2E
@@ -38,9 +47,9 @@ Vercel. No value or secret from `.env.local` is recorded here.
 | ID | State | Evidence / blocker |
 |---|---|---|
 | P01 | VERIFIED | Owner approved `https://adora-commerce.com` as the exact canonical production origin; `https://adora-commerce-os.vercel.app` remains a deployment/temporary domain and is not canonical |
-| P02 | MISSING | No Vercel project link exists; `.vercel/project.json` is absent |
+| P02 | VERIFIED | Dedicated Hobby project `adora1/adora-commerce-os` (`prj_toXXCAFY8ajeBJPlDHWby3in7jaI`) is connected to `adtanyawholesale04-spec/adora-commerce-os`; `main` is the production source, commit `ab91128` deployed Ready, previews remain separate, and no project environment variables exist |
 | P03 | VERIFIED | Dedicated `ACOS Production` project `pirewyrhddrhmtiwmlaw` is active and linked in Tokyo (`ap-northeast-1`) |
-| P04 | MISSING | Production Site URL and exact `/auth/platform/callback` allowlist evidence cannot be frozen before P01 |
+| P04 | VERIFIED | `adora-commerce.com` is attached to Vercel with valid configuration and SSL; the Cloudflare apex CNAME targets `a82fe037db6c1071.vercel-dns-017.com` in DNS-only mode; Supabase Auth uses exact Site URL `https://adora-commerce.com` and the sole redirect allowlist entry is `https://adora-commerce.com/auth/platform/callback` |
 | P05 | MISSING | No dedicated production Turnstile widget/hostname/sitekey evidence |
 | P06 | PARTIAL | Secret destination policy is frozen, but Supabase Auth configuration, named owner and rotation evidence are absent |
 | P07 | MISSING | No verified Resend account or dedicated transactional sending domain evidence |
@@ -57,10 +66,10 @@ Vercel. No value or secret from `.env.local` is recorded here.
 Summary:
 
 ```text
-VERIFIED: 2
+VERIFIED: 4
 PARTIAL: 2
 OWNER DECISION REQUIRED: 0
-MISSING: 12
+MISSING: 10
 ```
 
 ## Safety Disposition
@@ -68,7 +77,7 @@ MISSING: 12
 ```text
 ACOS_PLATFORM_SIGNUP_ENABLED must remain false in production
 ACOS_PLATFORM_SIGNUP_KILL_SWITCH must remain true in production
-no Vercel production secrets may be configured before P02/P12
+no Vercel production secrets may be configured before P12
 no Turnstile secret may leave Supabase Auth
 no SMTP credential may leave Supabase Auth
 no production email or public signup is authorized
@@ -80,18 +89,16 @@ fail closed until the complete external gate is verified.
 
 ## Next Ordered Actions
 
-1. Create/link one Vercel production project and keep previews isolated.
-2. Attach and verify `adora-commerce.com` without changing the frozen P01
-   canonical origin.
-3. Configure P04 only after P02 is frozen.
-4. Create and verify Turnstile and Resend/DNS boundaries without exposing
+1. Create and verify the P05/P06 production Turnstile widget and Supabase
+   CAPTCHA configuration without exposing the secret.
+2. Create and verify Resend/DNS boundaries without exposing
    secrets.
-5. Record P11-P16 operational evidence.
-6. Run the full production configuration validation and limited smoke test.
+3. Record P11-P16 operational evidence.
+4. Run the full production configuration validation and limited smoke test.
 
 ## Decision
 
 `PARTIAL / BLOCKED`
 
-P01, P03 and the production database gate are ready. Production deployment and
-signup remain blocked because P02/P04-P16 lack complete evidence.
+P01-P04 and the production database gate are ready. Public signup remains
+blocked because P05-P16 lack complete evidence.

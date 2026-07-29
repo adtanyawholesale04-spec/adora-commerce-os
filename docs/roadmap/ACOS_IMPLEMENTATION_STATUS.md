@@ -185,7 +185,7 @@ Track B Customer Engagement Platform
 | Phase 1B Platform-Led Signup Part 8E Local E2E | `docs/testing/ACOS_PHASE_1B_PART8E_LOCAL_E2E_VALIDATION_REPORT.md` | VALIDATED | Signup, Mailpit, PKCE, bootstrap, isolation, CAPTCHA-protected Admin Auth compatibility and session resume passed locally |
 | Phase 1B Platform-Led Signup Part 8F Production Readiness | `docs/api-contracts/ACOS_PHASE_1B_PLATFORM_LED_SIGNUP_PART8F_PRODUCTION_READINESS_GATE.md` | BLOCKED / OWNER INPUTS REQUIRED | Repository gates pass; exact origin, hosting/Supabase projects, production CAPTCHA, SMTP/DNS, secret destinations, monitoring, rollout and recovery evidence are absent |
 | Phase 1B Platform-Led Signup Part 8F Owner Decision Freeze | `docs/api-contracts/ACOS_PHASE_1B_PLATFORM_LED_SIGNUP_PART8F_OWNER_DECISION_FREEZE.md` | OWNER APPROVED / POLICY FROZEN / EXTERNAL VALUES PENDING | P01-P16 safety policies are frozen; exact external project, domain, sender, DNS, quota and operational evidence remain absent |
-| Phase 1B Platform-Led Signup Part 8F External Evidence Reconciliation | `docs/api-contracts/ACOS_PHASE_1B_PART8F_EXTERNAL_EVIDENCE_RECONCILIATION.md` | PARTIAL / BLOCKED | P01 is frozen to `https://adora-commerce.com`, P03 and the production database gate are verified; no Vercel project is linked and P02/P04-P16 remain incomplete or missing |
+| Phase 1B Platform-Led Signup Part 8F External Evidence Reconciliation | `docs/api-contracts/ACOS_PHASE_1B_PART8F_EXTERNAL_EVIDENCE_RECONCILIATION.md` | PARTIAL / BLOCKED | P01-P04 and the production database gate are verified; `adora-commerce.com` has valid Vercel configuration with a DNS-only apex CNAME, and Supabase Auth uses the exact canonical Site URL and callback; P05-P16 remain incomplete or missing |
 | Migration 060 Phase 1B Signup Rate-Limit Validation 2026-07-29 | `docs/migrations/MIGRATION_060_PHASE_1B_SIGNUP_RATE_LIMIT_VALIDATION_2026-07-29.md` | VALIDATED | Fresh replay, lifecycle, retention, privilege and 20-connection concurrency gates passed |
 | Migration 059 Customer Portal CRM Contact Sync Validation 2026-07-29 | `docs/migrations/MIGRATION_059_CUSTOMER_PORTAL_CRM_CONTACT_SYNC_VALIDATION_2026-07-29.md` | VALIDATED | Fresh replay and focused tenant, lifecycle, conflict, idempotency, privacy and direct-role denial gates passed |
 | Migration 057 Customer Portal Verified Contact Notification Validation 2026-07-29 | `docs/migrations/MIGRATION_057_CUSTOMER_PORTAL_VERIFIED_CONTACT_NOTIFICATION_VALIDATION_2026-07-29.md` | VALIDATED | Contact request/verification and notification mapping passed fresh replay, focused, security and workflow gates |
@@ -1172,9 +1172,10 @@ PHASE 1B PART 8E LOCAL END-TO-END VALIDATION COMPLETE / VALIDATED: signup, Mailp
 PHASE 1B PART 8E PRODUCTION BOUNDARY: local test keys and Mailpit only; production origin, CAPTCHA keys, SMTP/domain credentials, deployment secrets, monitoring and rollout remain unapproved and disabled
 PHASE 1B PART 8F PRODUCTION READINESS REVIEW COMPLETE / BLOCKED: repository gates pass, but required external production inputs P01-P16 are absent and cannot be inferred
 PHASE 1B PART 8F OWNER DECISION FREEZE COMPLETE: P01-P16 safety policies approved; P01 is exactly `https://adora-commerce.com` and the Vercel deployment domain is non-canonical
-BLOCKED: Vercel production project evidence, production Turnstile widget, Resend sender/domain/DNS, current quota evidence and named operational owners remain absent and cannot be inferred
+BLOCKED: production Turnstile widget and Supabase CAPTCHA configuration, Resend sender/domain/DNS, current quota evidence and named operational owners remain absent and cannot be inferred
 NEXT: Part 8F External Values And Evidence Collection
-CURRENT SUBSTEP: P02 Vercel Production Project Creation And Link Evidence
+CURRENT SUBSTEP: Custom Domain Attachment And P04 Auth URL Configuration VERIFIED
+NEXT SUBSTEP: P05/P06 Production Turnstile Widget And Supabase CAPTCHA Configuration OWNER APPROVAL REQUIRED
 AFTER PORTAL: Platform-Led Signup contract, then Storefront visibility/read model; Checkout/Payment follows Storefront, and Finance/Tax remains blocked until Checkout/Payment sources are clear
 
 Implementation:

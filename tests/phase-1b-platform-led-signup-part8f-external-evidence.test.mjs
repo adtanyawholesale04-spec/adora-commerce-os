@@ -14,13 +14,13 @@ test("Part 8F evidence reconciles every P01-P16 input", async () => {
     assert.match(evidence, new RegExp(`\\| ${id} \\|`));
   }
 
-  assert.match(evidence, /VERIFIED: 2/);
+  assert.match(evidence, /VERIFIED: 4/);
   assert.match(evidence, /PARTIAL: 2/);
   assert.match(evidence, /OWNER DECISION REQUIRED: 0/);
-  assert.match(evidence, /MISSING: 12/);
+  assert.match(evidence, /MISSING: 10/);
 });
 
-test("Part 8F verifies the approved P01 and P03 without guessing P02", async () => {
+test("Part 8F verifies the approved P01-P04 provider evidence", async () => {
   const evidence = await readFile(evidencePath, "utf8");
 
   assert.match(evidence, /pirewyrhddrhmtiwmlaw/);
@@ -28,8 +28,19 @@ test("Part 8F verifies the approved P01 and P03 without guessing P02", async () 
   assert.match(evidence, /https:\/\/adora-commerce-os\.vercel\.app/);
   assert.match(evidence, /https:\/\/adora-commerce\.com/);
   assert.match(evidence, /\| P01 \| VERIFIED \|/);
+  assert.match(evidence, /\| P02 \| VERIFIED \|/);
+  assert.match(evidence, /\| P03 \| VERIFIED \|/);
+  assert.match(evidence, /\| P04 \| VERIFIED \|/);
   assert.match(evidence, /deployment\/temporary domain and is not canonical/);
-  assert.match(evidence, /\.vercel\/project\.json.*absent/i);
+  assert.match(evidence, /prj_toXXCAFY8ajeBJPlDHWby3in7jaI/);
+  assert.match(evidence, /adtanyawholesale04-spec\/adora-commerce-os/);
+  assert.match(evidence, /a82fe037db6c1071\.vercel-dns-017\.com \(DNS only\)/);
+  assert.match(evidence, /Supabase Auth Site URL: https:\/\/adora-commerce\.com/);
+  assert.match(
+    evidence,
+    /Supabase Auth redirect allowlist: https:\/\/adora-commerce\.com\/auth\/platform\/callback/,
+  );
+  assert.match(evidence, /project environment variables: NONE/);
 });
 
 test("Part 8F remains fail-closed and secret-free", async () => {
