@@ -71,6 +71,9 @@ Event / Audit / Ledger:
 Finance / Tax:
 [เกี่ยวกับ receipt, tax invoice, VAT, expense, fee, refund, credit note, accountant export หรือไม่]
 
+UI Language / Appearance:
+[ใช้ภาษาไทยเป็น default หรือไม่, รองรับภาษาอังกฤษหรือไม่, รองรับ Light / Dark / System theme หรือไม่]
+
 Consent / Policy / Moderation:
 [ต้องตรวจ consent, policy, report/block/appeal หรือไม่]
 
@@ -85,6 +88,14 @@ Validation:
 ```
 
 ถ้าตอบข้อใดไม่ได้ ให้หยุดและระบุว่าเป็น `DECISION REQUIRED`
+
+ข้อกำหนด UI กลางที่ถือว่าอนุมัติแล้ว:
+
+- ภาษาไทย (`th-TH`) เป็น default และภาษาอังกฤษ (`en-US`) เป็นภาษาที่รองรับ
+- ฟอนต์หลักของ UI คือ `Noto Sans Thai` จาก Google Fonts พร้อม fallback system sans
+- ทุกข้อความ UI ต้องใช้ translation key ไม่ hard-code ใน component
+- รองรับ Light, Dark และ System default โดยใช้ design token กลาง
+- ต้องตรวจ table, drawer, modal, badge, chart, focus และ error state ในทั้งสอง theme
 
 ---
 

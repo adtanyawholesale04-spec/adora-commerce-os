@@ -136,6 +136,11 @@ runSqlSuite([
     file: "supabase/validation/044_customer_portal_contact_workflow_e2e_test.sql",
     requiredRows: ["customer_portal_contact_workflow_e2e|pass"],
   },
+  {
+    name: "phase_1b_platform_signup_boundary",
+    file: "supabase/validation/045_phase_1b_platform_signup_boundary_test.sql",
+    requiredRows: ["phase_1b_platform_signup_boundary|pass"],
+  },
 ]);
 
 runNpmScript("validate:carrier-webhook-e2e");

@@ -21,5 +21,9 @@ test("Auth Admin apply integrates CRM sync without widening the server boundary"
   assert.doesNotMatch(source, /use server|NEXT_PUBLIC_SUPABASE_SERVICE_ROLE|console\.(log|error)/);
   assert.match(status, /PART 3 CRM CONTACT SYNC SERVER INTEGRATION IMPLEMENTED \/ VALIDATED/);
   assert.match(status, /PART 4 CUSTOMER PORTAL CONTACT WORKFLOW VALIDATED/);
-  assert.match(status, /NEXT: Platform-Led Signup contract review under Phase 1B/);
+  assert.match(status, /PHASE 1B PART 0 REPOSITORY & DEPENDENCY AUDIT VALIDATED/);
+  assert.match(
+    status,
+    /NEXT: Owner review and approval of Phase 1B Part 8B Durable Rate-Limit Migration Plan/,
+  );
 });
