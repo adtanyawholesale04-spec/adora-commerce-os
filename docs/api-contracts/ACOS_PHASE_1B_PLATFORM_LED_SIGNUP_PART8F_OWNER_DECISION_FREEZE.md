@@ -18,7 +18,7 @@ DNS record or secret.
 
 | ID | Owner-approved decision | External value/evidence state |
 |---|---|---|
-| P01 | Use one canonical HTTPS application origin with no wildcard, path, query or fragment | Exact origin pending |
+| P01 | Use `https://adora-commerce.com` as the canonical HTTPS application origin with no wildcard, path, query or fragment; `https://adora-commerce-os.vercel.app` is a deployment/temporary domain and must not be treated as canonical | Owner approved and exact origin frozen |
 | P02 | Use one dedicated Vercel production project; preview deployments use isolated test configuration | Project creation/link evidence pending |
 | P03 | Use one dedicated hosted Supabase production project; never reuse local or preview data | Project reference and region pending |
 | P04 | Supabase Site URL equals P01 and the allowlist contains the exact P01 platform callback only | Configuration evidence pending P01/P03 |
@@ -63,14 +63,13 @@ development, CI logs and preview deployments.
 
 Policy approval does not resolve these concrete values:
 
-1. exact canonical HTTPS origin;
-2. Vercel production project identity;
-3. Supabase production project reference and region;
-4. Turnstile production widget/sitekey and hostname evidence;
-5. Resend account, sending domain, sender address and sender name;
-6. SPF, DKIM and DMARC evidence;
-7. named rotation, monitoring, rollout and recovery owners;
-8. current provider quota evidence and backup/restore disposition.
+1. Vercel production project identity;
+2. Supabase production project reference and region;
+3. Turnstile production widget/sitekey and hostname evidence;
+4. Resend account, sending domain, sender address and sender name;
+5. SPF, DKIM and DMARC evidence;
+6. named rotation, monitoring, rollout and recovery owners;
+7. current provider quota evidence and backup/restore disposition.
 
 ## Decision
 

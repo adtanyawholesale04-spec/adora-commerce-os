@@ -11,7 +11,7 @@ const status = readFileSync(
   "utf8",
 );
 
-test("Part 8F freezes all P01-P16 policies without inventing external values", () => {
+test("Part 8F freezes all P01-P16 policies and records the approved P01", () => {
   assert.match(
     freeze,
     /\*\*Status:\*\* OWNER APPROVED \/ POLICY FROZEN \/ EXTERNAL VALUES PENDING/,
@@ -19,7 +19,9 @@ test("Part 8F freezes all P01-P16 policies without inventing external values", (
   for (let id = 1; id <= 16; id += 1) {
     assert.match(freeze, new RegExp(`\\| P${String(id).padStart(2, "0")} \\|`));
   }
-  assert.match(freeze, /Exact origin pending/);
+  assert.match(freeze, /https:\/\/adora-commerce\.com/);
+  assert.match(freeze, /deployment\/temporary domain and must not be treated as canonical/);
+  assert.doesNotMatch(freeze, /exact canonical HTTPS origin;/);
   assert.match(freeze, /Project reference and region pending/);
   assert.match(freeze, /Exact address and sender name pending/);
 });
