@@ -859,6 +859,51 @@ Exit gate:
 - order จาก storefront ผูก customer และ organization ได้ถูกต้อง
 - booking/appointment ไม่เปิดข้อมูลส่วนตัวเกินจำเป็นใน public surface
 
+## Phase 1E: Finance & Tax Control MVP
+
+เป้าหมาย: ทำให้ร้านควบคุมยอดขาย เอกสารรับเงิน ภาษีขาย ภาษีซื้อ และค่าใช้จ่ายพื้นฐานได้ โดยยังไม่ต้องเป็นระบบบัญชีเต็มรูปแบบตั้งแต่แรก
+
+หลักคิด:
+
+- Commerce Core เป็นแหล่งความจริงของยอดขาย, order, payment, refund และ return
+- Finance & Tax เป็นชั้นสรุป/เอกสาร/รายงานที่อ่านจาก Commerce Core และสร้าง record เพิ่มเท่าที่จำเป็น
+- ไม่แก้ยอด order/payment ย้อนหลังแบบ silent update
+- ทุกเอกสารการเงินต้องมีเลขเอกสาร, สถานะ, audit และ cancellation/reversal path
+- ทุกยอดเงินต้องเก็บ currency, tax basis, tax rate, tax amount และ rounding rule ชัดเจน
+- ระบบช่วยจัดข้อมูลให้เจ้าของร้านและนักบัญชี แต่ไม่ควร claim ว่าเป็นคำปรึกษาภาษีตามกฎหมาย
+
+Feature:
+
+- receipt / payment receipt generation จาก payment ที่ยืนยันแล้ว
+- tax invoice request และ tax invoice record
+- output VAT / ภาษีขาย จากยอดขายที่เข้าเงื่อนไข
+- input VAT / ภาษีซื้อ จาก purchase/expense ที่ร้านบันทึก
+- expense record สำหรับค่าใช้จ่ายธุรกิจ เช่น ค่าส่ง, ค่าแพ็ก, ค่าโฆษณา, ค่าธรรมเนียม payment, ค่าเช่า, ค่าซื้อสินค้า
+- supplier/vendor profile แบบพื้นฐาน
+- purchase bill / supplier invoice attachment
+- refund, return, credit note/debit note linkage
+- tax report export: ภาษีขาย, ภาษีซื้อ, ยอดขาย, ค่าใช้จ่าย
+- accountant export เป็น CSV/Excel
+- finance dashboard: sales, paid amount, refund, fee, expense, gross margin estimate
+
+ยังไม่ทำ:
+
+- full general ledger
+- chart of accounts เต็มรูปแบบ
+- automated journal posting ทุกเหตุการณ์
+- financial statements เต็ม เช่น balance sheet / trial balance
+- e-Tax Invoice/e-Receipt integration กับ provider ภายนอก
+- ยื่นภาษีอัตโนมัติ
+
+Exit gate:
+
+- ร้านดูยอดขาย/ยอดรับเงินจริง/ยอดคืนเงินได้จาก source of truth เดิม
+- ร้านออกหรือบันทึก receipt/tax invoice ได้โดยไม่แก้ order เดิม
+- ร้านบันทึกค่าใช้จ่ายและแนบหลักฐานได้
+- รายงานภาษีขายและภาษีซื้อ export ได้
+- refund/return เชื่อม credit note หรือ reversal ได้
+- finance/tax data เคารพ tenant boundary, permission, audit และ immutable document numbering
+
 ## Phase 2: Verified Review MVP
 
 เป้าหมาย: ลูกค้ารีวิวสินค้า บริการ หรือ booking ที่เคยซื้อ/ใช้จริงได้ โดยเริ่มจาก order item ก่อน แล้วออกแบบให้ขยายไป target อื่นได้
@@ -1395,6 +1440,22 @@ Payment Intent
 Payment Transaction
 Order
 Order Item
+Receipt
+Tax Invoice
+Tax Invoice Line
+Credit Note
+Debit Note
+Finance Document Number Sequence
+Tax Configuration
+Output VAT Entry
+Input VAT Entry
+Expense
+Expense Category
+Supplier / Vendor
+Supplier Bill
+Payment Fee
+Finance Export Batch
+Accountant Export
 Coupon
 Point Ledger
 Notification
@@ -1448,6 +1509,10 @@ Audit Log
 - storefront ต้องใช้ product/service/order/payment source เดิมของ Commerce Core
 - storefront visibility ต้องเคารพ product status, inventory status, service availability และ plan entitlement
 - checkout session ควรเป็นจุดเชื่อม attribution ก่อนเกิด order/booking จริง
+- finance/tax document ต้องอ้างอิง order/payment/refund/return เดิม และห้าม rewrite commercial source of truth
+- tax invoice, receipt, credit note และ debit note ต้องมีเลขเอกสารที่ audit ได้และไม่ reuse เลขเอกสารเดิมหลังยกเลิก
+- output VAT ต้องผูกกับ sales/payment/tax invoice rule ส่วน input VAT ต้องผูกกับ purchase/expense/supplier bill ที่ร้านบันทึก
+- expense และ supplier bill ต้องรองรับ attachment เพื่อใช้เป็นหลักฐานให้เจ้าของร้านและนักบัญชีตรวจสอบ
 - public community data อาจมี `organization_id` เมื่อผูกกับร้าน/สินค้า
 - store achievement ต้องคำนวณจาก metric ที่ตรวจสอบได้ เช่น paid sales, completed orders, verified members, verified reviews
 - platform reward ต้องมี grant ledger, expiry, redemption และ revoke/reversal rule
@@ -1463,7 +1528,246 @@ Audit Log
 
 ---
 
-# 11. System Boundary Map
+# 11. Recommended First Database Build Order
+
+ลำดับนี้ใช้เมื่อเริ่มสร้าง migration/table จริงสำหรับ vision ใหม่ โดยยังต้องทำ contract review, RLS, permission, audit และ validation gate ทุกครั้งก่อน merge
+
+## 11.1 Storefront + Storefront Visibility
+
+ทำก่อนเพราะ Storefront เป็น conversion center ของ customer portal, community, review, attribution และ live helper
+
+ต้องใช้ source เดิม:
+
+- organization/store
+- product/product_variant
+- inventory status
+- promotion/coupon/loyalty เมื่อพร้อม
+- customer/store membership
+
+ควรสร้างเฉพาะ additive tables เช่น:
+
+- storefront
+- storefront page/settings
+- storefront visibility rule
+- storefront domain ระยะหลัง
+
+ยังไม่ควรทำ:
+
+- custom theme builder ซับซ้อน
+- multi-store cart
+- marketplace checkout
+
+## 11.2 Live-to-Chat Foundation
+
+ทำต่อจาก Storefront เพราะช่วยให้ TikTok/ช่องทางอื่นปิดยอดใน ACOS ได้เร็ว โดยไม่รอ provider API
+
+ควรประสานกับ:
+
+```text
+docs/roadmap/ACOS_LIVE_COMMERCE_MANAGEMENT_PLAN.md
+```
+
+ควรสร้าง additive tables เช่น:
+
+- live session
+- live chat link
+- live chat session
+- live chat message
+- live product assignment
+- live sale code assignment
+- live parser result
+
+ต้องใช้ source เดิม:
+
+- product_variant
+- cart/purchase session
+- order/payment
+- customer/store membership
+
+ยังไม่ควรทำ:
+
+- TikTok comment ingestion เป็น dependency แรก
+- own video streaming
+- external cart เป็น source หลัก
+
+## 11.3 Checkout Session / Payment Link Bridge
+
+ทำเพื่อเชื่อม Storefront และ Live-to-Chat กับยอดขายจริง
+
+ต้องใช้ source เดิม:
+
+- cart
+- order
+- payment
+- promotion/coupon
+- inventory reservation
+
+ควรสร้างเฉพาะ orchestration/additive layer เช่น:
+
+- checkout session
+- payment intent/link reference
+- attribution-ready checkout event
+
+ยังไม่ควรทำ:
+
+- payment provider ใหม่โดยไม่มี secret boundary
+- rewrite order/payment state เดิม
+- split/multi-vendor marketplace payment
+
+## 11.4 Finance & Tax Control Foundation
+
+ทำหลัง Checkout/Payment มี source of truth ชัด เพื่อให้ร้านเริ่มควบคุมยอดขาย ภาษี และค่าใช้จ่ายได้ โดยยังไม่ต้องทำบัญชีเต็มตั้งแต่แรก
+
+ต้องใช้ source เดิม:
+
+- organization/store
+- order/order item
+- payment/payment transaction
+- refund/return/RMA
+- shipment/COD settlement เมื่อเกี่ยวข้อง
+- product/service cost data เฉพาะที่ permission อนุญาต
+
+ควรสร้าง additive tables เช่น:
+
+- tax configuration
+- finance document number sequence
+- receipt
+- tax invoice
+- tax invoice line
+- credit note / debit note
+- output VAT entry
+- input VAT entry
+- expense
+- expense category
+- supplier/vendor
+- supplier bill
+- payment fee
+- finance export batch
+
+MVP report:
+
+- sales summary
+- paid amount summary
+- refund summary
+- output VAT report
+- input VAT report
+- expense report
+- gross margin estimate
+- accountant export CSV/Excel
+
+ยังไม่ควรทำ:
+
+- full chart of accounts
+- general ledger เต็ม
+- automated journal entry ทุก event
+- tax filing automation
+- e-Tax provider integration เป็น dependency แรก
+
+## 11.5 Review Target + Verified Review
+
+ทำหลังมี order/booking source ที่ trace ได้
+
+ควรสร้าง:
+
+- review
+- review target
+- review media link
+- review visibility
+- review moderation/report link
+
+ต้องรองรับ:
+
+- product
+- service
+- booking
+- package
+- store
+
+ยังไม่ควรทำ:
+
+- commission จาก review ก่อน attribution/ledger พร้อม
+- review ที่ได้ badge โดยไม่ผูก purchase/booking จริง
+
+## 11.6 Public Profile + Community Feed
+
+ทำหลัง review และ visibility rule ชัด
+
+ควรสร้าง:
+
+- public profile
+- follow
+- post/community content extensions
+- comment/reaction/save
+- feed projection/read model
+
+ยังไม่ควรทำ:
+
+- feed ranking ซับซ้อน
+- public DM
+- cross-store data exposure
+
+## 11.7 Commission Ledger + Wallet
+
+ทำหลัง attribution จาก order/booking ชัด
+
+ควรสร้าง:
+
+- commission rule
+- commission ledger
+- wallet ledger
+- payout request ระยะหลัง
+
+ต้องมี:
+
+- hold period
+- reversal
+- refund/cancel handling
+- audit
+
+ยังไม่ควรทำ:
+
+- auto payout
+- creator marketplace payout
+- real-money flow โดยไม่มี policy/tax/approval
+
+## 11.8 Store Achievement + Platform Reward
+
+ทำหลังมี metric ที่ audit ได้ เช่น paid sales, completed orders, verified members, verified reviews
+
+ควรสร้าง:
+
+- store achievement rule
+- store achievement progress
+- store mission
+- platform reward
+- reward grant ledger
+- reward redemption
+
+ยังไม่ควรทำ:
+
+- follower-only reward ก่อน fraud guard
+- platform-funded coupon โดยไม่มี cost policy
+
+## 11.9 Ads / Boost
+
+ทำหลังมี organic store/customer/review/community activity จริง
+
+ควรสร้าง:
+
+- ad campaign
+- ad creative/placement
+- impression/click/conversion log
+- spend ledger
+
+ยังไม่ควรทำ:
+
+- ads ก่อน trust layer พร้อม
+- paid visibility ที่ไม่ติด label/policy
+- CPC/CPA ซับซ้อนใน MVP
+
+---
+
+# 12. System Boundary Map
 
 ```text
 Commerce Core
@@ -1499,7 +1803,7 @@ Monetization
 
 ---
 
-# 12. Implementation Checklist
+# 13. Implementation Checklist
 
 ใช้ checklist นี้ก่อนเริ่ม feature ใหม่ใน track นี้
 
@@ -1534,7 +1838,7 @@ Monetization
 
 ---
 
-# 13. Recommended Build Order
+# 14. Recommended Build Order
 
 ลำดับที่แนะนำสำหรับการพัฒนาจริง:
 
@@ -1562,7 +1866,7 @@ Monetization
 
 ---
 
-# 14. Open Decisions
+# 15. Open Decisions
 
 ต้องให้ Project Owner ตัดสินใจก่อน freeze business rules:
 
@@ -1598,10 +1902,17 @@ Monetization
 30. Custom domain เป็น feature ของ plan ใด และต้องเปิดเมื่อใด
 31. Storefront order จะสร้าง store membership อัตโนมัติหรือไม่
 32. Cart จะรองรับสินค้าหลายร้านในตะกร้าเดียวหรือเริ่มจาก single-store cart
+33. Finance & Tax MVP ต้องเริ่มจาก receipt อย่างเดียว หรือเปิด tax invoice/VAT report พร้อมกัน
+34. ร้านที่ยังไม่จด VAT ต้องใช้ tax configuration แบบใด และต้องแสดงข้อความ/เอกสารต่างจากร้านที่จด VAT อย่างไร
+35. เลขที่เอกสาร receipt/tax invoice/credit note ต้องรันต่อ organization, branch หรือ document type
+36. Expense category ใดควรเป็น default สำหรับร้านค้าไทย เช่น ค่าส่ง, ค่าแพ็ก, ค่าโฆษณา, ค่าธรรมเนียม payment, ค่าเช่า, ซื้อสินค้า
+37. ต้องรองรับ withholding tax / หัก ณ ที่จ่าย ใน phase แรกหรือเลื่อนไปหลัง Finance MVP
+38. Export ให้นักบัญชีควรเริ่มจาก CSV/Excel รูปแบบใด และต้องมีฟิลด์อะไรเป็นขั้นต่ำ
+39. e-Tax Invoice/e-Receipt จะเป็น integration ระยะหลังกับ provider ใด หรือเริ่มจาก document record ภายในระบบก่อน
 
 ---
 
-# 15. MVP Definition
+# 16. MVP Definition
 
 MVP แรกที่ควรส่งมอบโดยไม่ใหญ่เกินไป:
 
@@ -1620,6 +1931,13 @@ Storefront
   + product/service detail
   + join membership / follow store
   + basic cart / checkout / payment path
+
+Finance & Tax Control
+  + receipt/tax document record from confirmed payment
+  + tax configuration placeholder
+  + output VAT/input VAT report foundation
+  + expense record with attachment
+  + accountant export
 
 Verified Review
   + create review from purchased item
@@ -1641,10 +1959,11 @@ Basic Community
 - creator marketplace
 - cross-store recommendation ขั้นสูง
 - custom domain / advanced storefront theme
+- full accounting / general ledger / automatic tax filing
 
 ---
 
-# 16. Long-Term Vision
+# 17. Long-Term Vision
 
 เมื่อระบบโตขึ้น ACOS จะไม่ใช่แค่เครื่องมือร้านค้า แต่เป็น commerce network ที่มี:
 
@@ -1662,7 +1981,7 @@ Basic Community
 
 ---
 
-# 17. Next Action
+# 18. Next Action
 
 งานถัดไปที่ควรทำหลังเอกสารนี้:
 
@@ -1677,4 +1996,8 @@ Basic Community
 9. ทำ UI contract สำหรับ customer dashboard
 10. ทำ UI contract สำหรับ store landing page / product detail / cart / checkout
 11. ทำ UI contract สำหรับ platform signup / creator onboarding แบบยังไม่เปิด payout
-12. ทำ migration plan สำหรับ Track B phase แรก
+12. Freeze business rules สำหรับ Phase 1E: Finance & Tax Control MVP
+13. ออกแบบ ER addendum สำหรับ receipt, tax invoice, document number sequence, tax configuration, expense, supplier bill, VAT entry และ finance export
+14. ทำ API contract สำหรับ finance/tax read model และ document creation guard
+15. ทำ UI contract สำหรับ finance dashboard, tax report, expense record และ accountant export
+16. ทำ migration plan สำหรับ Track B phase แรก

@@ -35,7 +35,7 @@ test("implementation status points to the approved review and Part 1", () => {
   const status = fs.readFileSync(statusPath, "utf8");
   assert.match(status, /A3-ROLE-MANAGEMENT-CONTRACT-REVIEW-001/);
   assert.match(status, /A3 role replacement\/deactivation contract review APPROVED/i);
-  assert.match(status, /NEXT: Track B Business Rule Review/);
+  assert.match(status, /NEXT: Complete the Customer Portal MVP/);
 });
 
 test("Part 1 implementation contract stays write-disabled and hands off to Part 2", () => {

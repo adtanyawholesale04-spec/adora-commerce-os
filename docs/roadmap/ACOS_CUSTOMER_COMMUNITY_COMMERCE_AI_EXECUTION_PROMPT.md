@@ -10,7 +10,7 @@
 
 # 0. How To Use
 
-เมื่อจะให้ AI/Developer ทำงานที่เกี่ยวกับ Customer Portal, Storefront, Community, Review, Affiliate, Commission, Wallet, Messaging, Platform Growth Support หรือ Ads ให้เริ่มด้วยคำสั่งนี้:
+เมื่อจะให้ AI/Developer ทำงานที่เกี่ยวกับ Customer Portal, Storefront, Checkout, Finance & Tax, Community, Review, Affiliate, Commission, Wallet, Messaging, Platform Growth Support หรือ Ads ให้เริ่มด้วยคำสั่งนี้:
 
 ```text
 อ่านและยึดไฟล์นี้ก่อนเริ่มงาน:
@@ -68,6 +68,9 @@ Public vs Private Data:
 Event / Audit / Ledger:
 [ต้องมี event, audit log, ledger หรือไม่]
 
+Finance / Tax:
+[เกี่ยวกับ receipt, tax invoice, VAT, expense, fee, refund, credit note, accountant export หรือไม่]
+
 Consent / Policy / Moderation:
 [ต้องตรวจ consent, policy, report/block/appeal หรือไม่]
 
@@ -111,6 +114,7 @@ Phase 1: Customer Portal MVP
 Phase 1B: Platform-Led Signup Readiness
 Phase 1C: Storefront MVP
 Phase 1D: Storefront Cart / Checkout / Payment MVP
+Phase 1E: Finance & Tax Control MVP
 Phase 2: Verified Review MVP
 Phase 3: Public Profile + Basic Community Feed
 Phase 4: Buy From Review + Attribution
@@ -158,6 +162,10 @@ Required / Not Required / Deferred / Decision Required
 - public community data ต้องแยกจาก private account data
 - storefront ต้องใช้ product/service/order/payment source เดิม
 - checkout session ต้องรองรับ attribution event
+- finance/tax document ต้องอ้างอิง order/payment/refund/return source เดิม และห้าม rewrite commercial source of truth
+- receipt, tax invoice, credit note และ debit note ต้องมีเลขเอกสารที่ audit ได้และไม่ reuse หลังยกเลิก
+- output VAT ต้องผูกกับยอดขายหรือ tax invoice rule ส่วน input VAT ต้องผูกกับ expense/purchase/supplier bill
+- expense/supplier bill ต้องมี tenant boundary, permission, audit และ attachment policy
 - review ต้องรองรับ `review_target` ไม่ lock กับ product อย่างเดียว
 - review ที่มี badge ต้องผูกกับ purchase/booking/service จริง
 - financial/value movement ต้องใช้ ledger
@@ -257,4 +265,3 @@ docs/roadmap/ACOS_CUSTOMER_COMMUNITY_COMMERCE_GROWTH_GUIDE.md
 ถ้างานกระทบ protected core หรือยังมี decision required ให้หยุดถามก่อน
 ถ้าพร้อม ให้ทำ implementation ตาม repo pattern และเพิ่ม validation ที่จำเป็น
 ```
-

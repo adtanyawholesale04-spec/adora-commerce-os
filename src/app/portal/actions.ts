@@ -6,6 +6,16 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type ActionResult = { ok: true } | { ok: false; message: string };
 
+const consentChannels = new Set(["LINE", "SMS", "EMAIL", "PHONE"]);
+const consentPurposes = new Set([
+  "ORDER_UPDATE",
+  "LIVE_NOTIFICATION",
+  "PROMOTION",
+  "NEW_PRODUCT",
+  "LOYALTY",
+  "CONTENT_UPDATE"
+]);
+
 export async function createPortalAddressAction(formData: FormData): Promise<ActionResult> {
   return callAddressRpc("api_create_customer_portal_address", {
     p_label: stringValue(formData, "label"),
@@ -46,6 +56,50 @@ export async function archivePortalAddressAction(formData: FormData): Promise<Ac
     p_address_id: requiredValue(formData, "address_id"),
     p_client_request_id: crypto.randomUUID()
   });
+}
+
+export async function updatePortalConsentAction(formData: FormData): Promise<ActionResult> {
+  try {
+    const channel = requiredValue(formData, "channel").toUpperCase();
+    const purpose = requiredValue(formData, "purpose").toUpperCase();
+    const status = requiredValue(formData, "status").toUpperCase();
+    const destination = stringValue(formData, "destination");
+    const policyVersion = stringValue(formData, "policy_version");
+
+    if (!consentChannels.has(channel) || !consentPurposes.has(purpose)) {
+      return { ok: false, message: "Unsupported consent preference." };
+    }
+    if (status !== "GRANTED" && status !== "REVOKED") {
+      return { ok: false, message: "Unsupported consent status." };
+    }
+    if ((channel === "EMAIL" || channel === "PHONE") && !destination) {
+      return { ok: false, message: "A verified destination is required." };
+    }
+
+    const context = await getAdminShellContext();
+    if (context.mode !== "configured" || !context.activeOrganizationId) {
+      return { ok: false, message: "Active organization membership is required." };
+    }
+
+    const supabase = await createSupabaseServerClient();
+    const { error } = await supabase.rpc("api_update_customer_portal_consent", {
+      p_organization_id: context.activeOrganizationId,
+      p_channel: channel,
+      p_purpose: purpose,
+      p_status: status,
+      p_destination: destination || null,
+      p_policy_version: policyVersion || null,
+      p_client_request_id: crypto.randomUUID()
+    });
+    if (error) {
+      return { ok: false, message: "We could not update this preference." };
+    }
+
+    revalidatePath("/portal");
+    return { ok: true };
+  } catch {
+    return { ok: false, message: "We could not update this preference." };
+  }
 }
 
 async function callAddressRpc(functionName: string, params: Record<string, unknown>): Promise<ActionResult> {

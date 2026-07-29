@@ -20,5 +20,5 @@ test("CRM contact sync review protects the canonical customer boundary", () => {
 test("implementation status keeps CRM synchronization blocked for Owner freeze", () => {
   assert.match(status, /Customer Portal Part 5 CRM Contact Synchronization Contract Review/);
   assert.match(status, /CONTRACT REVIEW COMPLETE \/ OWNER DECISION REQUIRED/);
-  assert.match(status, /NEXT: Owner freeze for the Part 5 CRM contact synchronization decision table/);
+  assert.match(status, /NEXT BLOCKED GATE: Owner freeze for the Part 5 CRM contact synchronization decision table/);
 });

@@ -35,5 +35,5 @@ test("Shipping implementation is ready after Owner approval", () => {
   assert.match(review, /20260728150119_a3_shipping_assignment_boundary\.sql/);
   assert.match(boundary, /api_assign_shipment/);
   assert.match(status, /A3-SHIPPING-ASSIGNMENT-001.*VALIDATED/);
-  assert.match(status, /NEXT: Track B Business Rule Review/);
+  assert.match(status, /NEXT: Complete the Customer Portal MVP/);
 });

@@ -1,0 +1,115 @@
+# ADORA Commerce OS (ACOS)
+# CUSTOMER COMMUNITY COMMERCE STATUS RECONCILIATION
+
+**Date:** 2026-07-29
+**Status:** RECONCILED
+**Scope:** Customer Community Commerce phase ordering and Customer Portal implementation evidence
+
+---
+
+## 1. Authority And Method
+
+This reconciliation follows the ACOS governance hierarchy. The AI Coding
+Constitution remains the highest execution authority, and
+`ACOS_IMPLEMENTATION_STATUS.md` remains the current-state source of truth.
+
+Inputs reviewed:
+
+```text
+docs/governance/ACOS_AI_CODING_CONSTITUTION.md
+docs/roadmap/ACOS_CUSTOMER_COMMUNITY_COMMERCE_AI_EXECUTION_PROMPT.md
+docs/roadmap/ACOS_CUSTOMER_COMMUNITY_COMMERCE_GROWTH_GUIDE.md
+docs/roadmap/ACOS_MASTER_DEVELOPMENT_ROADMAP_V2.md
+docs/roadmap/ACOS_IMPLEMENTATION_STATUS.md
+src/app/portal
+src/lib/portal
+supabase/migrations
+supabase/validation
+tests
+```
+
+Only repository-backed evidence is promoted. This review creates no migration,
+changes no frozen migration, and enables no protected write path.
+
+---
+
+## 2. Reconciled Phase Order
+
+| Phase | Reconciled Status | Dependency / Gate |
+|---|---:|---|
+| Phase 0 - Foundation Alignment | PARTIAL / CONTROLLED | Core identity, tenant, RLS, audit, consent, event and usage boundaries exist; remaining commercial/media decisions stay separately gated |
+| Phase 1 - Customer Portal MVP | IN_PROGRESS | Read model, profile summary, address writes, order history, benefits, consent preference and notification inbox are implemented; contact-management completion remains gated |
+| Phase 1B - Platform-Led Signup | NOT_STARTED | Requires an approved signup, organization creation, membership, entitlement and abuse-control contract |
+| Phase 1C - Storefront MVP | NOT_STARTED | Requires visibility, public tenant resolution, media and catalog projection contracts; must reuse canonical products |
+| Phase 1D - Checkout And Payment | BLOCKED | Requires Phase 1C plus approved order draft, reservation, payment and idempotency boundaries |
+| Phase 1E - Finance And Tax | BLOCKED | Must follow a clear Checkout/Payment source; requires finance, tax, privacy and audit decisions |
+| Phase 2+ - Community, Growth And Intelligence | DEFERRED | Requires stable Portal, Storefront, Checkout and canonical event flows |
+
+The safe product order is:
+
+```text
+Customer Portal completion
+-> Platform-Led Signup
+-> Storefront read model and visibility
+-> Live-to-Chat
+-> Checkout and payment bridge
+-> Finance and Tax foundation
+```
+
+---
+
+## 3. Customer Portal Evidence
+
+| Capability | Repository Evidence | Reconciled Status |
+|---|---|---:|
+| Profile summary | `/portal` server page and ownership-scoped snapshot RPC | IMPLEMENTED / READ-ONLY |
+| Address management | Guarded RPCs, server actions and bilingual UI | IMPLEMENTED / VALIDATED |
+| Order history | Snapshot includes canonical orders/items and `/portal` renders them | IMPLEMENTED / READ-ONLY |
+| Coupons and loyalty points | Snapshot includes active coupons and loyalty balances; `/portal` renders both | IMPLEMENTED / READ-ONLY |
+| Consent state | Snapshot, guarded grant/revoke RPC and bilingual Portal preference switches are validated | IMPLEMENTED / VALIDATED |
+| Notification inbox | Ownership-scoped canonical notification read boundary and bilingual read-only Portal UI are validated | IMPLEMENTED / VALIDATED |
+| Verified Auth contact apply | Server-only Auth Admin apply boundary is validated | IMPLEMENTED / VALIDATED |
+| CRM customer contact sync | Contract review exists; Owner freeze is not recorded | BLOCKED / OWNER DECISION REQUIRED |
+| Followed merchants and feed | Required product/service flows are not complete | BLOCKED |
+
+Backend readiness alone does not make a user-facing workflow complete. The
+Portal remains `IN_PROGRESS` until the private contact-management decision and
+remaining UI boundary are approved and validated.
+
+---
+
+## 4. Corrections Applied
+
+The following stale status statements are corrected:
+
+1. Coupons/points and order history are no longer marked blocked because the
+   validated canonical read model and rendered UI exist.
+2. Consent preference is implemented through the validated guarded boundary and
+   does not trigger message dispatch.
+3. Notification inbox is implemented as a server-read-only Portal UI; mark as
+   read remains a separately gated write action.
+4. Track A no longer points back to the already completed Track B Business Rule
+   Review.
+5. Finance and Tax remain explicitly gated behind Checkout and Payment.
+
+---
+
+## 5. Remaining Blockers And Safe Next Work
+
+P0:
+
+```text
+Owner freeze for CRM contact synchronization.
+```
+
+This remains blocked because it can mutate private canonical customer contact
+data. No implementation may begin before the decision table is frozen.
+
+After Owner freeze and Phase 1 Portal completion:
+
+```text
+1. Review and freeze Platform-Led Signup contract.
+2. Review Storefront visibility and canonical product projection contracts.
+```
+
+Checkout, payment, Finance and Tax must not be pulled forward.

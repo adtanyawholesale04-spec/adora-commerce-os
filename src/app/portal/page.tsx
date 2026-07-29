@@ -2,17 +2,22 @@ import {
   ArrowRight,
   CircleAlert,
   Coins,
-  CreditCard,
   Gift,
   MapPin,
+  Bell,
   Package,
   ShieldCheck,
   Sparkles,
   UserRound
 } from "lucide-react";
-import { getCustomerPortalReadModel, type PortalOrder } from "@/lib/portal/customer";
+import {
+  getCustomerPortalReadModel,
+  type PortalNotification,
+  type PortalOrder
+} from "@/lib/portal/customer";
 import { getAdminPreferences } from "@/lib/admin/preferences";
 import { AddressManager } from "@/app/portal/address-manager";
+import { ConsentPreferenceManager } from "@/app/portal/consent-preference-manager";
 
 export const dynamic = "force-dynamic";
 
@@ -42,6 +47,14 @@ const copy = {
     loyalty: "คะแนนสะสม",
     coupons: "สิทธิประโยชน์",
     consents: "การสื่อสารที่อนุญาต",
+    consentDescription: "เลือกการสื่อสารที่คุณต้องการรับ การเปลี่ยนแปลงนี้ไม่ส่งข้อความทันที",
+    consentSaved: "บันทึกการตั้งค่าแล้ว",
+    consentError: "ไม่สามารถบันทึกการตั้งค่าได้ กรุณาลองอีกครั้ง",
+    notifications: "การแจ้งเตือน",
+    notificationDescription: "ข่าวสารและสถานะล่าสุดสำหรับบัญชีของคุณ",
+    emptyNotifications: "ยังไม่มีการแจ้งเตือน",
+    notificationError: "ไม่สามารถโหลดการแจ้งเตือนได้ในขณะนี้",
+    unread: "ยังไม่อ่าน",
     order: "คำสั่งซื้อ",
     paid: "ชำระแล้ว",
     due: "ค้างชำระ",
@@ -92,6 +105,14 @@ const copy = {
     loyalty: "Loyalty points",
     coupons: "Benefits",
     consents: "Communication consent",
+    consentDescription: "Choose which communications you want to receive. Changing a preference does not send a message.",
+    consentSaved: "Preference saved",
+    consentError: "We could not save this preference. Please try again.",
+    notifications: "Notifications",
+    notificationDescription: "Recent updates and account activity for you.",
+    emptyNotifications: "No notifications yet",
+    notificationError: "Notifications are unavailable right now.",
+    unread: "Unread",
     order: "Order",
     paid: "Paid",
     due: "Due",
@@ -186,6 +207,13 @@ export default async function PortalPage() {
               <Stat icon={<MapPin aria-hidden />} label={text.addresses} value={(snapshot.addresses ?? []).length.toString()} />
             </section>
 
+            <NotificationInbox
+              notifications={model.notifications}
+              hasError={model.notificationsError}
+              text={text}
+              locale={preferences.locale}
+            />
+
             <section className="grid gap-6 xl:grid-cols-[minmax(0,1.4fr)_minmax(280px,0.6fr)]">
               <Panel title={text.orders} icon={<Package aria-hidden className="h-4 w-4 text-brand" />}>
                 {(snapshot.orders ?? []).length === 0 ? <Empty text={text.emptyOrders} /> : <OrderList orders={snapshot.orders ?? []} text={text} />}
@@ -214,20 +242,92 @@ export default async function PortalPage() {
                   </div>
                 ))}
               </Panel>
-              <Panel title={text.consents} icon={<CreditCard aria-hidden className="h-4 w-4 text-brand" />}>
-                {(snapshot.consents ?? []).length === 0 ? <Empty text={text.emptyConsents} /> : (snapshot.consents ?? []).map((consent) => (
-                  <div key={consent.id} className="flex items-center justify-between gap-3 border-b border-line py-3 last:border-0 last:pb-0">
-                    <div><p className="text-sm font-semibold">{consent.channel}</p><p className="text-xs text-muted">{consent.purpose}</p></div>
-                    <span className={consent.status === "GRANTED" ? "text-xs font-semibold text-success" : "text-xs text-muted"}>{consent.status === "GRANTED" ? text.granted : text.revoked}</span>
-                  </div>
-                ))}
-              </Panel>
+              <section className="rounded-lg border border-line bg-panel p-5 shadow-[var(--shadow-panel)]">
+                <ConsentPreferenceManager consents={snapshot.consents ?? []} copy={text} />
+              </section>
             </section>
           </div>
         )}
       </div>
     </main>
   );
+}
+
+function NotificationInbox({
+  notifications,
+  hasError,
+  text,
+  locale
+}: {
+  notifications: PortalNotification[];
+  hasError: boolean;
+  text: (typeof copy)["th"] | (typeof copy)["en"];
+  locale: "th" | "en";
+}) {
+  return (
+    <section className="overflow-hidden rounded-lg border border-line bg-panel shadow-[var(--shadow-panel)]">
+      <div className="flex flex-col gap-2 border-b border-line px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <div className="flex items-center gap-2">
+            <Bell aria-hidden className="h-4 w-4 text-brand" />
+            <h2 className="text-base font-semibold">{text.notifications}</h2>
+          </div>
+          <p className="mt-1 text-xs text-muted">{text.notificationDescription}</p>
+        </div>
+        {notifications.some((notification) => notification.recipient_status === "UNREAD") ? (
+          <span className="w-fit rounded-full bg-brand/10 px-2.5 py-1 text-xs font-semibold text-brand">
+            {notifications.filter((notification) => notification.recipient_status === "UNREAD").length} {text.unread}
+          </span>
+        ) : null}
+      </div>
+      {hasError ? (
+        <p className="px-5 py-6 text-sm text-danger">{text.notificationError}</p>
+      ) : notifications.length === 0 ? (
+        <Empty text={text.emptyNotifications} />
+      ) : (
+        <div className="divide-y divide-line">
+          {notifications.map((notification) => (
+            <article
+              key={notification.id}
+              className={`grid gap-3 px-5 py-4 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-start ${
+                notification.recipient_status === "UNREAD" ? "bg-brand/5" : ""
+              }`}
+            >
+              <span
+                className={`mt-1 h-2.5 w-2.5 rounded-full ${
+                  notification.recipient_status === "UNREAD" ? "bg-brand" : "bg-panel-strong"
+                }`}
+                aria-hidden
+              />
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h3 className="text-sm font-semibold">{notification.title}</h3>
+                  <span className="rounded-full border border-line px-2 py-0.5 text-[11px] font-semibold text-muted">
+                    {formatNotificationLabel(notification.notification_type)}
+                  </span>
+                </div>
+                {notification.body ? <p className="mt-1 text-sm leading-6 text-muted">{notification.body}</p> : null}
+              </div>
+              <time className="text-xs text-muted" dateTime={notification.created_at}>
+                {new Intl.DateTimeFormat(locale === "th" ? "th-TH" : "en-US", {
+                  dateStyle: "medium",
+                  timeStyle: "short"
+                }).format(new Date(notification.created_at))}
+              </time>
+            </article>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function formatNotificationLabel(value: string) {
+  return value
+    .toLowerCase()
+    .split("_")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
 }
 
 function PortalState({ state, text, detail }: { state: string; text: (typeof copy)["th"] | (typeof copy)["en"]; detail: string | null }) {

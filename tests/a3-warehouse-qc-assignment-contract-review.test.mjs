@@ -37,5 +37,5 @@ test("implementation status records the implemented QC assignment boundary", () 
   const status = fs.readFileSync(statusPath, "utf8");
   assert.match(status, /A3 Warehouse QC Assignment Contract Review/);
   assert.match(status, /A3-WAREHOUSE-QC-ASSIGNMENT-001/);
-  assert.match(status, /NEXT: Track B Business Rule Review/);
+  assert.match(status, /NEXT: Complete the Customer Portal MVP/);
 });

@@ -110,6 +110,7 @@ Track B Customer Engagement Platform
 | Master Development Roadmap | `docs/roadmap/ACOS_MASTER_DEVELOPMENT_ROADMAP_V2.md` | APPROVED | Master execution map |
 | Implementation Status | `docs/roadmap/ACOS_IMPLEMENTATION_STATUS.md` | ACTIVE | This file |
 | Status Reconciliation Audit | `docs/roadmap/ACOS_STATUS_RECONCILIATION_AUDIT.md` | PART 2C RECONCILED | Drift audit between repository evidence and this status file |
+| Customer Community Commerce Status Reconciliation 2026-07-29 | `docs/roadmap/ACOS_CUSTOMER_COMMUNITY_COMMERCE_STATUS_RECONCILIATION_2026-07-29.md` | RECONCILED | Aligns updated Growth Guide phases with repository evidence; records Portal UI gaps and Checkout-before-Finance dependency |
 | Track B Business Rule Review 2026-07-28 | `docs/roadmap/ACOS_TRACK_B_BUSINESS_RULE_REVIEW_2026-07-28.md` | FROZEN | Documents rule coverage, Owner freeze confirmation, repository verification checkpoint, and implementation guardrails |
 | MIG-PLAN-001 Repository Verification 2026-07-28 | `docs/migrations/MIGRATION_PLAN_REPOSITORY_VERIFICATION_2026-07-28.md` | VALIDATED | Verified current migration history, Core schema conventions, RLS helpers, permission seed pattern, and timestamp rule |
 | Track B Content Core Migration Contract Review | `docs/api-contracts/A3_TRACK_B_CONTENT_CORE_MIGRATION_CONTRACT_REVIEW.md` | VALIDATED | Owner decisions recorded; migration 035 replay and security boundary validation passed |
@@ -154,6 +155,8 @@ Track B Customer Engagement Platform
 | Migration 055 Customer Portal Address Guarded Actions Validation 2026-07-29 | `docs/migrations/MIGRATION_055_CUSTOMER_PORTAL_ADDRESS_GUARDED_ACTIONS_VALIDATION_2026-07-29.md` | VALIDATED | Address create/update/archive, retry safety, cross-tenant denial, direct-table denial, anonymous denial and regression gates passed |
 | Track B Customer Portal Part 3 Address UI | `src/app/portal/address-manager.tsx`, `src/app/portal/actions.ts` | IMPLEMENTED / VALIDATED | Bilingual add/edit/archive UI uses server actions and validated address RPCs; no direct browser writes |
 | Track B Customer Portal Part 4 Consent Guarded Action | `docs/api-contracts/ACOS_TRACK_B_CUSTOMER_PORTAL_CONSENT_GUARDED_ACTION.md` | IMPLEMENTED / VALIDATED | Consent update RPC normalizes destinations, appends immutable events, audits, is idempotent, and never dispatches messages |
+| Track B Customer Portal Consent Preference UI | `docs/api-contracts/ACOS_TRACK_B_CUSTOMER_PORTAL_CONSENT_PREFERENCE_UI.md` | IMPLEMENTED / VALIDATED | Bilingual ownership-scoped preference switches submit through the validated guarded RPC; no browser write or message dispatch |
+| Track B Customer Portal Notification Inbox UI | `docs/api-contracts/ACOS_TRACK_B_CUSTOMER_PORTAL_NOTIFICATION_INBOX_UI.md` | IMPLEMENTED / VALIDATED | Server-only ownership-scoped inbox reuses canonical notifications and isolates read failures; mark-as-read remains separately gated |
 | Migration 056 Customer Portal Consent Guarded Action Validation 2026-07-29 | `docs/migrations/MIGRATION_056_CUSTOMER_PORTAL_CONSENT_GUARDED_ACTION_VALIDATION_2026-07-29.md` | VALIDATED | Consent grant/revoke, race safety, tenant isolation, direct table denial, anonymous denial and dispatch separation passed |
 | Track B Customer Portal Part 5 Profile Contact and Notification Dependency Review | `docs/api-contracts/ACOS_TRACK_B_CUSTOMER_PORTAL_PART5_PROFILE_CONTACT_NOTIFICATION_DEPENDENCY_REVIEW.md` | AUTH APPLY IMPLEMENTED / CRM SYNC OWNER DECISION REQUIRED | Auth and CRM contact sources remain distinct; verified Auth apply is validated while canonical customer synchronization remains blocked for Owner freeze |
 | Track B Customer Portal Part 5 Verified Contact and Notification Boundary | `docs/api-contracts/ACOS_TRACK_B_CUSTOMER_PORTAL_VERIFIED_CONTACT_NOTIFICATION_BOUNDARY.md` | IMPLEMENTED / VALIDATED | 24-hour contact request, service-only verification, Auth Admin apply boundary, active-link notification mapping, idempotency, audit, tenant isolation and direct-role denial passed |
@@ -620,7 +623,7 @@ MIG-PLAN-001 repository verification passed; each migration still requires its o
 | CONSENT-003 | Grant consent | VALIDATED | Customer Portal guarded action implemented and validated |
 | CONSENT-004 | Revoke consent | VALIDATED | Customer Portal guarded action implemented and validated |
 | CONSENT-005 | Consent event log | VALIDATED | Append-only event table and trigger validated |
-| CONSENT-006 | Preference page | BLOCKED | Requires UI/API |
+| CONSENT-006 | Preference page | IMPLEMENTED / VALIDATED | Bilingual Portal controls grant/revoke existing consent keys through the guarded server action and validated RPC |
 | CONSENT-007 | Dispatch-time consent check | IN_REVIEW | Contracted dependency for Campaign; dispatch implementation remains later scope |
 
 ---
@@ -721,9 +724,9 @@ MIG-PLAN-001 repository verification passed; each migration still requires its o
 | PORTAL-001 | Customer profile page | IMPLEMENTED / READ-ONLY | `/portal` route and server adapter are implemented; profile edits remain a separate guarded contract |
 | PORTAL-002 | Followed merchants | BLOCKED | Requires Follow |
 | PORTAL-003 | Feed page | BLOCKED | Requires Feed |
-| PORTAL-004 | Coupons / points page | BLOCKED | Requires Loyalty contract |
-| PORTAL-005 | Notification preference page | BLOCKED | Requires Consent Center |
-| PORTAL-006 | Order history page | BLOCKED | Requires Order read contract |
+| PORTAL-004 | Coupons / points page | IMPLEMENTED / READ-ONLY | Canonical snapshot returns active coupons and loyalty balances; `/portal` renders both without direct source-table access |
+| PORTAL-005 | Notification preference page | IMPLEMENTED / VALIDATED | Consent preferences and the read-only notification inbox are implemented through validated ownership-scoped boundaries |
+| PORTAL-006 | Order history page | IMPLEMENTED / READ-ONLY | Canonical snapshot returns scoped orders/items and `/portal` renders order history |
 
 ---
 
@@ -1104,13 +1107,17 @@ PART 2A COMPLETE: role replacement database boundary implemented and validated
 PART 2B COMPLETE: approved open-work predicate and guarded deactivation boundary implemented
 OPERATIONAL GUARD: ACTIVE -> SUSPENDED is allowed only when assigned/unassigned blocking work is absent and coverage gaps are empty
 PART 2C RECONCILED: Fulfillment, Warehouse QC, Shipping, and Returns assignment boundaries and deactivation coverage are validated; no coverage gaps remain
-NEXT: Track B Business Rule Review
+NEXT: Complete the Customer Portal MVP under the reconciled Customer Community Commerce phase order
 
 Track B Customer Engagement:
 ARCHITECTURE DIRECTION APPROVED
 BUSINESS RULES V1 FROZEN
 ER V2 FROZEN FOR MIGRATION PLANNING
-NEXT: Owner freeze for the Part 5 CRM contact synchronization decision table; implementation remains blocked until every recommended value is approved or changed, while Live Commerce L0 remains the next broader Track B foundation
+CUSTOMER COMMUNITY COMMERCE STATUS RECONCILED 2026-07-29
+PHASE 1 CUSTOMER PORTAL MVP IN_PROGRESS: profile, address, order history, coupons, loyalty, consent preference and read-only notification inbox are implemented; contact-management completion remains gated
+NEXT BLOCKED GATE: Owner freeze for the Part 5 CRM contact synchronization decision table before any private canonical customer contact mutation
+NEXT SAFE WORK: Notification mark-as-read remains a separately gated optional write; Platform-Led Signup starts only after Phase 1 completion
+AFTER PORTAL: Platform-Led Signup contract, then Storefront visibility/read model; Checkout/Payment follows Storefront, and Finance/Tax remains blocked until Checkout/Payment sources are clear
 
 Implementation:
 CONTROLLED START

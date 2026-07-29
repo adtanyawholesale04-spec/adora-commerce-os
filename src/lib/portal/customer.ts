@@ -104,39 +104,77 @@ export type PortalConsent = {
   revoked_at: string | null;
 };
 
+export type PortalNotification = {
+  id: string;
+  notification_type: string;
+  title: string;
+  body: string | null;
+  severity: string | null;
+  reference_type: string | null;
+  reference_id: string | null;
+  status: string;
+  recipient_status: string;
+  created_at: string;
+};
+
+type CustomerPortalNotificationResult = {
+  available: boolean;
+  organization_id: string;
+  reason?: string;
+  notifications?: PortalNotification[];
+};
+
 export type CustomerPortalReadModel = {
   context: AdminShellContext;
   state: PortalReadState;
   snapshot: CustomerPortalSnapshot | null;
   errorMessage: string | null;
+  notifications: PortalNotification[];
+  notificationsError: boolean;
 };
 
 export async function getCustomerPortalReadModel(): Promise<CustomerPortalReadModel> {
   const context = await getAdminShellContext();
 
   if (context.mode === "missing_env" || context.mode === "anonymous") {
-    return { context, state: context.mode, snapshot: null, errorMessage: null };
+    return { context, state: context.mode, snapshot: null, errorMessage: null, notifications: [], notificationsError: false };
   }
 
   if (!context.activeOrganizationId) {
-    return { context, state: "missing_membership", snapshot: null, errorMessage: null };
+    return { context, state: "missing_membership", snapshot: null, errorMessage: null, notifications: [], notificationsError: false };
   }
 
   const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase.rpc("api_get_customer_portal_snapshot", {
-    p_organization_id: context.activeOrganizationId,
-    p_client_request_id: crypto.randomUUID()
-  });
+  const [snapshotResult, notificationResult] = await Promise.all([
+    supabase.rpc("api_get_customer_portal_snapshot", {
+      p_organization_id: context.activeOrganizationId,
+      p_client_request_id: crypto.randomUUID()
+    }),
+    supabase.rpc("api_get_customer_portal_notifications", {
+      p_organization_id: context.activeOrganizationId,
+      p_client_request_id: crypto.randomUUID()
+    })
+  ]);
 
-  if (error) {
-    return { context, state: "query_error", snapshot: null, errorMessage: error.message };
+  if (snapshotResult.error) {
+    return {
+      context,
+      state: "query_error",
+      snapshot: null,
+      errorMessage: snapshotResult.error.message,
+      notifications: [],
+      notificationsError: Boolean(notificationResult.error)
+    };
   }
 
-  const snapshot = data as CustomerPortalSnapshot;
+  const snapshot = snapshotResult.data as CustomerPortalSnapshot;
+  const notificationPayload = notificationResult.data as CustomerPortalNotificationResult | null;
   return {
     context,
     state: snapshot.available ? "ready" : "unlinked",
     snapshot,
-    errorMessage: null
+    errorMessage: null,
+    notifications: notificationPayload?.available ? notificationPayload.notifications ?? [] : [],
+    notificationsError: Boolean(notificationResult.error)
   };
 }
