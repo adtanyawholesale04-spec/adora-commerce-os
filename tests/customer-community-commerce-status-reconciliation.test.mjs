@@ -33,7 +33,7 @@ test("Customer Community Commerce status preserves evidence and dependency order
     status,
     /\| CONSENT-006 \| Preference page \| IMPLEMENTED \/ VALIDATED \|/,
   );
-  assert.match(reconciliation, /Phase 1 - Customer Portal MVP \| IN_PROGRESS/);
+  assert.match(reconciliation, /Phase 1 - Customer Portal MVP \| VALIDATED/);
   assert.match(reconciliation, /Phase 1D - Checkout And Payment \| BLOCKED/);
   assert.match(reconciliation, /Phase 1E - Finance And Tax \| BLOCKED/);
   assert.ok(

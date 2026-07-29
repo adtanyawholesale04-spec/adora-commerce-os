@@ -9,7 +9,7 @@ const review = fs.readFileSync(
 const status = fs.readFileSync("docs/roadmap/ACOS_IMPLEMENTATION_STATUS.md", "utf8");
 
 test("CRM contact sync review protects the canonical customer boundary", () => {
-  assert.match(review, /CONTRACT REVIEW COMPLETE \/ OWNER DECISION REQUIRED/);
+  assert.match(review, /OWNER APPROVED \/ FROZEN/);
   assert.match(review, /Existing non-empty CRM value.*Do not overwrite automatically/);
   assert.match(review, /Duplicate value on another customer.*Block automatic sync/);
   assert.match(review, /Do not copy, grant, revoke, or retarget consent automatically/);
@@ -17,8 +17,16 @@ test("CRM contact sync review protects the canonical customer boundary", () => {
   assert.match(review, /never store the raw contact value/i);
 });
 
-test("implementation status keeps CRM synchronization blocked for Owner freeze", () => {
+test("implementation status records the Owner freeze and keeps Part 2 explicit", () => {
   assert.match(status, /Customer Portal Part 5 CRM Contact Synchronization Contract Review/);
-  assert.match(status, /CONTRACT REVIEW COMPLETE \/ OWNER DECISION REQUIRED/);
-  assert.match(status, /NEXT BLOCKED GATE: Owner freeze for the Part 5 CRM contact synchronization decision table/);
+  assert.match(status, /OWNER APPROVED \/ FROZEN/);
+  assert.match(
+    status,
+    /PART 3 CRM CONTACT SYNC SERVER INTEGRATION IMPLEMENTED \/ VALIDATED/,
+  );
+  assert.match(
+    status,
+    /PART 4 CUSTOMER PORTAL CONTACT WORKFLOW VALIDATED/,
+  );
+  assert.match(status, /NEXT: Platform-Led Signup contract review under Phase 1B/);
 });

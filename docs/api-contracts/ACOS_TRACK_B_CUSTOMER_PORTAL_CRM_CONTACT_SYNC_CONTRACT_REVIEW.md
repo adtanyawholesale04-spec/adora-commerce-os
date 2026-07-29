@@ -1,7 +1,7 @@
 # Track B Customer Portal CRM Contact Synchronization Contract Review
 
 **Task ID:** `PORTAL-P1-PART5-CRM-CONTACT-SYNC-REVIEW`
-**Status:** CONTRACT REVIEW COMPLETE / OWNER DECISION REQUIRED
+**Status:** OWNER APPROVED / FROZEN
 **Date:** 2026-07-29
 
 ## Objective
@@ -75,6 +75,17 @@ The existing request status `APPLIED` means Auth Admin apply completed. CRM sync
 | Permission boundary | Service-role-only application boundary; no browser, authenticated RPC, or staff direct table write | Protects private canonical data |
 | Failure policy | Leave Auth apply intact, keep CRM sync retryable, and record sanitized failure audit | Cross-system rollback is unsafe |
 
+## Owner Approval
+
+The Project Owner approved every recommended safe value on 2026-07-29. The
+frozen decision record is:
+
+```text
+docs/api-contracts/ACOS_TRACK_B_CUSTOMER_PORTAL_CRM_CONTACT_SYNC_OWNER_DECISION_FREEZE.md
+```
+
+Implementation must follow that record without widening scope.
+
 ## Proposed Service Contract After Approval
 
 ```text
@@ -117,4 +128,6 @@ The database write should be one service-role-only RPC so the customer update an
 
 ## Current Gate
 
-Implementation is **BLOCKED** until the Project Owner approves or changes every value in the Owner Decision Table. The safe work completed in this task is the contract review only.
+Part 1 Owner Decision Freeze is complete. Part 2 guarded database boundary is
+`IMPLEMENTED / VALIDATED`. The approval document itself did not enable a CRM
+contact write; Migration 059 provides the separately validated boundary.

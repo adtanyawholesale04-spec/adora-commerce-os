@@ -21,8 +21,31 @@ type ApplyRpcRow = {
   already_applied: boolean;
 };
 
+export type CustomerContactCrmSyncResult =
+  | "synced"
+  | "already_matching"
+  | "contact_request_not_applied"
+  | "customer_link_not_active"
+  | "customer_not_active"
+  | "crm_contact_conflict"
+  | "crm_duplicate_contact_conflict"
+  | "persistence_error";
+
+type CrmSyncRpcRow = {
+  request_id: string;
+  sync_result: Exclude<CustomerContactCrmSyncResult, "persistence_error">;
+  reused_existing: boolean;
+};
+
 export type CustomerContactApplyResult =
-  | { ok: true; requestId: string; status: "APPLIED"; alreadyApplied: boolean }
+  | {
+      ok: true;
+      requestId: string;
+      status: "APPLIED";
+      alreadyApplied: boolean;
+      crmSyncResult: CustomerContactCrmSyncResult;
+      crmSyncRetryable: boolean;
+    }
   | {
       ok: false;
       code:
@@ -64,7 +87,7 @@ export async function applyVerifiedCustomerContactChange(
     return { ok: false, code: "contact_request_not_found" };
   }
   if (request.status === "APPLIED") {
-    return { ok: true, requestId, status: "APPLIED", alreadyApplied: true };
+    return completeCrmSync(adminClient, organizationId, requestId, clientRequestId, true);
   }
   if (request.status !== "VERIFIED") {
     return { ok: false, code: "contact_request_not_verified" };
@@ -115,7 +138,55 @@ export async function applyVerifiedCustomerContactChange(
     return { ok: false, code: "auth_admin_audit_error" };
   }
 
-  return { ok: true, requestId: applied.request_id, status: "APPLIED", alreadyApplied: applied.already_applied };
+  return completeCrmSync(
+    adminClient,
+    organizationId,
+    applied.request_id,
+    clientRequestId,
+    applied.already_applied
+  );
+}
+
+async function completeCrmSync(
+  adminClient: ReturnType<typeof createSupabaseAuthAdminClient>,
+  organizationId: string,
+  requestId: string,
+  clientRequestId: string,
+  alreadyApplied: boolean
+): Promise<CustomerContactApplyResult> {
+  const { data: syncRows, error: syncError } = await adminClient.rpc(
+    "api_sync_applied_customer_contact_to_crm",
+    {
+      p_organization_id: organizationId,
+      p_request_id: requestId,
+      p_client_request_id: clientRequestId
+    }
+  );
+  const synced = Array.isArray(syncRows) ? (syncRows[0] as CrmSyncRpcRow | undefined) : undefined;
+
+  if (syncError || !synced) {
+    return {
+      ok: true,
+      requestId,
+      status: "APPLIED",
+      alreadyApplied,
+      crmSyncResult: "persistence_error",
+      crmSyncRetryable: true
+    };
+  }
+
+  return {
+    ok: true,
+    requestId: synced.request_id,
+    status: "APPLIED",
+    alreadyApplied,
+    crmSyncResult: synced.sync_result,
+    crmSyncRetryable: isRetryableCrmResult(synced.sync_result)
+  };
+}
+
+function isRetryableCrmResult(result: CrmSyncRpcRow["sync_result"]) {
+  return result === "contact_request_not_applied";
 }
 
 async function recordApplyFailure(

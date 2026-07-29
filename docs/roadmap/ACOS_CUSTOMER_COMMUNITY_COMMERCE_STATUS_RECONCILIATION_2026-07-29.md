@@ -38,7 +38,7 @@ changes no frozen migration, and enables no protected write path.
 | Phase | Reconciled Status | Dependency / Gate |
 |---|---:|---|
 | Phase 0 - Foundation Alignment | PARTIAL / CONTROLLED | Core identity, tenant, RLS, audit, consent, event and usage boundaries exist; remaining commercial/media decisions stay separately gated |
-| Phase 1 - Customer Portal MVP | IN_PROGRESS | Read model, profile summary, address writes, order history, benefits, consent preference and notification inbox are implemented; contact-management completion remains gated |
+| Phase 1 - Customer Portal MVP | VALIDATED | Read model, profile summary, address writes, order history, benefits, consent preference, notification inbox and the guarded verified contact workflow are validated |
 | Phase 1B - Platform-Led Signup | NOT_STARTED | Requires an approved signup, organization creation, membership, entitlement and abuse-control contract |
 | Phase 1C - Storefront MVP | NOT_STARTED | Requires visibility, public tenant resolution, media and catalog projection contracts; must reuse canonical products |
 | Phase 1D - Checkout And Payment | BLOCKED | Requires Phase 1C plus approved order draft, reservation, payment and idempotency boundaries |
@@ -69,12 +69,12 @@ Customer Portal completion
 | Consent state | Snapshot, guarded grant/revoke RPC and bilingual Portal preference switches are validated | IMPLEMENTED / VALIDATED |
 | Notification inbox | Ownership-scoped canonical notification read boundary and bilingual read-only Portal UI are validated | IMPLEMENTED / VALIDATED |
 | Verified Auth contact apply | Server-only Auth Admin apply boundary is validated | IMPLEMENTED / VALIDATED |
-| CRM customer contact sync | Contract review exists; Owner freeze is not recorded | BLOCKED / OWNER DECISION REQUIRED |
+| CRM customer contact sync | Owner freeze, atomic service-only database boundary, Auth-to-CRM server integration and final end-to-end workflow validation are complete | IMPLEMENTED / VALIDATED |
 | Followed merchants and feed | Required product/service flows are not complete | BLOCKED |
 
-Backend readiness alone does not make a user-facing workflow complete. The
-Portal remains `IN_PROGRESS` until the private contact-management decision and
-remaining UI boundary are approved and validated.
+The Phase 1 Portal MVP is validated against its approved scope. Followed
+merchants and feed remain excluded because their upstream modules are blocked;
+their absence does not reopen the completed Portal foundation.
 
 ---
 
@@ -96,14 +96,19 @@ The following stale status statements are corrected:
 
 ## 5. Remaining Blockers And Safe Next Work
 
-P0:
+Part 1 completed:
 
 ```text
-Owner freeze for CRM contact synchronization.
+Owner freeze for CRM contact synchronization: APPROVED / FROZEN.
 ```
 
-This remains blocked because it can mutate private canonical customer contact
-data. No implementation may begin before the decision table is frozen.
+Part 2 implemented and validated the service-only atomic boundary. Direct client
+writes, automatic overwrite, duplicate contact merge, consent changes and raw
+PII audit remain forbidden.
+
+Parts 3 and 4 integrated the server-only Auth apply flow and validated the
+complete request-to-CRM workflow, retry behavior, audit privacy and unchanged
+consent/identity sources.
 
 After Owner freeze and Phase 1 Portal completion:
 

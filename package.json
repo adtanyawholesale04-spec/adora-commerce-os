@@ -30,6 +30,8 @@
     "validate:customer-portal-consent-guarded-action": "node supabase/validation/customer-portal-consent-guarded-action-suite.mjs",
     "validate:customer-portal-verified-contact-notification": "node supabase/validation/customer-portal-verified-contact-notification-suite.mjs",
     "validate:customer-portal-auth-admin-apply": "node supabase/validation/customer-portal-auth-admin-apply-suite.mjs",
+    "validate:customer-portal-crm-contact-sync": "node supabase/validation/customer-portal-crm-contact-sync-boundary-suite.mjs",
+    "validate:customer-portal-contact-workflow-e2e": "node supabase/validation/customer-portal-contact-workflow-e2e-suite.mjs",
     "validate:supabase": "npm run validate:supabase-security && npm run validate:supabase-workflows && npm run validate:commerce-integration"
   },
   "dependencies": {

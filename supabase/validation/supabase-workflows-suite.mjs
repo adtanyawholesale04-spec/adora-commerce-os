@@ -126,6 +126,16 @@ runSqlSuite([
     file: "supabase/validation/042_customer_portal_auth_admin_apply_boundary_test.sql",
     requiredRows: ["customer_portal_auth_admin_apply|pass"],
   },
+  {
+    name: "customer_portal_crm_contact_sync_boundary",
+    file: "supabase/validation/043_customer_portal_crm_contact_sync_boundary_test.sql",
+    requiredRows: ["customer_portal_crm_contact_sync_boundary|pass"],
+  },
+  {
+    name: "customer_portal_contact_workflow_e2e",
+    file: "supabase/validation/044_customer_portal_contact_workflow_e2e_test.sql",
+    requiredRows: ["customer_portal_contact_workflow_e2e|pass"],
+  },
 ]);
 
 runNpmScript("validate:carrier-webhook-e2e");

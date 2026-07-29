@@ -14,6 +14,8 @@ test("customer contact Auth Admin apply stays server-only and retry-safe", () =>
   assert.match(boundarySource, /auth\.admin\.getUserById/);
   assert.match(boundarySource, /auth\.admin\.updateUserById/);
   assert.match(boundarySource, /api_apply_customer_contact_change/);
+  assert.match(boundarySource, /api_sync_applied_customer_contact_to_crm/);
+  assert.match(boundarySource, /crmSyncResult/);
   assert.doesNotMatch(boundarySource, /use server/);
   assert.match(migrationSource, /status = 'APPLIED'/);
   assert.match(migrationSource, /api_record_customer_contact_change_apply_failure/);

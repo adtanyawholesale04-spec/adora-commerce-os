@@ -9,7 +9,7 @@
 
 `api_verify_customer_contact_change_request` is service-role-only. It moves a valid request to `VERIFIED`, records the verification method and audit event, and returns `auth_admin_apply_required=true`. It does not update `auth.users` or `customers` directly. The separate server-only Auth Admin boundary now applies the verified value to the linked `auth.users` record and closes the request as `APPLIED`.
 
-`applyVerifiedCustomerContactChange` reads the service-role-only request, confirms the linked `profiles.auth_user_id`, calls `auth.admin.updateUserById` with the verified contact and confirmation flag, then calls `api_apply_customer_contact_change`. If Auth Admin fails, the boundary records a sanitized failure audit and leaves the request retryable. If Auth Admin already has the verified value, it skips the provider update and only completes the database transition.
+`applyVerifiedCustomerContactChange` reads the service-role-only request, confirms the linked `profiles.auth_user_id`, calls `auth.admin.updateUserById` with the verified contact and confirmation flag, then calls `api_apply_customer_contact_change`. After the request is `APPLIED`, it invokes the separately validated CRM sync RPC and returns a typed CRM outcome without rolling back Auth. An `APPLIED` retry skips the provider update but still retries CRM sync. If Auth Admin fails, the boundary records a sanitized failure audit and leaves the request retryable.
 
 ## Notification Mapping
 
