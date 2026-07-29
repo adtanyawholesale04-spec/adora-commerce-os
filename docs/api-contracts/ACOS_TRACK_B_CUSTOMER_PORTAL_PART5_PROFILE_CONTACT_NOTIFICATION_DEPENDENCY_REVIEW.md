@@ -1,7 +1,7 @@
 # Track B Customer Portal Part 5 Profile Contact and Notification Dependency Review
 
 **Part:** `PORTAL-P1-PART5`
-**Status:** BOUNDARY IMPLEMENTED / AUTH APPLY DEFERRED
+**Status:** AUTH APPLY IMPLEMENTED / CRM SYNC OWNER DECISION REQUIRED
 **Primary scope:** verified profile contact change policy and customer notification recipient dependency
 
 ## Current Source Finding
@@ -13,7 +13,7 @@ The frozen schema has two different contact surfaces:
 - `public.profiles` stores `auth_user_id` and `display_name`, but no email or phone;
 - `customer_profile_links` is the approved ownership association.
 
-These fields cannot be updated together by inference. The Part 5 boundary now records and service-verifies a contact-change request, but the final Auth Admin apply and CRM synchronization remain separate decisions.
+These fields cannot be updated together by inference. The Part 5 boundary now records and service-verifies a contact-change request, and the server-only Auth Admin apply boundary is implemented. CRM synchronization remains a separate Owner decision.
 
 ## Safest Part 5 Policy
 
@@ -58,4 +58,4 @@ The current `notifications` model targets `notification_recipients.profile_id`, 
 - consent/suppression recheck before dispatch;
 - no rewrite of order/payment/fulfillment history.
 
-The request/verification boundary and notification read mapping are implemented in Migration 057. No Auth Admin apply call, CRM contact synchronization, notification mark-read mutation, or provider dispatch is created by this review.
+The request/verification boundary and notification read mapping are implemented in Migration 057, and the Auth Admin apply boundary is implemented in Migration 058 plus the server-only application boundary. CRM contact synchronization, notification mark-read mutation, and provider dispatch remain separate contracts.
