@@ -144,5 +144,6 @@ runSqlSuite([
 ]);
 
 runNpmScript("validate:carrier-webhook-e2e");
+runNpmScript("validate:phase-1b-signup-rate-limit");
 
 console.log("supabase_workflows_suite pass");

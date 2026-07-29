@@ -39,6 +39,6 @@ test("Part 7C remains reconciled after local URL selection", () => {
   );
   assert.match(
     status,
-    /NEXT: Owner review and approval of Phase 1B Part 8B Durable Rate-Limit Migration Plan/,
+    /NEXT: Phase 1B Part 8C Server Provider Adapters/,
   );
 });

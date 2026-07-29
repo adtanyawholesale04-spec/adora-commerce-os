@@ -28,6 +28,6 @@ test("Owner freeze keeps production Auth rollout blocked", () => {
   assert.match(status, /PHASE 1B PART 5 OWNER DECISION FREEZE COMPLETE/);
   assert.match(
     status,
-    /NEXT: Owner review and approval of Phase 1B Part 8B Durable Rate-Limit Migration Plan/,
+    /NEXT: Phase 1B Part 8C Server Provider Adapters/,
   );
 });

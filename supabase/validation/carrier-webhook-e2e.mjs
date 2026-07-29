@@ -330,7 +330,16 @@ function runPsql(sql) {
 function startFunctionServer() {
   const child = spawn(
     supabaseCli.command,
-    [...supabaseCli.argsPrefix, "supabase", "functions", "serve", "--no-verify-jwt", "--env-file", envFile],
+    [
+      ...supabaseCli.argsPrefix,
+      "supabase",
+      "functions",
+      "serve",
+      "carrier-webhook",
+      "--no-verify-jwt",
+      "--env-file",
+      envFile,
+    ],
     {
       stdio: ["ignore", "pipe", "pipe"],
       env: {
@@ -368,17 +377,27 @@ async function waitForFunctionServer() {
 
   while (Date.now() - startedAt < 30_000) {
     try {
-      const response = await fetch(rootUrl, { method: "GET" });
+      const response = await fetch(`${rootUrl}?provider=flash`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-carrier-provider": "flash",
+          "x-carrier-signature": "sha256=not-a-valid-signature",
+        },
+        body: "{}",
+      });
 
-      if (response.status === 405) {
+      if (response.status === 401) {
         return;
       }
     } catch {
-      await delay(500);
+      // The local gateway can be briefly unavailable while the worker reloads.
     }
+
+    await delay(500);
   }
 
-  throw new Error("carrier-webhook function server did not start in time");
+  throw new Error("carrier-webhook function server did not load the E2E provider secret");
 }
 
 async function sendFixture(testCase) {
