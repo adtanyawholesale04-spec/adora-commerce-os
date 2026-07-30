@@ -6,25 +6,41 @@ const review = readFileSync(
   "docs/api-contracts/ACOS_PHASE_1C_STOREFRONT_VISIBILITY_READ_MODEL_CONTRACT_REVIEW.md",
   "utf8",
 );
+const freeze = readFileSync(
+  "docs/api-contracts/ACOS_PHASE_1C_STOREFRONT_OWNER_DECISION_FREEZE.md",
+  "utf8",
+);
 const status = readFileSync(
   "docs/roadmap/ACOS_IMPLEMENTATION_STATUS.md",
   "utf8",
 );
 
-test("Phase 1C review records all recommended Owner decisions without authorizing implementation", () => {
+test("Phase 1C review records the frozen decisions and validated Part 3 boundary", () => {
   assert.match(
     review,
-    /\*\*Status:\*\* IN REVIEW \/ BLOCKED \/ OWNER DECISIONS REQUIRED/,
+    /\*\*Status:\*\* OWNER APPROVED \/ PART 3 IMPLEMENTED \/ LOCAL VALIDATED/,
   );
-  assert.match(review, /\*\*Migration:\*\* None/);
+  assert.match(
+    review,
+    /\*\*Migration:\*\* Additive Part 3 migration; local only, production not applied/,
+  );
   for (let id = 1; id <= 18; id += 1) {
     assert.match(review, new RegExp(`\\| D${String(id).padStart(2, "0")} \\|`));
   }
   assert.match(review, /Part 0 \| Repository and dependency audit \| COMPLETE/);
   assert.match(
     review,
-    /Part 1 \| Owner Decision Freeze D01-D18 \| BLOCKED \/ OWNER APPROVAL REQUIRED/,
+    /Part 1 \| Owner Decision Freeze D01-D18 \| OWNER APPROVED \/ COMPLETE/,
   );
+  assert.match(
+    review,
+    /Part 2 \| Storefront Business Rules and ER addendum \| OWNER APPROVED \/ COMPLETE/,
+  );
+  assert.match(
+    review,
+    /Part 3 \| Additive migration and guarded public read boundary \| IMPLEMENTED \/ LOCAL VALIDATED/,
+  );
+  assert.match(review, /Part 4 \| Read-only Storefront list\/detail UI \| READY/);
 });
 
 test("Phase 1C review reuses canonical sources and refuses invented service data", () => {
@@ -54,10 +70,28 @@ test("Phase 1C preserves deferred production and visual-system gates", () => {
   assert.match(review, /Keep current blue tokens, Noto Sans Thai, Thai\/English and light\/dark/);
 });
 
-test("implementation status blocks Phase 1C at the Owner decision gate", () => {
+test("Owner freeze approves D01-D18 while preserving closed runtime boundaries", () => {
+  assert.match(freeze, /\*\*Status:\*\* OWNER APPROVED \/ D01-D18 FROZEN/);
+  for (let id = 1; id <= 18; id += 1) {
+    assert.match(freeze, new RegExp(`\\| D${String(id).padStart(2, "0")} \\|`));
+  }
+  assert.match(freeze, /public Storefront runtime: NOT AUTHORIZED/);
+  assert.match(freeze, /database migration: NOT AUTHORIZED/);
+  assert.match(freeze, /production launch: BLOCKED BY P16/);
+  assert.match(freeze, /ACOS_PLATFORM_SIGNUP_ENABLED` remains false/);
+  assert.match(freeze, /ACOS_PLATFORM_SIGNUP_KILL_SWITCH` remains true/);
+});
+
+test("Owner freeze keeps the proposed brand guide separate from the Phase 1C baseline", () => {
+  assert.match(freeze, /D15 freezes the currently implemented blue visual baseline/);
+  assert.match(freeze, /does not approve or reject the proposed Dark Purple\/Wisteria\/Sunglow palette/);
+  assert.match(freeze, /remains `PROPOSED FOR OWNER REVIEW`/);
+});
+
+test("implementation status completes Part 3 and advances to gated Part 4", () => {
   assert.match(
     status,
-    /Phase 1C Storefront Visibility and Read-Model Contract Review .* IN REVIEW \/ BLOCKED \/ OWNER DECISIONS REQUIRED/,
+    /Phase 1C Storefront Visibility and Read-Model Contract Review .* OWNER APPROVED \/ PART 3 IMPLEMENTED \/ PART 4 READY/,
   );
   assert.match(
     status,
@@ -65,7 +99,18 @@ test("implementation status blocks Phase 1C at the Owner decision gate", () => {
   );
   assert.match(
     status,
-    /BLOCKED: Phase 1C implementation requires Owner Decision Freeze D01-D18/,
+    /PHASE 1C PART 1 OWNER DECISION FREEZE COMPLETE: D01-D18 approved in full/,
   );
-  assert.match(status, /NEXT SUBSTEP: PHASE 1C OWNER DECISION FREEZE D01-D18/);
+  assert.match(
+    status,
+    /PHASE 1C PART 2 OWNER FREEZE COMPLETE/,
+  );
+  assert.match(
+    status,
+    /PHASE 1C PART 3 DATABASE BOUNDARY IMPLEMENTED \/ LOCAL VALIDATED/,
+  );
+  assert.match(
+    status,
+    /NEXT SUBSTEP: PHASE 1C PART 4 READ-ONLY STOREFRONT LIST AND DETAIL UI/,
+  );
 });

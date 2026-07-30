@@ -2,9 +2,9 @@
 
 **Task ID:** `PHASE-1C-STOREFRONT-CONTRACT-REVIEW`
 **Review Date:** 2026-07-31
-**Status:** IN REVIEW / BLOCKED / OWNER DECISIONS REQUIRED
+**Status:** OWNER APPROVED / PART 3 IMPLEMENTED / LOCAL VALIDATED
 **Runtime:** Local and controlled preview only
-**Migration:** None
+**Migration:** Additive Part 3 migration; local only, production not applied
 **Approved Provider Spend:** USD 0
 
 ## Purpose
@@ -46,9 +46,9 @@ The existing Admin product read model is authenticated, tenant-scoped and
 permission-aware. It is not an anonymous Storefront API and must not be exposed
 or reused by bypassing its authorization boundary.
 
-## Blocking Dependencies
+## Implementation Dependencies
 
-Phase 1C implementation is blocked because:
+Phase 1C runtime and migration implementation remain blocked because:
 
 1. no frozen Phase 1C Storefront Business Rules document exists;
 2. no frozen Storefront ER addendum exists;
@@ -60,11 +60,15 @@ Phase 1C implementation is blocked because:
 7. the proposed document in `docs/design/` is not Owner-frozen and conflicts
    with the currently implemented blue visual tokens.
 
-These blockers must not be resolved by inference.
+Part 1 Owner approval resolves the decision-table blocker only. The remaining
+dependencies must be designed and frozen in Part 2 rather than resolved by
+inference.
 
-## Recommended Owner Decision Table
+## Frozen Owner Decision Table
 
-Every row remains `OWNER APPROVAL REQUIRED`.
+The Owner approved every recommended value D01-D18 on 2026-07-31. The durable
+approval evidence is
+`ACOS_PHASE_1C_STOREFRONT_OWNER_DECISION_FREEZE.md`.
 
 | ID | Decision | Recommended value | Safety reason |
 |---|---|---|---|
@@ -139,16 +143,17 @@ The later implementation must prove:
 | Part | Scope | Current state |
 |---|---|---|
 | Part 0 | Repository and dependency audit | COMPLETE |
-| Part 1 | Owner Decision Freeze D01-D18 | BLOCKED / OWNER APPROVAL REQUIRED |
-| Part 2 | Storefront Business Rules and ER addendum | NOT STARTED |
-| Part 3 | Additive migration and guarded public read boundary | NOT STARTED |
-| Part 4 | Read-only Storefront list/detail UI | NOT STARTED |
+| Part 1 | Owner Decision Freeze D01-D18 | OWNER APPROVED / COMPLETE |
+| Part 2 | Storefront Business Rules and ER addendum | OWNER APPROVED / COMPLETE |
+| Part 3 | Additive migration and guarded public read boundary | IMPLEMENTED / LOCAL VALIDATED |
+| Part 4 | Read-only Storefront list/detail UI | READY |
 | Part 5 | Responsive, accessibility and controlled-preview QA | NOT STARTED |
 
 ## Decision
 
-`BLOCKED`
+`OWNER APPROVED / PART 3 IMPLEMENTED / PART 4 READY`
 
-Phase 1C Part 0 is complete. No migration or runtime implementation is
-authorized until the Owner approves D01-D18 and the resulting Business Rules
-and ER addendum are frozen.
+Phase 1C Parts 0-3 are complete. The additive migration, guarded mutations and
+server-only public projection passed local replay and security validation.
+Part 4 read-only UI is ready. Public runtime and production migration remain
+unauthorized.
