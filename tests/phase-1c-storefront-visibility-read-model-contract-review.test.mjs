@@ -18,7 +18,7 @@ const status = readFileSync(
 test("Phase 1C review records the frozen decisions and validated Part 3 boundary", () => {
   assert.match(
     review,
-    /\*\*Status:\*\* OWNER APPROVED \/ PART 3 IMPLEMENTED \/ LOCAL VALIDATED/,
+    /\*\*Status:\*\* OWNER APPROVED \/ PART 5 VALIDATED \/ PHASE 1C LOCAL COMPLETE/,
   );
   assert.match(
     review,
@@ -40,7 +40,14 @@ test("Phase 1C review records the frozen decisions and validated Part 3 boundary
     review,
     /Part 3 \| Additive migration and guarded public read boundary \| IMPLEMENTED \/ LOCAL VALIDATED/,
   );
-  assert.match(review, /Part 4 \| Read-only Storefront list\/detail UI \| READY/);
+  assert.match(
+    review,
+    /Part 4 \| Read-only Storefront list\/detail UI \| IMPLEMENTED \/ LOCAL VALIDATED/,
+  );
+  assert.match(
+    review,
+    /Part 5 \| Responsive, accessibility and controlled-preview QA \| VALIDATED \/ COMPLETE/,
+  );
 });
 
 test("Phase 1C review reuses canonical sources and refuses invented service data", () => {
@@ -88,10 +95,10 @@ test("Owner freeze keeps the proposed brand guide separate from the Phase 1C bas
   assert.match(freeze, /remains `PROPOSED FOR OWNER REVIEW`/);
 });
 
-test("implementation status completes Part 3 and advances to gated Part 4", () => {
+test("implementation status completes Phase 1C locally and advances to Phase 1D review", () => {
   assert.match(
     status,
-    /Phase 1C Storefront Visibility and Read-Model Contract Review .* OWNER APPROVED \/ PART 3 IMPLEMENTED \/ PART 4 READY/,
+    /Phase 1C Storefront Visibility and Read-Model Contract Review .* OWNER APPROVED \/ PART 5 VALIDATED \/ PHASE 1C LOCAL COMPLETE/,
   );
   assert.match(
     status,
@@ -111,6 +118,14 @@ test("implementation status completes Part 3 and advances to gated Part 4", () =
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1C PART 4 READ-ONLY STOREFRONT LIST AND DETAIL UI/,
+    /PHASE 1C PART 4 READ-ONLY STOREFRONT UI IMPLEMENTED \/ LOCAL VALIDATED/,
+  );
+  assert.match(
+    status,
+    /PHASE 1C PART 5 RESPONSIVE, ACCESSIBILITY AND CONTROLLED-PREVIEW QA VALIDATED/,
+  );
+  assert.match(
+    status,
+    /NEXT SUBSTEP: PHASE 1D STOREFRONT CART \/ CHECKOUT \/ PAYMENT CONTRACT REVIEW/,
   );
 });

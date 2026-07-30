@@ -2,7 +2,7 @@
 
 **Task ID:** `PHASE-1C-STOREFRONT-CONTRACT-REVIEW`
 **Review Date:** 2026-07-31
-**Status:** OWNER APPROVED / PART 3 IMPLEMENTED / LOCAL VALIDATED
+**Status:** OWNER APPROVED / PART 5 VALIDATED / PHASE 1C LOCAL COMPLETE
 **Runtime:** Local and controlled preview only
 **Migration:** Additive Part 3 migration; local only, production not applied
 **Approved Provider Spend:** USD 0
@@ -146,14 +146,14 @@ The later implementation must prove:
 | Part 1 | Owner Decision Freeze D01-D18 | OWNER APPROVED / COMPLETE |
 | Part 2 | Storefront Business Rules and ER addendum | OWNER APPROVED / COMPLETE |
 | Part 3 | Additive migration and guarded public read boundary | IMPLEMENTED / LOCAL VALIDATED |
-| Part 4 | Read-only Storefront list/detail UI | READY |
-| Part 5 | Responsive, accessibility and controlled-preview QA | NOT STARTED |
+| Part 4 | Read-only Storefront list/detail UI | IMPLEMENTED / LOCAL VALIDATED |
+| Part 5 | Responsive, accessibility and controlled-preview QA | VALIDATED / COMPLETE |
 
 ## Decision
 
-`OWNER APPROVED / PART 3 IMPLEMENTED / PART 4 READY`
+`OWNER APPROVED / PART 5 VALIDATED / PHASE 1C LOCAL COMPLETE`
 
-Phase 1C Parts 0-3 are complete. The additive migration, guarded mutations and
-server-only public projection passed local replay and security validation.
-Part 4 read-only UI is ready. Public runtime and production migration remain
-unauthorized.
+Phase 1C Parts 0-5 are locally complete. The additive migration, guarded
+mutations, server-only public projection, local read-only Storefront UI and
+responsive/accessibility controlled-preview QA passed their validation gates.
+Public runtime and production migration remain unauthorized.

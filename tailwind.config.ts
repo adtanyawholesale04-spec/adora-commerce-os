@@ -13,9 +13,11 @@ const config: Config = {
         "panel-strong": "rgb(var(--color-panel-strong) / <alpha-value>)",
         sidebar: "rgb(var(--color-sidebar) / <alpha-value>)",
         brand: "rgb(var(--color-brand) / <alpha-value>)",
+        "on-brand": "rgb(var(--color-on-brand) / <alpha-value>)",
         accent: "rgb(var(--color-accent) / <alpha-value>)",
         success: "rgb(var(--color-success) / <alpha-value>)",
         warning: "rgb(var(--color-warning) / <alpha-value>)",
+        "warning-surface": "rgb(var(--color-warning-surface) / <alpha-value>)",
         danger: "rgb(var(--color-danger) / <alpha-value>)"
       }
     }

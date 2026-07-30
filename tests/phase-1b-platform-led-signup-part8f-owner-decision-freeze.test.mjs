@@ -78,10 +78,10 @@ test("implementation status advances to the approved Storefront Web app work", (
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1C PART 3 DATABASE BOUNDARY COMPLETE/,
+    /CURRENT SUBSTEP: PHASE 1C STOREFRONT MVP LOCAL VALIDATION COMPLETE/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1C PART 4 READ-ONLY STOREFRONT LIST AND DETAIL UI/,
+    /NEXT SUBSTEP: PHASE 1D STOREFRONT CART \/ CHECKOUT \/ PAYMENT CONTRACT REVIEW/,
   );
 });

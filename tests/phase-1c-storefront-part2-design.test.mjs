@@ -88,7 +88,7 @@ test("Part 2 preserves P16 after the validated Part 3 handoff", () => {
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1C PART 4 READ-ONLY STOREFRONT LIST AND DETAIL UI/,
+    /NEXT SUBSTEP: PHASE 1D STOREFRONT CART \/ CHECKOUT \/ PAYMENT CONTRACT REVIEW/,
   );
 });
 
