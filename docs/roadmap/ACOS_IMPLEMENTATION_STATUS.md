@@ -194,6 +194,7 @@ Track B Customer Engagement Platform
 | Phase 1C Storefront Part 3 Database Boundary | `docs/api-contracts/ACOS_PHASE_1C_STOREFRONT_PART3_DATABASE_BOUNDARY.md`, `supabase/migrations/20260730194013_phase_1c_storefront_boundary.sql`, `supabase/migrations/20260730194153_phase_1c_storefront_guarded_functions.sql` | IMPLEMENTED / LOCAL VALIDATED / PRODUCTION NOT APPLIED | Three additive RLS tables, default-deny entitlement, permissioned audited mutations and service-role-only bounded public read RPCs passed fresh replay and security validation |
 | Phase 1C Storefront Part 4 Read-Only UI | `src/app/store/`, `src/lib/storefront/`, `docs/api-contracts/ACOS_PHASE_1C_STOREFRONT_PART4_READ_ONLY_UI.md` | IMPLEMENTED / LOCAL VALIDATED / PRODUCTION NOT ACTIVATED | Server-only RPC adapter, product list/detail routes, controlled media, bilingual theme support and read-only failure states validated locally; conversion actions remain disabled |
 | Phase 1C Storefront Part 5 QA | `docs/testing/ACOS_PHASE_1C_STOREFRONT_PART5_QA_REPORT.md`, `tests/phase-1c-storefront-part5-qa.test.mjs` | VALIDATED / PHASE 1C LOCAL COMPLETE / PRODUCTION NOT ACTIVATED | 320-1440 px list/detail, Thai/English, light/dark, keyboard, contrast, reduced-motion, sold-out, not-found, performance and browser-console gates passed |
+| Phase 1D Cart / Checkout / Payment Part 0 Repository And Dependency Audit | `docs/api-contracts/ACOS_PHASE_1D_CART_CHECKOUT_PAYMENT_PART0_REPOSITORY_DEPENDENCY_AUDIT.md` | VALIDATED / OWNER DECISIONS REQUIRED / IMPLEMENTATION BLOCKED | Canonical cart, inventory, customer, promotion, coupon, order, payment, fulfillment, attribution and audit sources are reusable; no frozen Phase 1D rules/ER or customer-facing guarded checkout orchestration exists |
 | Migration 060 Phase 1B Signup Rate-Limit Validation 2026-07-29 | `docs/migrations/MIGRATION_060_PHASE_1B_SIGNUP_RATE_LIMIT_VALIDATION_2026-07-29.md` | VALIDATED | Fresh replay, lifecycle, retention, privilege and 20-connection concurrency gates passed |
 | Migration 059 Customer Portal CRM Contact Sync Validation 2026-07-29 | `docs/migrations/MIGRATION_059_CUSTOMER_PORTAL_CRM_CONTACT_SYNC_VALIDATION_2026-07-29.md` | VALIDATED | Fresh replay and focused tenant, lifecycle, conflict, idempotency, privacy and direct-role denial gates passed |
 | Migration 057 Customer Portal Verified Contact Notification Validation 2026-07-29 | `docs/migrations/MIGRATION_057_CUSTOMER_PORTAL_VERIFIED_CONTACT_NOTIFICATION_VALIDATION_2026-07-29.md` | VALIDATED | Contact request/verification and notification mapping passed fresh replay, focused, security and workflow gates |
@@ -1190,9 +1191,11 @@ PHASE 1C PART 3 DATABASE BOUNDARY IMPLEMENTED / LOCAL VALIDATED: additive RLS ta
 PHASE 1C PART 4 READ-ONLY STOREFRONT UI IMPLEMENTED / LOCAL VALIDATED: server-only bounded reads, canonical list/detail routes, controlled media, bilingual theme support and disabled conversion actions passed local validation
 PHASE 1C PART 5 RESPONSIVE, ACCESSIBILITY AND CONTROLLED-PREVIEW QA VALIDATED: 320-1440 px list/detail, bilingual themes, keyboard focus, contrast, reduced motion, sold-out, not-found, performance and clean-console gates passed
 BLOCKED: public Storefront runtime and production activation remain unauthorized; P16 remains mandatory
-CURRENT SUBSTEP: PHASE 1C STOREFRONT MVP LOCAL VALIDATION COMPLETE
-NEXT SUBSTEP: PHASE 1D STOREFRONT CART / CHECKOUT / PAYMENT CONTRACT REVIEW
-OWNER DECISIONS REQUIRED BEFORE PROTECTED OR PAYMENT WORK
+PHASE 1D PART 0 REPOSITORY AND DEPENDENCY AUDIT COMPLETE: canonical Commerce Core cart, inventory, customer, promotion, coupon, order, payment, fulfillment, attribution and audit sources are reusable; no duplicate commerce master is allowed
+BLOCKED: Phase 1D protected implementation has no frozen Business Rules/ER and no customer-facing guarded checkout orchestration, payment-provider or manual-confirmation contract
+CURRENT SUBSTEP: PHASE 1D PART 0 REPOSITORY AND DEPENDENCY AUDIT COMPLETE
+NEXT SUBSTEP: PHASE 1D PART 1 OWNER DECISION FREEZE D01-D24
+OWNER DECISIONS REQUIRED BEFORE MIGRATION, PROTECTED CART/ORDER WRITES OR PAYMENT WORK
 AFTER STOREFRONT: Checkout/Payment follows Storefront, and Finance/Tax remains blocked until Checkout/Payment sources are clear
 
 Implementation:

@@ -98,10 +98,10 @@ test("Part 4 records local completion without opening production", () => {
   assert.match(contract, /\*\*Production:\*\* NOT ACTIVATED \/ BLOCKED BY P16/);
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1C STOREFRONT MVP LOCAL VALIDATION COMPLETE/,
+    /PHASE 1C PART 5 RESPONSIVE, ACCESSIBILITY AND CONTROLLED-PREVIEW QA VALIDATED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D STOREFRONT CART \/ CHECKOUT \/ PAYMENT CONTRACT REVIEW/,
+    /NEXT SUBSTEP: PHASE 1D PART 1 OWNER DECISION FREEZE D01-D24/,
   );
 });
