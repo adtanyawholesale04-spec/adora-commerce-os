@@ -37,6 +37,6 @@ test("Part 8 remains reconciled after local configuration readiness", () => {
   );
   assert.match(
     status,
-    /NEXT: Part 8F External Values And Evidence Collection/,
+    /NEXT: Phase 1C Storefront MVP/,
   );
 });

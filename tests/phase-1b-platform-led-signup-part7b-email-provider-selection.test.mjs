@@ -36,6 +36,6 @@ test("Part 7B remains reconciled after implementation planning", () => {
   );
   assert.match(
     status,
-    /NEXT: Part 8F External Values And Evidence Collection/,
+    /NEXT: Phase 1C Storefront MVP/,
   );
 });

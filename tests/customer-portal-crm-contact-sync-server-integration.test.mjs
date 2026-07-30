@@ -24,6 +24,6 @@ test("Auth Admin apply integrates CRM sync without widening the server boundary"
   assert.match(status, /PHASE 1B PART 0 REPOSITORY & DEPENDENCY AUDIT VALIDATED/);
   assert.match(
     status,
-    /NEXT: Part 8F External Values And Evidence Collection/,
+    /NEXT: Phase 1C Storefront MVP/,
   );
 });

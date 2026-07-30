@@ -39,6 +39,6 @@ test("Part 7C remains reconciled after local URL selection", () => {
   );
   assert.match(
     status,
-    /NEXT: Part 8F External Values And Evidence Collection/,
+    /NEXT: Phase 1C Storefront MVP/,
   );
 });

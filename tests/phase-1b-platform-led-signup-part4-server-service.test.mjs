@@ -34,6 +34,6 @@ test("Part 4 maps exactly the frozen guarded operations without UI exposure", ()
   assert.match(status, /PHASE 1B PART 4 SERVER APPLICATION SERVICE BOUNDARY IMPLEMENTED \/ VALIDATED/);
   assert.match(
     status,
-    /NEXT: Part 8F External Values And Evidence Collection/,
+    /NEXT: Phase 1C Storefront MVP/,
   );
 });

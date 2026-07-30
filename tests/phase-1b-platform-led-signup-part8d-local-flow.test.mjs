@@ -83,6 +83,6 @@ test("Part 8D status advances to local E2E validation", () => {
   );
   assert.match(
     status,
-    /NEXT: Part 8F External Values And Evidence Collection/,
+    /NEXT: Phase 1C Storefront MVP/,
   );
 });

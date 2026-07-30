@@ -45,6 +45,6 @@ test("Part 6 remains runtime-disabled pending provider selection", () => {
   assert.match(status, /PHASE 1B PART 6 PROVIDER-NEUTRAL AUTH BOUNDARY DESIGN IMPLEMENTED \/ VALIDATED/);
   assert.match(
     status,
-    /NEXT: Part 8F External Values And Evidence Collection/,
+    /NEXT: Phase 1C Storefront MVP/,
   );
 });

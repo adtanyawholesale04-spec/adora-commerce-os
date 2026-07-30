@@ -47,6 +47,6 @@ test("Part 8A records readiness and stops before protected migration", () => {
   );
   assert.match(
     status,
-    /NEXT: Part 8F External Values And Evidence Collection/,
+    /NEXT: Phase 1C Storefront MVP/,
   );
 });

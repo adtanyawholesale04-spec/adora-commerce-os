@@ -1,9 +1,16 @@
 # Phase 1B Part 8F Owner Decision Freeze
 
 **Task ID:** `PHASE-1B-PLATFORM-SIGNUP-PART8F-OWNER-FREEZE`
-**Status:** OWNER APPROVED / POLICY FROZEN / EXTERNAL VALUES PENDING
+**Status:** OWNER APPROVED / POLICY FROZEN / EXTERNAL EVIDENCE PARTIAL
 **Approval Date:** 2026-07-29
 **P08 External Value Approval Date:** 2026-07-31
+**P10 Evidence Date:** 2026-07-31
+**P11 Evidence Date:** 2026-07-31
+**P12 Evidence Date:** 2026-07-31
+**P13 Approval Date:** 2026-07-31
+**P14 Approval Date:** 2026-07-31
+**P15 Approval Date:** 2026-07-31
+**P16 Approval Date:** 2026-07-31
 **Runtime:** Production disabled
 **Migration:** None
 **Approved Provider Spend:** USD 0
@@ -28,13 +35,13 @@ DNS record or secret.
 | P07 | Use Resend Custom SMTP Free with a dedicated transactional sending domain | Account and exact domain pending |
 | P08 | Use the exact dedicated Auth identity `ADORA Commerce <no-reply@auth.adora-commerce.com>` | Owner approved and exact sender identity frozen |
 | P09 | Require verified SPF and DKIM plus DMARC monitoring before rollout | DNS evidence pending |
-| P10 | Disable provider link tracking and preserve the exact Auth callback | Provider configuration evidence pending |
-| P11 | Keep approved spend at USD 0, disable paid overage and keep ACOS limits below current provider/Auth limits | Current quota evidence pending |
-| P12 | Store application server secrets in Vercel Production only; store CAPTCHA/SMTP secrets in Supabase only; expose only the Turnstile sitekey publicly | Destination map approved; project-specific evidence pending |
-| P13 | Rotate application secrets every 90 days and provider secrets after suspected exposure, owner change or provider incident; revoke before replacement during emergencies | Named operational owner and contact pending |
-| P14 | Monitor Auth failures, CAPTCHA failures, limiter denials and email delivery failures without logging recipients, tokens or secrets | Monitoring destination and alert owner pending |
-| P15 | Roll out to an Owner-approved smoke-test cohort first; keep signup disabled and kill switch active until evidence passes; rollback by enabling the kill switch | Cohort and operational owner pending |
-| P16 | Require an approved production backup policy and successful restore-drill disposition before public signup | Backup/restore evidence pending |
+| P10 | Disable provider link tracking and preserve the exact Auth callback | Verified: no tracking subdomain, exact Site URL/callback allowlist and default ConfirmationURL template |
+| P11 | Keep approved spend at USD 0, disable paid overage and keep ACOS limits below current provider/Auth limits | Verified: both providers are Free with no payment method; Resend overage is unavailable, Supabase spend cap is enabled and ACOS activation is capped at one attempted signup email per hour |
+| P12 | Store application server secrets in Vercel Production only; store CAPTCHA/SMTP secrets in Supabase only; expose only the Turnstile sitekey publicly | Verified: platform-signup values are Production-only, independent server secrets are sensitive, only the sitekey is browser-exposed and no SMTP credential exists |
+| P13 | Rotate application secrets every 90 days and provider secrets after suspected exposure, owner change or provider incident; revoke before replacement during emergencies | Verified: `ACOS Owner` owns rotation, emergency revocation and rollback through the provider-account owner contact route; next application-secret rotation is due 2026-10-29 |
+| P14 | Monitor Auth failures, CAPTCHA failures, limiter denials and email delivery failures without logging recipients, tokens or secrets | Verified: `ACOS Owner` owns Supabase Auth, Cloudflare Turnstile, Vercel runtime and Resend monitoring; privacy-safe stop thresholds are frozen and automated alerting is not claimed |
+| P15 | Roll out to an Owner-approved smoke-test cohort first; keep signup disabled and kill switch active until evidence passes; rollback by enabling the kill switch | Verified plan: one dedicated Owner-controlled test mailbox; `ACOS Owner` owns change, monitoring and rollback; execution remains blocked pending P16 and separate approval |
+| P16 | Require an approved production backup policy and successful restore-drill disposition before public signup | Partial evidence: the approved encrypted temporary export and isolated commerce-core restore passed and artifacts were deleted; compatible managed Auth/Storage recovery and recurring backup remain blocked |
 
 ## Secret Classification
 
@@ -64,10 +71,8 @@ development, CI logs and preview deployments.
 
 The remaining concrete values and evidence are:
 
-1. P10 provider link-tracking and callback-integrity evidence;
-2. P11 current provider quota evidence;
-3. P12 project-specific secret destination evidence;
-4. P13-P16 named operational owners, monitoring, rollout and recovery evidence.
+1. P16 compatible managed Auth/Storage restore evidence and a recurring
+   restorable backup disposition.
 
 ## Decision
 

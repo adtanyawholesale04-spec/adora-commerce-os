@@ -42,5 +42,8 @@ test("Part 4 preserves the independent Phase 1B deployment blocker", async () =>
   assert.match(closure, /Vercel credential connection: BLOCKED BY PART 8F STATUS/);
   assert.match(closure, /production signup enablement: BLOCKED BY PART 8F STATUS/);
   assert.match(closure, /No secret\s+belongs in Git/);
-  assert.match(status, /Phase 1B Platform-Led Signup Part 8F Production Readiness.*BLOCKED \/ OWNER INPUTS REQUIRED/);
+  assert.match(
+    status,
+    /Phase 1B Platform-Led Signup Part 8F Production Readiness.*DEFERRED \/ PRODUCTION BLOCKER/,
+  );
 });

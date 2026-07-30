@@ -36,7 +36,7 @@ test("Part 8F preserves disabled defaults and production fail-closed behavior", 
 test("implementation status records the Part 8F blocker without guessing", () => {
   assert.match(
     status,
-    /PHASE 1B PART 8F PRODUCTION READINESS REVIEW COMPLETE \/ BLOCKED/,
+    /PHASE 1B PART 8F PRODUCTION READINESS REVIEW COMPLETE \/ DEFERRED PRODUCTION BLOCKER/,
   );
-  assert.match(status, /NEXT: Part 8F External Values And Evidence Collection/);
+  assert.match(status, /NEXT: Phase 1C Storefront MVP/);
 });
