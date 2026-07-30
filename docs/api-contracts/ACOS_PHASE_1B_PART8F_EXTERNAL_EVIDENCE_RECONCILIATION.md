@@ -1,7 +1,7 @@
 # Phase 1B Part 8F External Values and Evidence Reconciliation
 
 **Task ID:** `PHASE-1B-PLATFORM-SIGNUP-PART8F-EVIDENCE`
-**Review Date:** 2026-07-30
+**Review Date:** 2026-07-31
 **Status:** PARTIAL / BLOCKED / OWNER AND PROVIDER INPUTS REQUIRED
 **Runtime:** Production disabled
 **Migration:** None
@@ -35,6 +35,19 @@ production custom domain: adora-commerce.com (VALID CONFIGURATION)
 production DNS: apex CNAME -> a82fe037db6c1071.vercel-dns-017.com (DNS only)
 Supabase Auth Site URL: https://adora-commerce.com
 Supabase Auth redirect allowlist: https://adora-commerce.com/auth/platform/callback
+Cloudflare Turnstile widget: ACOS Production Signup
+Turnstile hostname/mode: adora-commerce.com / Managed
+Turnstile pre-clearance: DISABLED
+Supabase Auth CAPTCHA: ENABLED / CLOUDFLARE TURNSTILE
+Turnstile secret destination: SUPABASE AUTH ONLY
+Turnstile credential owner: ACOS Owner
+Turnstile rotation cadence: 90 DAYS / NEXT DUE 2026-10-29
+Resend transactional domain: auth.adora-commerce.com
+Resend sending region: Tokyo (ap-northeast-1)
+Resend domain status: VERIFIED
+Resend DKIM/SPF/mail-from: VERIFIED
+DMARC monitoring: _dmarc.adora-commerce.com / p=none
+Resend sender identity: ADORA Commerce <no-reply@auth.adora-commerce.com>
 project environment variables: NONE
 ```
 
@@ -50,11 +63,11 @@ Vercel. No value or secret from `.env.local` is recorded here.
 | P02 | VERIFIED | Dedicated Hobby project `adora1/adora-commerce-os` (`prj_toXXCAFY8ajeBJPlDHWby3in7jaI`) is connected to `adtanyawholesale04-spec/adora-commerce-os`; `main` is the production source, commit `ab91128` deployed Ready, previews remain separate, and no project environment variables exist |
 | P03 | VERIFIED | Dedicated `ACOS Production` project `pirewyrhddrhmtiwmlaw` is active and linked in Tokyo (`ap-northeast-1`) |
 | P04 | VERIFIED | `adora-commerce.com` is attached to Vercel with valid configuration and SSL; the Cloudflare apex CNAME targets `a82fe037db6c1071.vercel-dns-017.com` in DNS-only mode; Supabase Auth uses exact Site URL `https://adora-commerce.com` and the sole redirect allowlist entry is `https://adora-commerce.com/auth/platform/callback` |
-| P05 | MISSING | No dedicated production Turnstile widget/hostname/sitekey evidence |
-| P06 | PARTIAL | Secret destination policy is frozen, but Supabase Auth configuration, named owner and rotation evidence are absent |
-| P07 | MISSING | No verified Resend account or dedicated transactional sending domain evidence |
-| P08 | MISSING | No exact From address or sender-name approval |
-| P09 | MISSING | No verified SPF, DKIM or DMARC monitoring evidence |
+| P05 | VERIFIED | Dedicated production widget `ACOS Production Signup` is configured for exact hostname `adora-commerce.com` in Managed mode with pre-clearance disabled; provider keys exist but their values are intentionally excluded from repository evidence |
+| P06 | VERIFIED | Supabase Auth CAPTCHA protection is enabled with Cloudflare Turnstile and the secret is stored only in Supabase Auth; `ACOS Owner` owns the credential and the approved 90-day/emergency rotation process is frozen in `ACOS_PHASE_1B_PART8F_P06_TURNSTILE_CREDENTIAL_OPERATIONS.md` |
+| P07 | VERIFIED | Owner-controlled Resend account contains the dedicated transactional domain `auth.adora-commerce.com` in Tokyo (`ap-northeast-1`); DNS verification remains separately gated by P09 and no API key, SMTP credential or email send was created |
+| P08 | VERIFIED | Owner approved the exact authentication sender `ADORA Commerce <no-reply@auth.adora-commerce.com>`; no Reply-To, SMTP credential, API key or email send is implied |
+| P09 | VERIFIED | Resend reports `auth.adora-commerce.com` verified; Cloudflare holds DNS-only DKIM, SPF and mail-from MX records, while `_dmarc.adora-commerce.com` resolves with the approved monitoring policy `p=none`; record values and authorization state are excluded from repository evidence |
 | P10 | MISSING | No Resend link-tracking configuration or production callback-integrity evidence |
 | P11 | MISSING | No current Resend/Supabase Auth quota evidence; paid overage remains unauthorized |
 | P12 | PARTIAL | Destination policy is frozen, but no Vercel project-specific environment evidence exists |
@@ -66,10 +79,10 @@ Vercel. No value or secret from `.env.local` is recorded here.
 Summary:
 
 ```text
-VERIFIED: 4
-PARTIAL: 2
+VERIFIED: 9
+PARTIAL: 1
 OWNER DECISION REQUIRED: 0
-MISSING: 10
+MISSING: 6
 ```
 
 ## Safety Disposition
@@ -89,16 +102,13 @@ fail closed until the complete external gate is verified.
 
 ## Next Ordered Actions
 
-1. Create and verify the P05/P06 production Turnstile widget and Supabase
-   CAPTCHA configuration without exposing the secret.
-2. Create and verify Resend/DNS boundaries without exposing
-   secrets.
-3. Record P11-P16 operational evidence.
-4. Run the full production configuration validation and limited smoke test.
+1. Reconcile P10 link tracking and callback-integrity settings.
+2. Record P11-P16 operational evidence.
+3. Run the full production configuration validation and limited smoke test.
 
 ## Decision
 
 `PARTIAL / BLOCKED`
 
-P01-P04 and the production database gate are ready. Public signup remains
-blocked because P05-P16 lack complete evidence.
+P01-P09 and the production database gate are ready. Public signup remains
+blocked because P10-P16 lack complete evidence.

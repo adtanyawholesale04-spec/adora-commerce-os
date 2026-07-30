@@ -23,7 +23,11 @@ test("Part 8F freezes all P01-P16 policies and records the approved P01", () => 
   assert.match(freeze, /deployment\/temporary domain and must not be treated as canonical/);
   assert.doesNotMatch(freeze, /exact canonical HTTPS origin;/);
   assert.match(freeze, /Project reference and region pending/);
-  assert.match(freeze, /Exact address and sender name pending/);
+  assert.match(
+    freeze,
+    /ADORA Commerce <no-reply@auth\.adora-commerce\.com>/,
+  );
+  assert.match(freeze, /Owner approved and exact sender identity frozen/);
 });
 
 test("Part 8F keeps secrets, cost and rollout safely bounded", () => {

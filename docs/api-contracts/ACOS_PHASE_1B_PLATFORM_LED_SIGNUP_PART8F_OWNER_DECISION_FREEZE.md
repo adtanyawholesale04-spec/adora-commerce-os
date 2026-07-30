@@ -3,6 +3,7 @@
 **Task ID:** `PHASE-1B-PLATFORM-SIGNUP-PART8F-OWNER-FREEZE`
 **Status:** OWNER APPROVED / POLICY FROZEN / EXTERNAL VALUES PENDING
 **Approval Date:** 2026-07-29
+**P08 External Value Approval Date:** 2026-07-31
 **Runtime:** Production disabled
 **Migration:** None
 **Approved Provider Spend:** USD 0
@@ -25,7 +26,7 @@ DNS record or secret.
 | P05 | Use a dedicated production Turnstile widget restricted to the P01 hostname | Widget/sitekey evidence pending P01 |
 | P06 | Store the Turnstile secret only in Supabase Auth CAPTCHA configuration | Secret destination approved; configuration/rotation evidence pending |
 | P07 | Use Resend Custom SMTP Free with a dedicated transactional sending domain | Account and exact domain pending |
-| P08 | Use a dedicated no-reply Auth sender under the approved P07 domain | Exact address and sender name pending |
+| P08 | Use the exact dedicated Auth identity `ADORA Commerce <no-reply@auth.adora-commerce.com>` | Owner approved and exact sender identity frozen |
 | P09 | Require verified SPF and DKIM plus DMARC monitoring before rollout | DNS evidence pending |
 | P10 | Disable provider link tracking and preserve the exact Auth callback | Provider configuration evidence pending |
 | P11 | Keep approved spend at USD 0, disable paid overage and keep ACOS limits below current provider/Auth limits | Current quota evidence pending |
@@ -61,15 +62,12 @@ development, CI logs and preview deployments.
 
 ## Unresolved External Values
 
-Policy approval does not resolve these concrete values:
+The remaining concrete values and evidence are:
 
-1. Vercel production project identity;
-2. Supabase production project reference and region;
-3. Turnstile production widget/sitekey and hostname evidence;
-4. Resend account, sending domain, sender address and sender name;
-5. SPF, DKIM and DMARC evidence;
-6. named rotation, monitoring, rollout and recovery owners;
-7. current provider quota evidence and backup/restore disposition.
+1. P10 provider link-tracking and callback-integrity evidence;
+2. P11 current provider quota evidence;
+3. P12 project-specific secret destination evidence;
+4. P13-P16 named operational owners, monitoring, rollout and recovery evidence.
 
 ## Decision
 
