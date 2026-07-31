@@ -11,11 +11,15 @@ const status = readFileSync(
   "utf8",
 );
 const migrations = readdirSync("supabase/migrations");
+const migration = readFileSync(
+  "supabase/migrations/20260731183955_phase_1d_guarded_cart_rpcs.sql",
+  "utf8",
+);
 
-test("Part 3C freezes all Owner-approved C01-C24 decisions without creating runtime", () => {
+test("Part 3C freezes C01-C24 and records the locally validated migration", () => {
   assert.match(
     contract,
-    /OWNER APPROVED \/ C01-C24 FROZEN \/ SQL BLOCKED BY PROMOTION CONTRACT/,
+    /OWNER APPROVED \/ C01-C24 FROZEN \/ SQL IMPLEMENTED \/ LOCAL VALIDATED/,
   );
   assert.match(contract, /\*\*Owner Approval Date:\*\* 2026-08-01/);
   for (let id = 1; id <= 24; id += 1) {
@@ -23,7 +27,7 @@ test("Part 3C freezes all Owner-approved C01-C24 decisions without creating runt
   }
   assert.equal(
     migrations.some((name) => /phase_1d_guarded_cart/i.test(name)),
-    false,
+    true,
   );
 });
 
@@ -60,9 +64,13 @@ test("Part 3C preserves idempotency, grants, privacy and Production gates", () =
   assert.match(contract, /granted only to `authenticated`/);
   assert.match(contract, /No call stores email, phone, address, consent, proof/);
   assert.match(contract, /no Production apply or public checkout activation/);
+  assert.match(migration, /security definer/);
+  assert.match(migration, /grant execute on function public\.api_resolve_storefront_cart/);
+  assert.match(migration, /to authenticated/);
+  assert.doesNotMatch(migration, /grant execute[\s\S]*to anon/);
 });
 
-test("implementation status records Owner freeze and stops for promotion review", () => {
+test("implementation status records local completion and stops before Part 3D SQL", () => {
   assert.match(
     status,
     /PHASE 1D PART 3C GUARDED CART BOUNDARY CONTRACT REVIEW PREPARED/,
@@ -73,10 +81,10 @@ test("implementation status records Owner freeze and stops for promotion review"
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D PART 3C C01-C24 OWNER APPROVED \/ PROMOTION CONTRACT REQUIRED \/ SQL BLOCKED/,
+    /CURRENT SUBSTEP: PHASE 1D PART 3D AC01-AC30 OWNER FROZEN \/ COUPON SUBCONTRACT REQUIRED \/ SQL BLOCKED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D PART 3C PROMOTION EVALUATION SUBCONTRACT REVIEW/,
+    /NEXT SUBSTEP: PHASE 1D PART 3D COUPON EVALUATION SUBCONTRACT REVIEW/,
   );
 });

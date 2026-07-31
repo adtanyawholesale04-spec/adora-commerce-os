@@ -2,20 +2,21 @@
 
 **Task ID:** `PHASE-1D-CHECKOUT-PART3C`
 **Review Date:** 2026-08-01
-**Status:** OWNER APPROVED / C01-C24 FROZEN / SQL BLOCKED BY PROMOTION CONTRACT
+**Status:** OWNER APPROVED / C01-C24 FROZEN / SQL IMPLEMENTED / LOCAL VALIDATED
 **Owner Approval Date:** 2026-08-01
 **Depends On:** Owner-frozen D01-D24, CO-BR-001 to CO-BR-044, Phase 1D ER Addendum, M01-M20 and locally validated Part 3B foundation
-**Migration:** Not created
-**Local Apply:** Not authorized until the promotion evaluator contract is Owner-frozen
+**Migration:** `20260731183955_phase_1d_guarded_cart_rpcs.sql`
+**Local Apply:** Fresh replay and focused validation passed on 2026-08-01
 **Production Apply:** Not authorized / blocked by P16
 **Provider Spend:** USD 0
 
 ## Objective
 
-Define the exact customer-owned guarded cart boundary before creating Layer 2
-SQL. This review covers cart resolution, item set/remove and checkout start. It
-does not create an RPC, route, direct browser write, order, payment, inventory
-reservation, coupon reservation, provider integration or Production change.
+Define the exact customer-owned guarded cart boundary for Layer 2 SQL. The
+review covers cart resolution, item set/remove and checkout start. The approved
+boundary is now implemented and locally validated without a runtime route,
+direct browser write, order, payment, inventory reservation, coupon
+reservation, provider integration or Production change.
 
 ## Task Envelope
 
@@ -127,7 +128,7 @@ CHECKOUT_NOT_AVAILABLE
 CART_NOT_FOUND
 CART_NOT_MUTABLE
 QUANTITY_INVALID
-ITEM_NOT_AVAILABLE
+ITEM_UNAVAILABLE
 PROMOTION_CONFIGURATION_UNSUPPORTED
 IDEMPOTENCY_CONFLICT
 REQUEST_IN_PROGRESS
@@ -183,7 +184,7 @@ active cart and returns one deterministic result. No stock balance is mutated.
   snapshot or idempotency evidence.
 - Part 3C never changes consent, membership, customer profile data or CRM data.
 
-## Validation Matrix For A Future Layer 2 Migration
+## Layer 2 Validation Matrix
 
 1. unauthenticated, inactive profile and inactive membership denial;
 2. missing/revoked customer link and non-active customer denial;
@@ -211,10 +212,13 @@ The four guarded cart candidates are compatible with the frozen cart and
 foundation model. The Project Owner approved C01-C24 in full on 2026-08-01.
 These signatures, lifecycle, ownership, quantity, availability, pricing,
 idempotency, security, privacy and delivery decisions are frozen for the
-remaining Part 3C design and implementation gates.
+remaining Part 3C implementation gates.
 
-Layer 2 SQL remains **BLOCKED** until a Promotion Evaluation Subcontract freezes
-the executable promotion catalog required by D06 and CO-BR-013 to CO-BR-016.
+The separate Owner-frozen Promotion Evaluation Subcontract removed the pricing
+blocker. Migration `20260731183955_phase_1d_guarded_cart_rpcs.sql` now implements
+the four exact guarded functions and internal helpers. Fresh local replay,
+functional boundary validation, an eight-connection cart-resolution race,
+database lint and regressions passed on 2026-08-01.
 
-This review does not authorize a migration, runtime route, provider or
-Production change.
+This implementation does not authorize a runtime route, Part 3D atomic
+checkout, provider or Production change.

@@ -88,7 +88,7 @@ test("Part 2 preserves P16 after the validated Part 3 handoff", () => {
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D PART 3C PROMOTION EVALUATION SUBCONTRACT REVIEW/,
+    /NEXT SUBSTEP: PHASE 1D PART 3D COUPON EVALUATION SUBCONTRACT REVIEW/,
   );
 });
 

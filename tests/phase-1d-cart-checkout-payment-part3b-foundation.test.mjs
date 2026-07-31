@@ -83,11 +83,11 @@ test("Part 3B status and validation evidence preserve the production gate", () =
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D PART 3C PROMOTION EVALUATION SUBCONTRACT REVIEW/,
+    /NEXT SUBSTEP: PHASE 1D PART 3D COUPON EVALUATION SUBCONTRACT REVIEW/,
   );
   assert.match(
     status,
-    /Layer 2 SQL requires a frozen executable promotion catalog[\s\S]*Part 3D-3E protected runtime[\s\S]*remain unauthorized/,
+    /Part 3D SQL requires a frozen Coupon Evaluation Subcontract[\s\S]*production activation remain unauthorized/,
   );
   assert.match(report, /LOCAL VALIDATED \/ PRODUCTION NOT APPLIED/);
   assert.match(report, new RegExp(migrationName.replace(".", "\\.")));

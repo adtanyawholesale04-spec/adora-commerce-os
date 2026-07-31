@@ -9,7 +9,7 @@ runSqlSuite([
     requiredRows: [
       "public_tables_without_rls|0",
       "tenant_tables_without_rls|0",
-      "public_security_definer_functions|66",
+      "public_security_definer_functions|70",
     ],
   },
   {
