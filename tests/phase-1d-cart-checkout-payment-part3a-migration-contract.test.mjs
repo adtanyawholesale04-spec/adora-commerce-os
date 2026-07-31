@@ -65,14 +65,14 @@ test("implementation status records Part 3B and stops before Part 3C runtime", (
   assert.match(status, /PHASE 1D PART 3A MIGRATION CONTRACT REVIEW PREPARED/);
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D PART 3D AC01-AC30 OWNER FROZEN \/ COUPON SUBCONTRACT REQUIRED \/ SQL BLOCKED/,
+    /CURRENT SUBSTEP: PHASE 1D PART 3D COUPON PREFLIGHT CLEAN \/ LAYER 3 MIGRATION AUTHORIZATION REQUIRED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D PART 3D COUPON EVALUATION SUBCONTRACT REVIEW/,
+    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D PART 3D LAYER 3 MIGRATION GENERATION AND LOCAL VALIDATION/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 3D SQL requires a frozen Coupon Evaluation Subcontract[\s\S]*production activation remain unauthorized/,
+    /BLOCKED: Layer 3 migration generation and local apply require explicit Owner authorization[\s\S]*production activation remain unauthorized/,
   );
 });

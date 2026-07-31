@@ -126,6 +126,6 @@ test("implementation status completes Phase 1C locally and advances to Phase 1D 
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D PART 3D COUPON EVALUATION SUBCONTRACT REVIEW/,
+    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D PART 3D LAYER 3 MIGRATION GENERATION AND LOCAL VALIDATION/,
   );
 });
