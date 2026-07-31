@@ -98,14 +98,14 @@ test("Part 5 completes Phase 1C locally without opening Phase 1D writes", () => 
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D PART 0 REPOSITORY AND DEPENDENCY AUDIT COMPLETE/,
+    /CURRENT SUBSTEP: PHASE 1D PART 3A OWNER APPROVED \/ M01-M20 FROZEN FOR PART 3B/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D PART 1 OWNER DECISION FREEZE D01-D24/,
+    /NEXT SUBSTEP: PHASE 1D PART 3B FOUNDATION MIGRATION GENERATION AND LOCAL VALIDATION/,
   );
   assert.match(
     status,
-    /OWNER DECISIONS REQUIRED BEFORE MIGRATION, PROTECTED CART\/ORDER WRITES OR PAYMENT WORK/,
+    /BLOCKED: Production migration apply, Part 3C-3E protected runtime, real payment\/provider work and production activation remain unauthorized until later gates/,
   );
 });

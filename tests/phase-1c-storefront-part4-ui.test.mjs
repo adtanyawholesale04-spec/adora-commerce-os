@@ -102,6 +102,6 @@ test("Part 4 records local completion without opening production", () => {
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D PART 1 OWNER DECISION FREEZE D01-D24/,
+    /NEXT SUBSTEP: PHASE 1D PART 3B FOUNDATION MIGRATION GENERATION AND LOCAL VALIDATION/,
   );
 });
