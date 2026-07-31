@@ -2,12 +2,21 @@
 
 **Task ID:** `PHASE-1D-CHECKOUT-PART3D-COUPON`
 **Review Date:** 2026-08-01
-**Status:** OWNER FROZEN / CP01-CP30 APPROVED / LOCAL PREFLIGHT VALIDATED / MIGRATION AUTHORIZATION REQUIRED
+**Status:** OWNER FROZEN / CP01-CP30 APPROVED / IMPLEMENTED / LOCAL VALIDATED / PRODUCTION NOT APPLIED
 **Depends On:** Owner-frozen CO-BR-001 to CO-BR-044, PE01-PE24 and AC01-AC30
-**Migration:** Not created
-**Local Apply:** Not authorized
+**Migration:** `supabase/migrations/20260731195612_phase_1d_atomic_checkout_layer3.sql`
+**Local Apply:** Validated by fresh replay and competing-transaction test on 2026-08-01
 **Production Apply:** Not authorized / blocked by P16
 **Provider Spend:** USD 0
+
+## Implementation Reconciliation
+
+The separately authorized Layer 3 migration adds normalized coupon uniqueness,
+one-active-use constraints, structural ORDER-channel separation, the frozen
+coupon evaluator and reservation/evidence lifecycle. A two-customer race for
+one remaining coupon capacity produces exactly one order, redemption, payment
+and inventory hold; the losing transaction fails closed without deadlock.
+Production remains unapplied.
 
 ## Objective
 

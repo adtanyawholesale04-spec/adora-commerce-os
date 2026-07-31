@@ -98,14 +98,14 @@ test("Part 5 completes Phase 1C locally without opening Phase 1D writes", () => 
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D PART 3D COUPON PREFLIGHT CLEAN \/ LAYER 3 MIGRATION AUTHORIZATION REQUIRED/,
+    /CURRENT SUBSTEP: PHASE 1D PART 3E SERVER RUNTIME COMPLETE LOCALLY \/ PRODUCTION NOT APPLIED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D PART 3D LAYER 3 MIGRATION GENERATION AND LOCAL VALIDATION/,
+    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT BOUNDARY CONTRACT REVIEW/,
   );
   assert.match(
     status,
-    /BLOCKED: Layer 3 migration generation and local apply require explicit Owner authorization[\s\S]*production activation remain unauthorized/,
+    /BLOCKED: manual payment proof\/verification and provider boundaries[\s\S]*Production preflight\/apply[\s\S]*P16 remains mandatory for Production/,
   );
 });

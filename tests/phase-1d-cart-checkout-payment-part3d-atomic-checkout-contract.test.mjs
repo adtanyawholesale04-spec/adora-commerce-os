@@ -12,10 +12,10 @@ const status = readFileSync(
 );
 const migrations = readdirSync("supabase/migrations");
 
-test("Part 3D freezes all AC01-AC30 decisions without creating SQL", () => {
+test("Part 3D freezes AC01-AC30 and records the locally validated Layer 3 migration", () => {
   assert.match(
     contract,
-    /OWNER FROZEN \/ AC01-AC30 APPROVED \/ COUPON SUBCONTRACT REQUIRED \/ SQL BLOCKED/,
+    /OWNER FROZEN \/ AC01-AC30 APPROVED \/ IMPLEMENTED \/ LOCAL VALIDATED \/ PRODUCTION NOT APPLIED/,
   );
   assert.match(contract, /Project Owner approved the recommended values for AC01-AC30/);
   for (let id = 1; id <= 30; id += 1) {
@@ -23,7 +23,7 @@ test("Part 3D freezes all AC01-AC30 decisions without creating SQL", () => {
   }
   assert.equal(
     migrations.some((name) => /phase_1d_atomic_checkout/i.test(name)),
-    false,
+    true,
   );
 });
 
@@ -44,10 +44,10 @@ test("Part 3D reuses canonical commerce sources and one transaction", () => {
   assert.match(contract, /creates no hold\/order\/payment/);
 });
 
-test("Part 3D keeps coupon arithmetic and campaign separation blocked", () => {
+test("Part 3D implements the frozen coupon arithmetic and campaign separation", () => {
   assert.match(contract, /Coupon Evaluation Subcontract/);
   assert.match(contract, /coupon-linked campaign versions cannot apply without a submitted code/);
-  assert.match(contract, /Part 3D SQL remains \*\*BLOCKED\*\*/);
+  assert.match(contract, /competing-coupon tests/);
   assert.match(contract, /non-destructive preflight/);
 });
 
@@ -59,7 +59,7 @@ test("Part 3D preserves financial, privacy and provider boundaries", () => {
   assert.match(contract, /USD 0/);
 });
 
-test("implementation status records Owner freeze and stops before SQL", () => {
+test("implementation status records local Layer 3 completion and the Part 3E gate", () => {
   assert.match(status, /PHASE 1D PART 3D ATOMIC CHECKOUT CONTRACT REVIEW PREPARED/);
   assert.match(
     status,
@@ -67,10 +67,10 @@ test("implementation status records Owner freeze and stops before SQL", () => {
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D PART 3D COUPON PREFLIGHT CLEAN \/ LAYER 3 MIGRATION AUTHORIZATION REQUIRED/,
+    /CURRENT SUBSTEP: PHASE 1D PART 3E SERVER RUNTIME COMPLETE LOCALLY \/ PRODUCTION NOT APPLIED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D PART 3D LAYER 3 MIGRATION GENERATION AND LOCAL VALIDATION/,
+    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT BOUNDARY CONTRACT REVIEW/,
   );
 });

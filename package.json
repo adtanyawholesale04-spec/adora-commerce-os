@@ -39,6 +39,7 @@
     "validate:phase-1d-promotion-evaluator": "node supabase/validation/phase-1d-promotion-evaluator-suite.mjs",
     "validate:phase-1d-guarded-cart-rpcs": "node supabase/validation/phase-1d-guarded-cart-rpcs-suite.mjs",
     "validate:phase-1d-coupon-preflight": "node supabase/validation/phase-1d-coupon-preflight-suite.mjs",
+    "validate:phase-1d-atomic-checkout-layer3": "node supabase/validation/phase-1d-atomic-checkout-layer3-suite.mjs",
     "validate:supabase": "npm run validate:supabase-security && npm run validate:supabase-workflows && npm run validate:commerce-integration"
   },
   "dependencies": {

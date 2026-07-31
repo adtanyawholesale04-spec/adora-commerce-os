@@ -83,11 +83,11 @@ test("Part 3B status and validation evidence preserve the production gate", () =
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D PART 3D LAYER 3 MIGRATION GENERATION AND LOCAL VALIDATION/,
+    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT BOUNDARY CONTRACT REVIEW/,
   );
   assert.match(
     status,
-    /Layer 3 migration generation and local apply require explicit Owner authorization[\s\S]*production activation remain unauthorized/,
+    /manual payment proof\/verification and provider boundaries[\s\S]*Production preflight\/apply[\s\S]*P16 remains mandatory for Production/,
   );
   assert.match(report, /LOCAL VALIDATED \/ PRODUCTION NOT APPLIED/);
   assert.match(report, new RegExp(migrationName.replace(".", "\\.")));

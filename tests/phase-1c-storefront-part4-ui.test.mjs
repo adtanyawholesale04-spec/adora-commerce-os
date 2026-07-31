@@ -102,6 +102,6 @@ test("Part 4 records local completion without opening production", () => {
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D PART 3D LAYER 3 MIGRATION GENERATION AND LOCAL VALIDATION/,
+    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT BOUNDARY CONTRACT REVIEW/,
   );
 });

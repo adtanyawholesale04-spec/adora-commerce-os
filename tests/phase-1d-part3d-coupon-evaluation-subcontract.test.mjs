@@ -20,18 +20,18 @@ const preflightReport = readFileSync(
   "utf8",
 );
 
-test("coupon subcontract freezes CP01-CP30 without creating SQL", () => {
+test("coupon subcontract freezes CP01-CP30 and records the validated Layer 3 SQL", () => {
   assert.match(
     contract,
-    /OWNER FROZEN \/ CP01-CP30 APPROVED \/ LOCAL PREFLIGHT VALIDATED \/ MIGRATION AUTHORIZATION REQUIRED/,
+    /OWNER FROZEN \/ CP01-CP30 APPROVED \/ IMPLEMENTED \/ LOCAL VALIDATED \/ PRODUCTION NOT APPLIED/,
   );
   assert.match(contract, /Project Owner approved the recommended values for CP01-CP30/);
   for (let id = 1; id <= 30; id += 1) {
     assert.match(contract, new RegExp(`\\| CP${String(id).padStart(2, "0")} \\|`));
   }
   assert.equal(
-    migrations.some((name) => /phase_1d.*coupon.*evaluation/i.test(name)),
-    false,
+    migrations.some((name) => /phase_1d_atomic_checkout_layer3/i.test(name)),
+    true,
   );
 });
 
@@ -91,7 +91,7 @@ test("coupon preflight is read-only and records zero blocking findings", () => {
   assert.match(preflightReport, /Production Query:\*\* Not performed/);
 });
 
-test("implementation status records clean local preflight and stops at migration authorization", () => {
+test("implementation status records the validated coupon boundary and Part 3E gate", () => {
   assert.match(
     status,
     /PHASE 1D PART 3D COUPON EVALUATION SUBCONTRACT REVIEW PREPARED/,
@@ -106,14 +106,14 @@ test("implementation status records clean local preflight and stops at migration
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D PART 3D COUPON PREFLIGHT CLEAN \/ LAYER 3 MIGRATION AUTHORIZATION REQUIRED/,
+    /CURRENT SUBSTEP: PHASE 1D PART 3E SERVER RUNTIME COMPLETE LOCALLY \/ PRODUCTION NOT APPLIED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D PART 3D LAYER 3 MIGRATION GENERATION AND LOCAL VALIDATION/,
+    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT BOUNDARY CONTRACT REVIEW/,
   );
   assert.match(
     status,
-    /BLOCKED: Layer 3 migration generation and local apply require explicit Owner authorization[\s\S]*production activation remain unauthorized/,
+    /BLOCKED: manual payment proof\/verification and provider boundaries[\s\S]*Production preflight\/apply[\s\S]*P16 remains mandatory for Production/,
   );
 });

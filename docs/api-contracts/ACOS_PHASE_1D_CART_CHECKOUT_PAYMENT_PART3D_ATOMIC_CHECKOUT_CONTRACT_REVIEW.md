@@ -2,12 +2,22 @@
 
 **Task ID:** `PHASE-1D-CHECKOUT-PART3D`
 **Review Date:** 2026-08-01
-**Status:** OWNER FROZEN / AC01-AC30 APPROVED / COUPON SUBCONTRACT REQUIRED / SQL BLOCKED
+**Status:** OWNER FROZEN / AC01-AC30 APPROVED / IMPLEMENTED / LOCAL VALIDATED / PRODUCTION NOT APPLIED
 **Depends On:** Owner-frozen D01-D24, CO-BR-001 to CO-BR-044, Phase 1D ER Addendum, M01-M20, PE01-PE24 and locally validated Parts 3B-3C
-**Migration:** Not created
-**Local Apply:** Not authorized
+**Migration:** `supabase/migrations/20260731195612_phase_1d_atomic_checkout_layer3.sql`
+**Local Apply:** Validated by fresh replay on 2026-08-01
 **Production Apply:** Not authorized / blocked by P16
 **Provider Spend:** USD 0
+
+## Implementation Reconciliation
+
+The separately authorized forward migration now implements the three frozen
+Layer 3 APIs, deterministic inventory reservations, optional coupon evaluation,
+order/payment/evidence creation, idempotent expiry and Owner-approved
+compensation code `CHECKOUT_POST_COMMIT_FAILED`. Focused functional, reprice,
+expiry, compensation, privacy, role-grant, rollback and competing-coupon tests
+pass locally. No provider call, payment transaction/proof, Production apply or
+public activation was included.
 
 ## Objective
 
