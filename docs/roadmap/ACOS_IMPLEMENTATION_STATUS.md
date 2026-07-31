@@ -1228,15 +1228,21 @@ PHASE 1D PART 3D LAYER 3 IMPLEMENTED / LOCAL VALIDATED: Owner approved the singl
 PHASE 1D PART 3E SERVER APPLICATION RUNTIME CONTRACT REVIEW PREPARED: R01-R24 recommend customer-session checkout orchestration, disabled-by-default flags, canonical tenant/input handling, stable idempotency, controlled errors, strict response parsing, service-role isolation and independently retryable post-commit ORDER_PLACED attribution without creating runtime or SQL
 PHASE 1D PART 3E OWNER DECISION FREEZE COMPLETE: Owner approved R01-R24 in full on 2026-08-01; customer-session mutation, service-role isolation, stable retry, controlled result, attribution reconciliation, privacy and local-only delivery contracts are frozen
 PHASE 1D PART 3E SERVER APPLICATION RUNTIME IMPLEMENTED / LOCAL VALIDATED: disabled-by-default typed cart/checkout services and thin Server Actions use the authenticated Supabase cookie client; a separate server-only canonical order adapter records and reconciles ORDER_PLACED without compensating valid commerce truth; no migration, UI activation, manual payment, provider or Production change occurred
-CURRENT SUBSTEP: PHASE 1D PART 3E SERVER RUNTIME COMPLETE LOCALLY / PRODUCTION NOT APPLIED
-NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT BOUNDARY CONTRACT REVIEW
-BLOCKED: manual payment proof/verification and provider boundaries, Storefront checkout UI activation, Production preflight/apply and public activation remain unauthorized; P16 remains mandatory for Production
+PHASE 1D MANUAL PAYMENT PART 0 REPOSITORY AUDIT COMPLETE: canonical payment, transaction, proof, order, inventory, coupon, idempotency, permission, audit and attribution sources are reusable; proof Storage and protected payment orchestration gaps are classified without SQL or runtime changes
+PHASE 1D MANUAL PAYMENT PART 1A CUSTOMER SUBMISSION DECISION TABLE PREPARED: PS01-PS24 recommend authenticated same-tenant reference-only BANK_TRANSFER submission, canonical full amount, stable idempotency, one pending attempt, bounded audit/response and deferred private binary proof without authorizing implementation
+PHASE 1D MANUAL PAYMENT PART 1A OWNER DECISION FREEZE COMPLETE: Owner approved PS01-PS24 in full on 2026-08-01; reference-only BANK_TRANSFER customer submission, canonical amount, ownership, deadline, idempotency, pending-attempt, privacy and deferred binary-proof contracts are frozen
+CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 1A PS01-PS24 OWNER FROZEN / NO SQL OR RUNTIME AUTHORIZED
+NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT PART 1B STAFF REVIEW DECISION TABLE
+BLOCKED: Part 1B-1C decision freeze, manual payment migration, customer submission, staff verification, private proof Storage, Storefront checkout UI activation, Production preflight/apply and public activation remain unauthorized; P16 remains mandatory for Production
 AFTER STOREFRONT: Checkout/Payment follows Storefront, and Finance/Tax remains blocked until Checkout/Payment sources are clear
 
 Implementation:
 CONTROLLED START
 
 Latest validation:
+Phase 1D Manual Payment Part 1A Owner freeze reconciliation confirmed PS01-PS24 completeness and preserved all SQL, Storage, runtime, UI, provider and Production gates on 2026-08-01.
+Phase 1D Manual Payment Part 1A PS01-PS24 decision completeness, ownership, canonical amount, reference-only proof, idempotency, privacy and implementation-gate contract tests passed on 2026-08-01; no SQL, Storage, runtime, UI, provider or Production change was made.
+Phase 1D Manual Payment Part 0 canonical-source, schema-gap, permission, privacy and implementation-gate audit passed on 2026-08-01; no migration, Storage, runtime, provider, UI or Production change was made.
 Phase 1D Part 3E typed runtime contract/source gates, lint, typecheck, full tests and build passed on 2026-08-01; the checkout flags remain disabled and no Production or provider action occurred.
 Phase 1D Part 3E server application runtime contract review and static contract gates passed on 2026-08-01; no runtime, migration, provider or Production change was made.
 Phase 1D Part 3D fresh replay, atomic checkout/coupon/reprice/expiry/compensation suite, competing coupon race, database lint, Phase 1D regressions, Supabase security/workflow, Commerce integration and static gates passed on 2026-08-01.

@@ -98,14 +98,14 @@ test("Part 5 completes Phase 1C locally without opening Phase 1D writes", () => 
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D PART 3E SERVER RUNTIME COMPLETE LOCALLY \/ PRODUCTION NOT APPLIED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 1A PS01-PS24 OWNER FROZEN \/ NO SQL OR RUNTIME AUTHORIZED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT BOUNDARY CONTRACT REVIEW/,
+    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT PART 1B STAFF REVIEW DECISION TABLE/,
   );
   assert.match(
     status,
-    /BLOCKED: manual payment proof\/verification and provider boundaries[\s\S]*Production preflight\/apply[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 1B-1C decision freeze, manual payment migration, customer submission, staff verification, private proof Storage[\s\S]*Production preflight\/apply[\s\S]*P16 remains mandatory for Production/,
   );
 });
