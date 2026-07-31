@@ -91,14 +91,14 @@ test("implementation status advances only to the Owner freeze", () => {
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D PART 3A OWNER APPROVED \/ M01-M20 FROZEN FOR PART 3B/,
+    /CURRENT SUBSTEP: PHASE 1D PART 3C C01-C24 OWNER APPROVED \/ PROMOTION CONTRACT REQUIRED \/ SQL BLOCKED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D PART 3B FOUNDATION MIGRATION GENERATION AND LOCAL VALIDATION/,
+    /NEXT SUBSTEP: PHASE 1D PART 3C PROMOTION EVALUATION SUBCONTRACT REVIEW/,
   );
   assert.match(
     status,
-    /BLOCKED: Production migration apply, Part 3C-3E protected runtime, real payment\/provider work and production activation remain unauthorized until later gates/,
+    /BLOCKED: Layer 2 SQL requires a frozen executable promotion catalog[\s\S]*Part 3D-3E protected runtime[\s\S]*remain unauthorized/,
   );
 });

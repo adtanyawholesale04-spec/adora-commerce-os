@@ -35,6 +35,7 @@
     "validate:phase-1b-platform-signup": "node supabase/validation/phase-1b-platform-signup-boundary-suite.mjs",
     "validate:phase-1b-signup-rate-limit": "node supabase/validation/phase-1b-signup-rate-limit-boundary-suite.mjs",
     "validate:phase-1c-storefront": "node supabase/validation/phase-1c-storefront-boundary-suite.mjs",
+    "validate:phase-1d-checkout-foundation": "node supabase/validation/phase-1d-checkout-foundation-suite.mjs",
     "validate:supabase": "npm run validate:supabase-security && npm run validate:supabase-workflows && npm run validate:commerce-integration"
   },
   "dependencies": {

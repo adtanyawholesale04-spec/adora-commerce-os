@@ -12,7 +12,7 @@ const status = readFileSync(
 );
 const migrations = readdirSync("supabase/migrations");
 
-test("Part 3A records Owner approval for M01-M20 without creating SQL", () => {
+test("Part 3A records Owner approval for the single Part 3B foundation migration", () => {
   assert.match(contract, /\*\*Status:\*\* OWNER APPROVED \/ M01-M20 FROZEN FOR PART 3B/);
   assert.match(contract, /\*\*Owner Approval Date:\*\* 2026-08-01/);
   assert.match(contract, /Owner approved M01-M20 in full on 2026-08-01/);
@@ -23,8 +23,8 @@ test("Part 3A records Owner approval for M01-M20 without creating SQL", () => {
     );
   }
   assert.equal(
-    migrations.some((name) => /phase_1d_checkout_foundation/i.test(name)),
-    false,
+    migrations.filter((name) => /phase_1d_checkout_foundation/i.test(name)).length,
+    1,
   );
 });
 
@@ -61,18 +61,18 @@ test("foundation contract has non-destructive preflight and rollback gates", () 
   assert.match(contract, /no Production push occurs/);
 });
 
-test("implementation status advances only to Part 3B local foundation", () => {
+test("implementation status records Part 3B and stops before Part 3C runtime", () => {
   assert.match(status, /PHASE 1D PART 3A MIGRATION CONTRACT REVIEW PREPARED/);
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D PART 3A OWNER APPROVED \/ M01-M20 FROZEN FOR PART 3B/,
+    /CURRENT SUBSTEP: PHASE 1D PART 3C C01-C24 OWNER APPROVED \/ PROMOTION CONTRACT REQUIRED \/ SQL BLOCKED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D PART 3B FOUNDATION MIGRATION GENERATION AND LOCAL VALIDATION/,
+    /NEXT SUBSTEP: PHASE 1D PART 3C PROMOTION EVALUATION SUBCONTRACT REVIEW/,
   );
   assert.match(
     status,
-    /BLOCKED: Production migration apply, Part 3C-3E protected runtime, real payment\/provider work and production activation remain unauthorized until later gates/,
+    /BLOCKED: Layer 2 SQL requires a frozen executable promotion catalog[\s\S]*Part 3D-3E protected runtime[\s\S]*remain unauthorized/,
   );
 });

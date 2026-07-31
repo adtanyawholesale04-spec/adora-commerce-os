@@ -89,9 +89,9 @@ reset role;
 
 update public.platform_signup_rate_limit_buckets
 set
-  window_started_at = clock_timestamp() - interval '26 hours',
-  window_ends_at = clock_timestamp() - interval '25 hours',
-  expires_at = clock_timestamp() - interval '1 hour'
+  window_started_at = transaction_timestamp() - interval '26 hours',
+  window_ends_at = transaction_timestamp() - interval '25 hours',
+  expires_at = transaction_timestamp() - interval '1 hour'
 where scope = 'DESTINATION'
   and identity_digest = repeat('a', 64)
   and key_version = 1;

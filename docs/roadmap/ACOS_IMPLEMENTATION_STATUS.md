@@ -198,7 +198,10 @@ Track B Customer Engagement Platform
 | Phase 1D Cart / Checkout / Payment Part 1 Owner Decision Table | `docs/api-contracts/ACOS_PHASE_1D_CART_CHECKOUT_PAYMENT_PART1_OWNER_DECISION_TABLE.md` | OWNER APPROVED / D01-D24 FROZEN | Owner approved all safe local-first values on 2026-07-31; Part 2 Business Rules/ER design is ready while migration, protected writes, real payment/provider work and production remain unauthorized |
 | Phase 1D Cart / Checkout / Payment Part 2 Business Rules | `docs/business-rules/BUSINESS_RULES_PHASE_1D_CART_CHECKOUT_PAYMENT_MVP.md` | OWNER APPROVED / FROZEN FOR PART 3 | Owner approved CO-BR-001 through CO-BR-044 on 2026-08-01; exact tenant, lifecycle, calculation, inventory, payment, idempotency, event, audit, entitlement, privacy and recovery rules are frozen |
 | Phase 1D Cart / Checkout / Payment Part 2 ER Addendum | `docs/er/ER_ADDENDUM_PHASE_1D_CART_CHECKOUT_PAYMENT_MVP.md` | OWNER APPROVED / FROZEN FOR PART 3 | Owner approved the two-entity additive design on 2026-08-01; canonical Core masters remain authoritative and no checkout-session or provider table is included in local MVP |
-| Phase 1D Cart / Checkout / Payment Part 3A Migration Contract Review | `docs/api-contracts/ACOS_PHASE_1D_CART_CHECKOUT_PAYMENT_PART3A_MIGRATION_CONTRACT_REVIEW.md` | OWNER APPROVED / M01-M20 FROZEN FOR PART 3B | Owner approved M01-M20 on 2026-08-01; exact four-layer migration, additive Core references, constraints, indexes, RLS/grants, preflight, lock order, rollback and local validation contract are frozen; no migration exists or has been applied |
+| Phase 1D Cart / Checkout / Payment Part 3A Migration Contract Review | `docs/api-contracts/ACOS_PHASE_1D_CART_CHECKOUT_PAYMENT_PART3A_MIGRATION_CONTRACT_REVIEW.md` | OWNER APPROVED / M01-M20 FROZEN FOR PART 3B | Owner approved M01-M20 on 2026-08-01; the frozen contract authorized the locally validated Part 3B foundation migration while Production application remains separate and unauthorized |
+| Phase 1D Cart / Checkout / Payment Part 3B Foundation Migration | `supabase/migrations/20260731172908_phase_1d_checkout_foundation.sql`, `supabase/validation/048_phase_1d_checkout_foundation_test.sql` | IMPLEMENTED / LOCAL VALIDATED / PRODUCTION NOT APPLIED | Additive checkout settings, idempotency evidence, Core references, concurrency controls, RLS/direct-role denial and feature-only seed passed fresh replay and regression gates |
+| Migration 062 Phase 1D Checkout Foundation Validation 2026-08-01 | `docs/migrations/MIGRATION_062_PHASE_1D_CHECKOUT_FOUNDATION_VALIDATION_2026-08-01.md` | VALIDATED / PRODUCTION NOT APPLIED | Fresh replay, focused foundation, database lint, Storefront regression, Supabase security/workflow and Commerce integration gates passed |
+| Phase 1D Cart / Checkout / Payment Part 3C Guarded Cart Boundary Contract Review | `docs/api-contracts/ACOS_PHASE_1D_CART_CHECKOUT_PAYMENT_PART3C_GUARDED_CART_BOUNDARY_CONTRACT_REVIEW.md` | OWNER APPROVED / C01-C24 FROZEN / SQL BLOCKED | Owner approved C01-C24 on 2026-08-01; four guarded cart candidates, ownership, entitlement, idempotency, response, lock, event, privacy and validation contracts are frozen; executable promotion semantics still require a separate Owner-frozen subcontract before SQL |
 | Migration 060 Phase 1B Signup Rate-Limit Validation 2026-07-29 | `docs/migrations/MIGRATION_060_PHASE_1B_SIGNUP_RATE_LIMIT_VALIDATION_2026-07-29.md` | VALIDATED | Fresh replay, lifecycle, retention, privilege and 20-connection concurrency gates passed |
 | Migration 059 Customer Portal CRM Contact Sync Validation 2026-07-29 | `docs/migrations/MIGRATION_059_CUSTOMER_PORTAL_CRM_CONTACT_SYNC_VALIDATION_2026-07-29.md` | VALIDATED | Fresh replay and focused tenant, lifecycle, conflict, idempotency, privacy and direct-role denial gates passed |
 | Migration 057 Customer Portal Verified Contact Notification Validation 2026-07-29 | `docs/migrations/MIGRATION_057_CUSTOMER_PORTAL_VERIFIED_CONTACT_NOTIFICATION_VALIDATION_2026-07-29.md` | VALIDATED | Contact request/verification and notification mapping passed fresh replay, focused, security and workflow gates |
@@ -1203,15 +1206,19 @@ PHASE 1D PART 2 BUSINESS RULES AND ER ADDENDUM PREPARED: CO-BR-001 through CO-BR
 PHASE 1D PART 2 OWNER FREEZE COMPLETE: Owner approved CO-BR-001 through CO-BR-044 and the two-entity ER addendum in full on 2026-08-01
 PHASE 1D PART 3A MIGRATION CONTRACT REVIEW PREPARED: M01-M20 define four forward-only layers, exact foundation DDL, additive Core references, constraints, indexes, RLS/grants, preflight, lock order, rollback and local validation gates
 PHASE 1D PART 3A OWNER FREEZE COMPLETE: Owner approved M01-M20 in full on 2026-08-01; Part 3B migration generation and local validation are authorized
-CURRENT SUBSTEP: PHASE 1D PART 3A OWNER APPROVED / M01-M20 FROZEN FOR PART 3B
-NEXT SUBSTEP: PHASE 1D PART 3B FOUNDATION MIGRATION GENERATION AND LOCAL VALIDATION
-BLOCKED: Production migration apply, Part 3C-3E protected runtime, real payment/provider work and production activation remain unauthorized until later gates
+PHASE 1D PART 3B FOUNDATION MIGRATION IMPLEMENTED / LOCAL VALIDATED: additive checkout settings, idempotency evidence, Core references, concurrency indexes, private grants and feature-only seed passed fresh replay and focused regression gates on 2026-08-01; Production was not applied
+PHASE 1D PART 3C GUARDED CART BOUNDARY CONTRACT REVIEW PREPARED: C01-C24 define exact customer ownership, four RPC candidates, entitlement, cart lifecycle, quantity, stock, pricing, idempotency, lock, response, event, privacy and validation posture without creating SQL
+PHASE 1D PART 3C OWNER DECISION FREEZE COMPLETE: Owner approved C01-C24 in full on 2026-08-01; guarded cart signatures, lifecycle, ownership, quantity, availability, pricing, idempotency, security, privacy and delivery gates are frozen
+CURRENT SUBSTEP: PHASE 1D PART 3C C01-C24 OWNER APPROVED / PROMOTION CONTRACT REQUIRED / SQL BLOCKED
+NEXT SUBSTEP: PHASE 1D PART 3C PROMOTION EVALUATION SUBCONTRACT REVIEW
+BLOCKED: Layer 2 SQL requires a frozen executable promotion catalog; Production migration apply, Part 3D-3E protected runtime, real payment/provider work and production activation remain unauthorized
 AFTER STOREFRONT: Checkout/Payment follows Storefront, and Finance/Tax remains blocked until Checkout/Payment sources are clear
 
 Implementation:
 CONTROLLED START
 
 Latest validation:
+Phase 1D Part 3B fresh local replay, checkout foundation suite, database lint, Storefront regression, Supabase security and Commerce integration suites passed on 2026-08-01.
 Phase 1C Part 3 fresh local replay, focused Storefront boundary suite, Supabase security suite and full workflow suite passed on 2026-07-31.
 Fresh local Supabase replay passed for migrations 001-latest at 2026-07-27.
 Focused A3 role-management Docker gate passed on 2026-07-28, including role replacement boundary validation.
