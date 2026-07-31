@@ -82,6 +82,6 @@ test("implementation status advances to the approved Storefront Web app work", (
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT PART 1B STAFF REVIEW DECISION TABLE/,
+    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT PART 1C SETTLEMENT AND FAILURE DECISION TABLE/,
   );
 });

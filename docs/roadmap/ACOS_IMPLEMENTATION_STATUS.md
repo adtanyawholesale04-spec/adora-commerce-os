@@ -1231,15 +1231,19 @@ PHASE 1D PART 3E SERVER APPLICATION RUNTIME IMPLEMENTED / LOCAL VALIDATED: disab
 PHASE 1D MANUAL PAYMENT PART 0 REPOSITORY AUDIT COMPLETE: canonical payment, transaction, proof, order, inventory, coupon, idempotency, permission, audit and attribution sources are reusable; proof Storage and protected payment orchestration gaps are classified without SQL or runtime changes
 PHASE 1D MANUAL PAYMENT PART 1A CUSTOMER SUBMISSION DECISION TABLE PREPARED: PS01-PS24 recommend authenticated same-tenant reference-only BANK_TRANSFER submission, canonical full amount, stable idempotency, one pending attempt, bounded audit/response and deferred private binary proof without authorizing implementation
 PHASE 1D MANUAL PAYMENT PART 1A OWNER DECISION FREEZE COMPLETE: Owner approved PS01-PS24 in full on 2026-08-01; reference-only BANK_TRANSFER customer submission, canonical amount, ownership, deadline, idempotency, pending-attempt, privacy and deferred binary-proof contracts are frozen
-CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 1A PS01-PS24 OWNER FROZEN / NO SQL OR RUNTIME AUTHORIZED
-NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT PART 1B STAFF REVIEW DECISION TABLE
-BLOCKED: Part 1B-1C decision freeze, manual payment migration, customer submission, staff verification, private proof Storage, Storefront checkout UI activation, Production preflight/apply and public activation remain unauthorized; P16 remains mandatory for Production
+PHASE 1D MANUAL PAYMENT PART 1B STAFF REVIEW DECISION TABLE PREPARED: SR01-SR24 recommend explicit approve/reject actions, exact payment.verify authorization, maker-checker separation, mandatory bounded reason, optimistic concurrency, privacy-safe evidence and fail-closed hold/deadline alignment without authorizing implementation
+PHASE 1D MANUAL PAYMENT PART 1B OWNER DECISION FREEZE COMPLETE: Owner approved SR01-SR24 in full on 2026-08-01; explicit review actions, payment.verify authorization, maker-checker, reason, optimistic concurrency, privacy and fail-closed hold/deadline contracts are frozen
+CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 1B SR01-SR24 OWNER FROZEN / NO SQL OR RUNTIME AUTHORIZED
+NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT PART 1C SETTLEMENT AND FAILURE DECISION TABLE
+BLOCKED: Part 1C decision freeze, hold-deadline alignment, manual payment migration, customer submission, staff verification, private proof Storage, Storefront checkout UI activation, Production preflight/apply and public activation remain unauthorized; P16 remains mandatory for Production
 AFTER STOREFRONT: Checkout/Payment follows Storefront, and Finance/Tax remains blocked until Checkout/Payment sources are clear
 
 Implementation:
 CONTROLLED START
 
 Latest validation:
+Phase 1D Manual Payment Part 1B Owner freeze reconciliation confirmed SR01-SR24 completeness and preserved hold/deadline, SQL, Storage, runtime, UI, provider and Production gates on 2026-08-01.
+Phase 1D Manual Payment Part 1B SR01-SR24 decision completeness, payment.verify, maker-checker, reason privacy, optimistic concurrency and hold/deadline implementation-gate contract tests passed on 2026-08-01; no SQL, Storage, runtime, UI, provider or Production change was made.
 Phase 1D Manual Payment Part 1A Owner freeze reconciliation confirmed PS01-PS24 completeness and preserved all SQL, Storage, runtime, UI, provider and Production gates on 2026-08-01.
 Phase 1D Manual Payment Part 1A PS01-PS24 decision completeness, ownership, canonical amount, reference-only proof, idempotency, privacy and implementation-gate contract tests passed on 2026-08-01; no SQL, Storage, runtime, UI, provider or Production change was made.
 Phase 1D Manual Payment Part 0 canonical-source, schema-gap, permission, privacy and implementation-gate audit passed on 2026-08-01; no migration, Storage, runtime, provider, UI or Production change was made.
