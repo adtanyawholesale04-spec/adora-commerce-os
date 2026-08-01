@@ -126,7 +126,7 @@ replace P16-E1 through P16-E4.
 
 ## Next Gate
 
-`OWNER FULFILLMENT LINT WARNING DISPOSITION`
+`P16 RECOVERY EXECUTION AND PRODUCTION CHANGE-WINDOW PREPARATION`
 
 P16 execution remains in the Production checklist and must be completed before
 Production migration apply. The next zero-spend preflight decision may proceed

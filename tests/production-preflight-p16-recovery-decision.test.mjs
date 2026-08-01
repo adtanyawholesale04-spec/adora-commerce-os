@@ -35,7 +35,7 @@ test("P16 keeps Auth, Storage and paid actions separately guarded", () => {
 
 test("P16 decision advances preflight without claiming execution", () => {
   assert.match(preflight, /The policy decision is complete\. P16 execution remains blocked/);
-  assert.match(preflight, /OWNER FULFILLMENT LINT WARNING DISPOSITION/);
-  assert.match(status, /PRODUCTION PREFLIGHT P16 RECOVERY DECISION OWNER APPROVED/);
+  assert.match(preflight, /P16 RECOVERY EXECUTION AND PRODUCTION CHANGE-WINDOW PREPARATION/);
+  assert.match(status, /OWNER FULFILLMENT LINT WARNING DISPOSITION OWNER APPROVED; LOCAL FORWARD FIX VALIDATED/);
   assert.match(status, /BLOCKED: P16 approved recovery plan execution,[\s\S]*Production apply remains unauthorized/);
 });

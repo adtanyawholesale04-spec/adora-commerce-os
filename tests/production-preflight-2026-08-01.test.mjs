@@ -14,22 +14,22 @@ const status = readFileSync(
 test("Production preflight records identity and migration parity without apply", () => {
   assert.match(report, /LOCAL REPLAY VALIDATED \/ PRODUCTION APPLY BLOCKED/);
   assert.match(report, /project ref: pirewyrhddrhmtiwmlaw/);
-  assert.match(report, /repository migration files: 97/);
+  assert.match(report, /repository migration files: 99/);
   assert.match(report, /Production migrations applied: 86/);
-  assert.match(report, /Production pending migrations: 11/);
+  assert.match(report, /Production pending migrations: 13/);
   assert.match(report, /remote-only migration drift: 0/);
   assert.match(report, /dry-run: PASS \/ NO WRITE/);
-  assert.match(report, /repository tests: 391 \/ 391 PASS/);
+  assert.match(report, /repository tests: 394 \/ 394 PASS/);
   assert.match(report, /No Production migration was applied, repaired or pulled/);
-  assert.match(report, /local migrations applied after clean replay: 97 \/ 97/);
+  assert.match(report, /local migrations applied after clean replay: 99 \/ 99/);
   assert.match(report, /reset: PASS \/ destructive local QA data cleared/);
-  assert.match(report, /replay: PASS \/ all 97 repository migrations applied/);
+  assert.match(report, /replay: PASS \/ all 99 repository migrations applied/);
 });
 
 test("Production preflight preserves recovery and deployment blockers", () => {
   for (const required of [
     "P16 approved recovery plan execution",
-    "Fulfillment lint warning",
+    "Fulfillment lint",
     "Vercel project link",
     "migration change window",
   ]) {
@@ -39,7 +39,7 @@ test("Production preflight preserves recovery and deployment blockers", () => {
 });
 
 test("Implementation status advances to Owner blocker disposition", () => {
-  assert.match(status, /CURRENT SUBSTEP: PRODUCTION PREFLIGHT P16 RECOVERY DECISION OWNER APPROVED; EXECUTION AND APPLY BLOCKED/);
-  assert.match(status, /NEXT SUBSTEP: OWNER FULFILLMENT LINT WARNING DISPOSITION/);
+  assert.match(status, /CURRENT SUBSTEP: OWNER FULFILLMENT LINT WARNING DISPOSITION OWNER APPROVED; LOCAL FORWARD FIX VALIDATED/);
+  assert.match(status, /NEXT SUBSTEP: P16 RECOVERY EXECUTION AND PRODUCTION CHANGE-WINDOW PREPARATION/);
   assert.match(status, /BLOCKED: P16 approved recovery plan execution,[\s\S]*Production apply remains unauthorized/);
 });

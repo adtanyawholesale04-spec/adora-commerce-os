@@ -26,11 +26,11 @@ was not queried beyond project-list metadata.
 ## Migration Evidence
 
 ```text
-repository migration files: 97
+repository migration files: 99
 duplicate migration versions: 0
-local migrations applied after clean replay: 97 / 97
+local migrations applied after clean replay: 99 / 99
 Production migrations applied: 86
-Production pending migrations: 11
+Production pending migrations: 13
 remote-only migration drift: 0
 dry-run: PASS / NO WRITE
 ```
@@ -50,6 +50,8 @@ The dry-run would apply these files in order:
 9. `20260801054812_phase_1d_manual_payment_guarded_payment_snapshot.sql`
 10. `20260801103336_phase_1d_manual_payment_staff_review_reads.sql`
 11. `20260801105844_phase_1d_manual_payment_staff_review_actions.sql`
+12. `20260801172715_authenticated_permission_metadata_grants.sql`
+13. `20260801184544_a3_fulfillment_assignment_lint_forward_fix.sql`
 
 No Production migration was applied, repaired or pulled. No historical
 migration file was edited.
@@ -59,7 +61,7 @@ migration file was edited.
 ```text
 target: Supabase local stack only
 reset: PASS / destructive local QA data cleared
-replay: PASS / all 97 repository migrations applied
+replay: PASS / all 99 repository migrations applied
 local migration history: PASS / every repository migration recorded
 Production write: NONE
 ```
@@ -70,12 +72,18 @@ local database restarted cleanly after replay.
 
 ## Security And Compatibility Evidence
 
-- Production and local database lint both report one existing warning in
+- The linked Production schema reports one existing warning in
   `public.api_assign_fulfillment`: an audit JSON text value is assigned to a
   UUID output variable without an explicit cast.
-- The Fulfillment assignment functional and permission suites pass, and the
-  warning is already present in Production. It is not introduced by the 11
-  pending migrations. Any correction must use a new forward-only migration.
+- The warning was already present in Production and was not introduced by the
+  pending migrations. The Owner-approved local disposition uses the new
+  forward-only migration
+  `20260801184544_a3_fulfillment_assignment_lint_forward_fix.sql`, which
+  recreates the same function contract and adds an explicit `::uuid` cast.
+  The historical migration remains unchanged.
+- After clean local replay, `supabase db lint --local` reports no schema
+  errors. Production will retain the historical warning until this
+  forward-only migration is applied in an approved Production change window.
 - Local `supabase/config.toml` uses Postgres 17, matching Production.
 - The repository does not pin extension versions, so the announced Supabase
   extension-version deprecation does not require a migration rewrite.
@@ -88,7 +96,7 @@ local database restarted cleanly after replay.
 ## Validation Evidence
 
 ```text
-repository tests: 391 / 391 PASS
+repository tests: 394 / 394 PASS
 lint: PASS
 typecheck: PASS
 production build: PASS with network access
@@ -105,6 +113,8 @@ Phase 1D customer submission/races: PASS
 Phase 1D guarded payment snapshot/concurrency: PASS
 Phase 1D staff review reads: PASS
 Phase 1D staff review actions/race: PASS
+A3 Fulfillment assignment forward-fix regression: PASS
+local database lint after forward-fix replay: PASS (no schema errors)
 ```
 
 The earlier local-only checkout entitlement contamination was removed by the
@@ -154,7 +164,8 @@ and closes or accepts all of the following:
 
 1. P16 approved recovery plan execution: recurring backup plus managed
    database/Auth and separate Storage object restore proof.
-2. Forward-fix or explicit acceptance of the existing Fulfillment lint warning.
+2. Production application of the Owner-approved Fulfillment lint forward fix
+   in the same controlled migration change window.
 3. Vercel project link and secret-name-only Production environment inventory.
 4. A migration change window, rollback target and post-apply validation plan.
 
@@ -163,9 +174,10 @@ data changes, Vercel deployment, provider activation or public traffic.
 
 ## Recommended Next Gate
 
-`OWNER FULFILLMENT LINT WARNING DISPOSITION`
+`P16 RECOVERY EXECUTION AND PRODUCTION CHANGE-WINDOW PREPARATION`
 
-The local replay and P16 policy decisions are complete. P16 execution remains
-binding while the next zero-spend decision resolves the existing Fulfillment
-lint warning. Vercel environment readiness and the Production migration change
-window remain later gates.
+The Owner disposition is complete: local replay and lint are clean with the
+forward-only correction, while the historical Production warning remains
+pending until the controlled Production migration window. P16 execution,
+Vercel environment readiness and the Production migration change window remain
+binding gates.
