@@ -72,14 +72,14 @@ test("Part 2 keeps implementation and production gates closed", () => {
   assert.match(er, /requires a separate explicit instruction/);
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4C STAFF REVIEW FORWARD-ONLY MIGRATION CONTRACT REVIEW COMPLETE/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4C OWNER DECISION FREEZE COMPLETE FOR RM01-RM30/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4C OWNER DECISION FREEZE FOR RM01-RM30 REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4D LAYER A PRIVATE REVIEW READ MIGRATION GENERATION AND LOCAL VALIDATION REQUIRES OWNER APPROVAL/,
   );
   assert.match(
     status,
-    /BLOCKED: RM01-RM30 Owner freeze, Staff Review SQL generation and apply, guarded actions,[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 4D Layer A SQL generation and apply, Layer B guarded action SQL,[\s\S]*P16 remains mandatory for Production/,
   );
 });

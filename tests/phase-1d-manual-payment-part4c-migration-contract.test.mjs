@@ -7,12 +7,12 @@ const contractPath =
 const contract = readFileSync(contractPath, "utf8");
 const status = readFileSync("docs/roadmap/ACOS_IMPLEMENTATION_STATUS.md", "utf8");
 
-test("Part 4C records all RM recommendations without freezing them", () => {
+test("Part 4C preserves all Owner-frozen RM decisions", () => {
   for (let id = 1; id <= 30; id += 1) {
     assert.match(contract, new RegExp(`\\| RM${String(id).padStart(2, "0")} \\|`));
   }
-  assert.match(contract, /RM01-RM30 OWNER DECISION REQUIRED \/ SQL NOT AUTHORIZED/);
-  assert.match(contract, /recommendations, not frozen decisions/);
+  assert.match(contract, /OWNER APPROVED \/ RM01-RM30 FROZEN \/ SQL NOT AUTHORIZED/);
+  assert.match(contract, /explicitly approved all recommended values RM01-RM30 on[\s\S]*2026-08-01/);
 });
 
 test("Part 4C separates private reads from atomic guarded-write hardening", () => {
@@ -44,18 +44,18 @@ test("settlement, idempotency and post-commit events remain isolated", () => {
   assert.match(contract, /event failure never compensates financial truth/);
 });
 
-test("Part 4C advances only to the Owner freeze gate and creates no SQL", () => {
+test("Part 4C advances only to separately approved Layer A SQL", () => {
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4C STAFF REVIEW FORWARD-ONLY MIGRATION CONTRACT REVIEW COMPLETE/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4C OWNER DECISION FREEZE COMPLETE FOR RM01-RM30/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4C OWNER DECISION FREEZE FOR RM01-RM30 REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4D LAYER A PRIVATE REVIEW READ MIGRATION GENERATION AND LOCAL VALIDATION REQUIRES OWNER APPROVAL/,
   );
   assert.match(
     status,
-    /BLOCKED: RM01-RM30 Owner freeze, Staff Review SQL generation and apply, guarded actions,[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 4D Layer A SQL generation and apply, Layer B guarded action SQL,[\s\S]*P16 remains mandatory for Production/,
   );
   assert.equal(
     existsSync("supabase/migrations/phase_1d_manual_payment_staff_review.sql"),

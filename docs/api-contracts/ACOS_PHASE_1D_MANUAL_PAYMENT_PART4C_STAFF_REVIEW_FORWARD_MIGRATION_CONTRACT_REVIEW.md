@@ -4,7 +4,9 @@
 
 **Prepared Date:** 2026-08-01
 
-**Status:** CONTRACT REVIEW COMPLETE / RM01-RM30 OWNER DECISION REQUIRED / SQL NOT AUTHORIZED
+**Owner Approval Date:** 2026-08-01
+
+**Status:** OWNER APPROVED / RM01-RM30 FROZEN / SQL NOT AUTHORIZED
 
 **Depends On:** Owner-frozen SR01-SR24, SC01-SC30 and RV01-RV24
 
@@ -18,9 +20,13 @@ reuses the canonical order, payment, inventory, coupon, idempotency, audit and
 attribution sources. It creates no migration, function, policy, grant, runtime,
 UI, feature activation or Production change.
 
-## 2. Recommended Owner Decisions
+## 2. Frozen Owner Decisions
 
-| ID | Decision | Recommended safe value |
+The Project Owner explicitly approved all recommended values RM01-RM30 on
+2026-08-01. These values are now the frozen forward-only Staff Review migration
+baseline.
+
+| ID | Decision | Frozen value |
 |---|---|---|
 | RM01 | Migration layering | Use two separately generated forward-only migrations: Layer A read RPCs, then Layer B guarded actions and hardening |
 | RM02 | Frozen history | Never edit, rename, reorder or repair a frozen migration; actual filenames come only from `supabase migration new` after implementation approval |
@@ -143,7 +149,9 @@ Production rollout remain outside Part 4C.
 
 ## 8. Owner Approval Gate
 
-RM01-RM30 are recommendations, not frozen decisions. The next allowed step is
-an explicit Owner freeze for all or individually amended decisions. That freeze
-may authorize SQL design as a later separate step; this document itself does
-not authorize migration generation or apply.
+The Project Owner approved RM01-RM30 in full on 2026-08-01. Any change requires
+a new explicit Owner decision and must not silently alter this frozen baseline.
+The next allowed step is separate Owner approval for Part 4D Layer A private
+review-read migration generation and local validation. This freeze does not
+authorize SQL generation, local or Production apply, Layer B guarded actions,
+runtime, UI or feature activation.
