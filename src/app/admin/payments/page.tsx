@@ -5,6 +5,7 @@ import {
   ArrowLeft,
   CircleSlash,
   CreditCard,
+  ListChecks,
   ReceiptText,
   RefreshCcw,
   ShieldCheck,
@@ -19,6 +20,7 @@ import {
   type PaymentTransactionSummary,
   type RefundSummary
 } from "@/lib/admin/payments";
+import { isAdminManualPaymentReviewAvailable } from "@/lib/admin/manual-payment-review";
 
 export const dynamic = "force-dynamic";
 
@@ -54,6 +56,16 @@ export default async function PaymentsPage() {
           </div>
           <div className="flex flex-col gap-3 sm:items-end">
             <AdminPreferenceSwitcher preferences={preferences} returnPath="/admin/payments" />
+            {model.context.permissions.includes("payment.view") &&
+            isAdminManualPaymentReviewAvailable() ? (
+              <Link
+                href="/admin/payments/review"
+                className="inline-flex min-h-11 items-center gap-2 rounded-md bg-brand px-4 text-sm font-semibold text-on-brand shadow-sm hover:brightness-95"
+              >
+                <ListChecks aria-hidden className="h-4 w-4" />
+                {copy.manualPaymentReview.queueEntry}
+              </Link>
+            ) : null}
             <div className="grid gap-1 rounded-lg border border-line bg-panel-strong px-3 py-2 text-sm">
               <span className="font-medium">
                 {model.context.organizationName ?? copy.common.noOrganization}
