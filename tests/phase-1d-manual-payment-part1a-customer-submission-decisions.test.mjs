@@ -44,14 +44,14 @@ test("implementation status records the freeze and advances to Part 1B design", 
   assert.match(status, /PHASE 1D MANUAL PAYMENT PART 1A OWNER DECISION FREEZE COMPLETE/);
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 2C LOCAL VALIDATED \/ PRODUCTION NOT APPLIED \/ NO RUNTIME AUTHORIZED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3B OWNER FROZEN \/ NO RUNTIME IMPLEMENTED \/ PRODUCTION NOT APPLIED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT PART 3A CUSTOMER SUBMISSION GUARDED DATABASE BOUNDARY/,
+    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT PART 3C CUSTOMER SUBMISSION SERVICE IMPLEMENTATION/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 3A customer submission guarded database boundary, staff verification, private proof Storage[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 3C customer submission service implementation, staff verification, private proof Storage[\s\S]*P16 remains mandatory for Production/,
   );
 });
