@@ -43,14 +43,14 @@ test("status records the freeze and advances to Part 1C design", () => {
   assert.match(status, /PHASE 1D MANUAL PAYMENT PART 1B OWNER DECISION FREEZE COMPLETE/);
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-A1 CONTRACT REVIEW COMPLETE \/ OWNER DECISION FREEZE REQUIRED \/ NO SNAPSHOT MIGRATION IMPLEMENTED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-A2 OWNER APPROVED \/ MR01-MR24 FROZEN \/ NO SNAPSHOT MIGRATION IMPLEMENTED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: OWNER DECISION FREEZE FOR PHASE 1D MANUAL PAYMENT PART 3D-A1 MR01-MR24/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-A3 GUARDED PAYMENT SNAPSHOT MIGRATION AUTHORIZATION/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 3D-A2 Owner freeze, Part 3D-A3 snapshot migration and Part 3D-B\/3D-C UI delivery[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 3D-A3 snapshot migration and Part 3D-B\/3D-C UI delivery[\s\S]*P16 remains mandatory for Production/,
   );
 });

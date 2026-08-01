@@ -88,7 +88,7 @@ test("Part 2 preserves P16 after the validated Part 3 handoff", () => {
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: OWNER DECISION FREEZE FOR PHASE 1D MANUAL PAYMENT PART 3D-A1 MR01-MR24/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-A3 GUARDED PAYMENT SNAPSHOT MIGRATION AUTHORIZATION/,
   );
 });
 

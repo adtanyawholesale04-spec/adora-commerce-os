@@ -11,14 +11,18 @@ const status = readFileSync(
   "utf8",
 );
 
-test("Part 3D-A1 defines every guarded snapshot decision without SQL", () => {
+test("Part 3D-A2 freezes every Owner-approved snapshot decision without SQL", () => {
   for (let index = 1; index <= 24; index += 1) {
     assert.match(
       contract,
       new RegExp(`\\| MR${String(index).padStart(2, "0")} \\|`),
     );
   }
-  assert.match(contract, /MR01-MR24 OWNER DECISIONS REQUIRED/);
+  assert.match(contract, /OWNER APPROVED \/ MR01-MR24 FROZEN/);
+  assert.match(
+    contract,
+    /Owner approved the recommended values for[\s\S]*MR01-MR24 in full/,
+  );
   assert.match(contract, /Migration:\*\* Not created or authorized/);
   assert.match(contract, /creates no SQL function, migration, table, index, policy, grant/);
 });
@@ -63,21 +67,25 @@ test("Part 3D-A1 keeps the privileged read boundary fail closed", () => {
   assert.match(contract, /no row\/advisory locks/);
 });
 
-test("Part 3D-A1 status stops before Owner freeze and migration", () => {
+test("Part 3D-A2 status records Owner freeze and stops before migration", () => {
   assert.match(
     status,
     /PHASE 1D MANUAL PAYMENT PART 3D-A1 GUARDED PAYMENT SNAPSHOT CONTRACT REVIEW COMPLETE: MR01-MR24/,
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-A1 CONTRACT REVIEW COMPLETE \/ OWNER DECISION FREEZE REQUIRED \/ NO SNAPSHOT MIGRATION IMPLEMENTED/,
+    /PHASE 1D MANUAL PAYMENT PART 3D-A2 OWNER DECISION FREEZE COMPLETE: Owner approved MR01-MR24 in full/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: OWNER DECISION FREEZE FOR PHASE 1D MANUAL PAYMENT PART 3D-A1 MR01-MR24/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-A2 OWNER APPROVED \/ MR01-MR24 FROZEN \/ NO SNAPSHOT MIGRATION IMPLEMENTED/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 3D-A2 Owner freeze, Part 3D-A3 snapshot migration and Part 3D-B\/3D-C UI delivery[\s\S]*P16 remains mandatory for Production/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-A3 GUARDED PAYMENT SNAPSHOT MIGRATION AUTHORIZATION/,
+  );
+  assert.match(
+    status,
+    /BLOCKED: Part 3D-A3 snapshot migration and Part 3D-B\/3D-C UI delivery[\s\S]*P16 remains mandatory for Production/,
   );
 });

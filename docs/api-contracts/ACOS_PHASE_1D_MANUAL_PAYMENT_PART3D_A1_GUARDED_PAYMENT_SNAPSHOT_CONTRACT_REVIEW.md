@@ -1,7 +1,7 @@
 # Phase 1D Manual Payment Part 3D-A1 Guarded Payment Snapshot Contract Review
 
 **Task ID:** `PHASE-1D-MANUAL-PAYMENT-PART3D-A1-SNAPSHOT-CONTRACT`
-**Status:** CONTRACT REVIEW COMPLETE / MR01-MR24 OWNER DECISIONS REQUIRED / IMPLEMENTATION BLOCKED
+**Status:** OWNER APPROVED / MR01-MR24 FROZEN / IMPLEMENTATION BLOCKED
 **Prepared:** 2026-08-01
 **Depends On:** Owner-frozen MU01-MU24, CO-BR-001 through CO-BR-044 and locally validated Manual Payment Part 3A
 **Migration:** Not created or authorized
@@ -65,6 +65,18 @@ change.
 | MR22 | Concurrency | Use one statement snapshot with no row/advisory locks; a concurrent submit or expiry may make the result stale, so the future service/UI refreshes after action and the mutation boundary remains final authority |
 | MR23 | Migration shape | After separate Owner approval, create one CLI-timestamped forward-only migration containing dependency preflight, the function, exact revoke/grant and comment only; add no table, column, index, policy, seed or data repair |
 | MR24 | Delivery gate | After MR01-MR24 freeze, request explicit migration authorization, then run fresh replay, focused security/shape/concurrency validation, database lint and full regressions before Part 3D-B service/UI work |
+
+## Owner Decision Freeze
+
+On 2026-08-01, the Project Owner approved the recommended values for
+MR01-MR24 in full. This freezes the function signature, canonical identity and
+payment sources, ownership/non-enumeration rules, exact response allowlist,
+financial serialization, privacy, privileged-read posture, grants, no-write
+behavior, failure contract, concurrency posture and delivery gates.
+
+This approval completes Part 3D-A2 decision freeze only. It does not authorize
+the Part 3D-A3 migration, SQL function, local apply, server service, route, UI,
+Production apply or public activation.
 
 ## Proposed Result Contract
 
