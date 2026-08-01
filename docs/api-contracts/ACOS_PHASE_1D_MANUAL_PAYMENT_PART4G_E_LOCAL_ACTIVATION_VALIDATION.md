@@ -1,6 +1,6 @@
 # ACOS Phase 1D Manual Payment Part 4G-E: Local Activation Validation
 
-**Status:** PARTIALLY VALIDATED / BROWSER VERIFY AND REJECT QA PASSED / KEYBOARD-FOCUS QA PENDING
+**Status:** VALIDATED LOCALLY / BROWSER QA PASSED
 
 ## Completed local validation
 
@@ -13,10 +13,11 @@
 - Authenticated local Chrome QA opened the queue and detail screen, displayed the private reference inside the protected detail view, and completed the Verify action for the local QA transaction.
 - Post-action evidence confirmed `SUCCEEDED` transaction, `VERIFIED` proof, `CONFIRMED` order, `PAID` payment, one inventory allocation, and `PAYMENT_VERIFIED` audit event.
 - Authenticated local Chrome QA completed the Reject action for a fresh local QA transaction; post-action evidence confirmed `FAILED` transaction, `REJECTED` proof, unchanged `PENDING_CONFIRMATION` order, unchanged `UNPAID` payment, and `PAYMENT_REJECTED` audit event.
+- Authenticated local Chrome QA confirmed keyboard/focus behavior: modal focus enters the reason textarea, bounded validation remains reachable, Escape closes the modal, and focus returns to the triggering action.
 
-## Remaining blocker
+## Remaining gates
 
-Real browser UI workflow QA is substantially complete. The user-authenticated Chrome session verified the queue, detail, protected reference, approve flow, reject flow, and controlled removal from the queue. The full keyboard/focus pass remains to be exercised separately; automated validation, race, and idempotency coverage remains passed.
+Local browser UI workflow QA is complete. The user-authenticated Chrome session verified the queue, detail, protected reference, approve flow, reject flow, controlled removal from the queue, and keyboard/focus behavior. Production migration replay, private proof Storage, bank instruction configuration, provider integration, and public activation remain separately gated.
 
 ## Safety boundary
 
