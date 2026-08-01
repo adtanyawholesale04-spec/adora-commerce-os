@@ -88,7 +88,7 @@ test("Part 2 preserves P16 after the validated Part 3 handoff", () => {
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-D GUARDED REVIEW ACTION UI IMPLEMENTATION REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-E LOCAL FEATURE ACTIVATION AND REAL BROWSER WORKFLOW QA REQUIRES OWNER APPROVAL/,
   );
 });
 
@@ -105,4 +105,5 @@ test("Part 2 Owner freeze preserves exact contracts and closed runtime gates", (
   assert.match(freeze, /public Storefront runtime: NOT AUTHORIZED/);
   assert.match(freeze, /production activation: BLOCKED BY P16/);
 });
+
 

@@ -4,13 +4,13 @@ import {
   AlertCircle,
   ArrowLeft,
   CheckCircle2,
-  Clock3,
   CreditCard,
   Eye,
   LockKeyhole,
   ShieldCheck,
 } from "lucide-react";
 import { AdminPreferenceSwitcher } from "@/app/admin/_components/admin-preference-switcher";
+import { ReviewActionBar } from "@/app/admin/payments/review/[paymentTransactionId]/review-action-bar";
 import { adminCopy } from "@/lib/admin/i18n";
 import {
   createManualPaymentReviewService,
@@ -163,7 +163,11 @@ function DetailContent({
 
         <aside className="grid content-start gap-4">
           <StatusPanel detail={detail} copy={copy} />
-          <ActionBoundaryPanel blocked={reviewBlocked} copy={copy} />
+          <ReviewActionBar
+            canReview={!reviewBlocked}
+            copy={copy}
+            paymentTransactionId={detail.paymentTransactionId}
+          />
         </aside>
       </section>
     </div>
@@ -227,32 +231,6 @@ function StatusDatum({ label, value }: { label: string; value: string }) {
       <dt className="text-muted">{label}</dt>
       <dd className="text-right font-semibold">{value}</dd>
     </div>
-  );
-}
-
-function ActionBoundaryPanel({
-  blocked,
-  copy,
-}: {
-  blocked: boolean;
-  copy: Record<string, string>;
-}) {
-  return (
-    <section className="overflow-hidden rounded-lg border border-line bg-panel shadow-[var(--shadow-panel)]">
-      <div className="flex items-center gap-2 border-b border-line px-5 py-4">
-        <LockKeyhole aria-hidden className="h-4 w-4 text-warning" />
-        <h2 className="text-base font-semibold">{copy.actionBoundaryTitle}</h2>
-      </div>
-      <div className="grid gap-3 px-5 py-4 text-sm">
-        <p className="leading-6 text-muted">
-          {blocked ? copy.reviewBlockedDetail : copy.actionBoundaryDetail}
-        </p>
-        <div className="inline-flex items-center gap-2 rounded-md bg-panel-strong px-3 py-2 font-semibold text-muted">
-          <Clock3 aria-hidden className="h-4 w-4" />
-          {copy.actionsNextPart}
-        </div>
-      </div>
-    </section>
   );
 }
 
