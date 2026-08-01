@@ -72,14 +72,14 @@ test("Part 2 keeps implementation and production gates closed", () => {
   assert.match(er, /requires a separate explicit instruction/);
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 1B SR01-SR24 OWNER FROZEN \/ NO SQL OR RUNTIME AUTHORIZED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 2C LOCAL VALIDATED \/ PRODUCTION NOT APPLIED \/ NO RUNTIME AUTHORIZED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT PART 1C SETTLEMENT AND FAILURE DECISION TABLE/,
+    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT PART 3A CUSTOMER SUBMISSION GUARDED DATABASE BOUNDARY/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 1C decision freeze, hold-deadline alignment, manual payment migration, customer submission, staff verification, private proof Storage[\s\S]*Production preflight\/apply[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 3A customer submission guarded database boundary, staff verification, private proof Storage[\s\S]*Production preflight\/apply[\s\S]*P16 remains mandatory for Production/,
   );
 });

@@ -83,11 +83,11 @@ test("Part 3B status and validation evidence preserve the production gate", () =
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT PART 1C SETTLEMENT AND FAILURE DECISION TABLE/,
+    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT PART 3A CUSTOMER SUBMISSION GUARDED DATABASE BOUNDARY/,
   );
   assert.match(
     status,
-    /Part 1C decision freeze, hold-deadline alignment, manual payment migration, customer submission, staff verification, private proof Storage[\s\S]*Production preflight\/apply[\s\S]*P16 remains mandatory for Production/,
+    /Part 3A customer submission guarded database boundary, staff verification, private proof Storage[\s\S]*Production preflight\/apply[\s\S]*P16 remains mandatory for Production/,
   );
   assert.match(report, /LOCAL VALIDATED \/ PRODUCTION NOT APPLIED/);
   assert.match(report, new RegExp(migrationName.replace(".", "\\.")));

@@ -50,7 +50,7 @@ insert into public.organization_storefronts (id,organization_id,publication_stat
 values ('d6000000-0000-4000-8000-000000000001','d1000000-0000-4000-8000-000000000001','PUBLISHED','Layer 3',now(),
   'd2000000-0000-4000-8000-000000000001');
 insert into public.organization_checkout_settings (organization_id,status,currency_code,flat_shipping_charge,reservation_minutes,payment_due_minutes)
-values ('d1000000-0000-4000-8000-000000000001','ACTIVE','THB',35,15,60);
+values ('d1000000-0000-4000-8000-000000000001','ACTIVE','THB',35,15,15);
 insert into public.organization_entitlements (organization_id,feature_id,source_type,enabled,valid_from)
 select 'd1000000-0000-4000-8000-000000000001',id,'MANUAL_OVERRIDE',true,now()-interval '1 day'
 from public.features where code='storefront.checkout';
