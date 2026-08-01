@@ -11,9 +11,10 @@ test("Part 4G-E records local Auth/RLS validation without Production activation"
   assert.match(evidence, /concurrency race/);
   assert.match(evidence, /keyboard\/focus behavior/);
   assert.match(evidence, /No Production project, migration, public activation/);
-  assert.match(status, /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-E FINAL LOCAL VALIDATION COMPLETE/);
-  assert.match(status, /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-E OWNER STATUS RECONCILIATION AND NEXT-GATE REVIEW/);
-  assert.match(status, /BLOCKED: bank instruction configuration,[\s\S]*P16 remains mandatory for Production/);
+  assert.match(status, /PHASE 1D MANUAL PAYMENT PART 4G-E LOCAL ACTIVATION, AUTH\/RLS, BROWSER QA AND CONTROLLED-STATE MATRIX VALIDATED/);
+  assert.match(status, /CURRENT SUBSTEP: PRODUCTION PREFLIGHT READ-ONLY EVIDENCE COMPLETE; APPLY BLOCKED/);
+  assert.match(status, /NEXT SUBSTEP: OWNER PREFLIGHT BLOCKER DISPOSITION/);
+  assert.match(status, /BLOCKED: P16 recurring recovery,[\s\S]*Production apply remains unauthorized/);
   assert.match(status, /Latest validation:[\s\S]*authenticated Chrome QA also completed queue\/detail, Verify, Reject, queue removal and keyboard\/focus checks/);
   assert.match(status, /HISTORICAL GATE MARKER \(pre-authenticated-browser QA\): CURRENT SUBSTEP:/);
 });
