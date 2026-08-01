@@ -64,14 +64,14 @@ test("Part 2C status advances only to customer submission authorization", () => 
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3B OWNER FROZEN \/ NO RUNTIME IMPLEMENTED \/ PRODUCTION NOT APPLIED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3C LOCAL VALIDATED \/ FLAGS DISABLED \/ UI AND PRODUCTION NOT ACTIVATED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT PART 3C CUSTOMER SUBMISSION SERVICE IMPLEMENTATION/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D STOREFRONT SUBMISSION UI CONTRACT REVIEW/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 3C customer submission service implementation[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 3D Storefront submission UI[\s\S]*P16 remains mandatory for Production/,
   );
 });

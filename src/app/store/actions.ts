@@ -14,8 +14,13 @@ import {
   type CheckoutAddressInput,
   type StorefrontRuntimeResult,
 } from "@/lib/storefront/checkout";
+import {
+  createManualPaymentSubmissionService,
+  type ManualPaymentSubmissionResult,
+} from "@/lib/storefront/manual-payment";
 
 const checkoutService = createStorefrontCheckoutService();
+const manualPaymentService = createManualPaymentSubmissionService();
 
 export type StorefrontActionState = StorefrontRuntimeResult | {
   ok: false;
@@ -103,6 +108,21 @@ export async function submitStorefrontCheckoutAction(
   return result;
 }
 
+export async function submitStorefrontPaymentProofAction(
+  _previousState: ManualPaymentSubmissionResult,
+  formData: FormData,
+): Promise<ManualPaymentSubmissionResult> {
+  const organizationSlug = String(formData.get("organizationSlug") ?? "");
+  const result = await manualPaymentService.submitPaymentProof({
+    organizationSlug,
+    orderId: String(formData.get("orderId") ?? ""),
+    paymentReference: String(formData.get("paymentReference") ?? ""),
+    requestId: String(formData.get("requestId") ?? ""),
+  });
+  if (result.ok) revalidateStorefrontOrders(organizationSlug);
+  return result;
+}
+
 export async function setStorefrontPreferencesAction(formData: FormData) {
   const theme = formData.get("theme");
   const locale = formData.get("locale");
@@ -163,5 +183,12 @@ function revalidateStorefrontOnSuccess(
   const slug = organizationSlug.trim().toLowerCase();
   if (result.ok && /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(slug)) {
     revalidatePath(`/store/${slug}`);
+  }
+}
+
+function revalidateStorefrontOrders(organizationSlug: string) {
+  const slug = organizationSlug.trim().toLowerCase();
+  if (/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(slug)) {
+    revalidatePath(`/store/${slug}/orders`);
   }
 }

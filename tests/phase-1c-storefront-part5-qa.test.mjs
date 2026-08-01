@@ -98,14 +98,14 @@ test("Part 5 completes Phase 1C locally without opening Phase 1D writes", () => 
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3B OWNER FROZEN \/ NO RUNTIME IMPLEMENTED \/ PRODUCTION NOT APPLIED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3C LOCAL VALIDATED \/ FLAGS DISABLED \/ UI AND PRODUCTION NOT ACTIVATED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT PART 3C CUSTOMER SUBMISSION SERVICE IMPLEMENTATION/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D STOREFRONT SUBMISSION UI CONTRACT REVIEW/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 3C customer submission service implementation, staff verification, private proof Storage[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 3D Storefront submission UI, staff verification, private proof Storage[\s\S]*P16 remains mandatory for Production/,
   );
 });

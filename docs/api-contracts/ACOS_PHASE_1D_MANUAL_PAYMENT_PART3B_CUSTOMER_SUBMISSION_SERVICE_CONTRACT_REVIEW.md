@@ -1,11 +1,11 @@
 # Phase 1D Manual Payment Part 3B Customer Submission Service Contract Review
 
 **Task ID:** `PHASE-1D-MANUAL-PAYMENT-PART3B-SERVICE-CONTRACT`
-**Status:** OWNER APPROVED / MS01-MS24 FROZEN / IMPLEMENTATION NOT AUTHORIZED
+**Status:** OWNER APPROVED / MS01-MS24 FROZEN / IMPLEMENTED LOCALLY / VALIDATED
 **Prepared:** 2026-08-01
 **Depends On:** Owner-frozen PS01-PS24, AS01-AS24 and locally validated Part 3A customer submission RPC
 **Migration:** None proposed
-**Runtime Implementation:** Not authorized and not created
+**Runtime Implementation:** Local-only implementation authorized and completed
 **UI / Storage / Production:** Not authorized
 
 ## Objective
@@ -15,9 +15,10 @@ Storefront order surface to `api_submit_storefront_payment_proof`. The service
 must preserve the customer JWT, canonical tenant and payment authority,
 deterministic retry, privacy-safe errors and the reference-only evidence model.
 
-This review creates no Server Action, service module, feature flag, UI, Storage
-object, database object or Production change. The Project Owner froze
-MS01-MS24 on 2026-08-01; Part 3C implementation remains separately gated.
+The contract review created no runtime or database object. After the Project
+Owner froze MS01-MS24 and separately authorized Part 3C, the local-only
+service, Server Action, disabled flags and focused tests were implemented. UI,
+Storage, database and Production boundaries remain closed.
 
 ## Repository Reconciliation
 
@@ -73,9 +74,10 @@ MS01-MS24 in full. This freezes the customer-session, canonical tenant,
 input/output allowlist, feature-gate, idempotency, controlled-error, privacy,
 retry, revalidation and delivery contracts.
 
-The approval freezes the contract only. It does not itself authorize Part 3C
-runtime implementation, a migration, UI enablement, private proof Storage,
-staff verification, settlement, provider integration, public activation or
+The approval initially froze the contract only. The later explicit Part 3C
+authorization permitted the local implementation described below, but did not
+authorize a migration, UI enablement, private proof Storage, staff
+verification, settlement, provider integration, public activation or
 Production changes.
 
 ## Proposed Application Flow
@@ -156,7 +158,6 @@ canonical amount, currency, customer identity or payment state authority.
 
 ## Remaining Blocked Gates
 
-- Part 3C local service and Server Action implementation;
 - Storefront manual-payment form activation and bilingual UI;
 - staff verification, settlement and failure boundaries;
 - private proof Storage and signed-access design;
@@ -170,3 +171,23 @@ manual-payment submission service without creating a new source of truth. The
 recommended contract keeps tenant and ownership authority in Part 3A, keeps
 the bank reference private, makes retries deterministic and leaves every
 verification, settlement, Storage, UI and Production gate closed.
+
+## Part 3C Implementation Reconciliation
+
+The Owner-approved local implementation now includes:
+
+1. `src/lib/storefront/manual-payment.ts`, a typed `server-only` service that
+   defaults disabled, uses only the cookie-backed customer client, resolves the
+   canonical active organization from route slug and invokes the existing RPC;
+2. strict UUID/reference validation, an exact success-key allowlist and the
+   MS14-MS17 privacy-safe error/retry mapping;
+3. `submitStorefrontPaymentProofAction` as a thin POST form adapter that accepts
+   only the four MS07 fields and revalidates only the normalized tenant order
+   surface after success;
+4. disabled defaults in `.env.example`; and
+5. executable injected-client tests for feature, authentication, RPC input,
+   strict result parsing, privacy mapping and source boundaries.
+
+No current UI imports the action. No migration, direct table write, binary
+proof, staff review, settlement, provider call or Production activation was
+added by Part 3C.

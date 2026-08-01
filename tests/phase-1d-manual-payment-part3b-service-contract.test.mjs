@@ -11,13 +11,13 @@ const status = readFileSync(
   "utf8",
 );
 
-test("Part 3B freezes all Owner-approved service decisions without authorizing runtime", () => {
+test("Part 3B freezes all Owner-approved decisions and records the later runtime", () => {
   for (let index = 1; index <= 24; index += 1) {
     assert.match(contract, new RegExp(`\\| MS${String(index).padStart(2, "0")} \\|`));
   }
   assert.match(contract, /OWNER APPROVED \/ MS01-MS24 FROZEN/);
   assert.match(contract, /Owner approved the recommended values for[\s\S]*MS01-MS24 in full/);
-  assert.match(contract, /Runtime Implementation:\*\* Not authorized and not created/);
+  assert.match(contract, /Runtime Implementation:\*\* Local-only implementation authorized and completed/);
   assert.match(contract, /Migration:\*\* None proposed/);
 });
 
@@ -50,7 +50,7 @@ test("Part 3B freezes privacy-safe result, error and retry recommendations", () 
   assert.match(contract, /Do not accept files, MIME type, bucket, object path or signed URL/);
 });
 
-test("Part 3B status records Owner freeze and keeps Part 3C separately gated", () => {
+test("Part 3B status preserves Owner freeze after Part 3C implementation", () => {
   assert.match(
     status,
     /PHASE 1D MANUAL PAYMENT PART 3B CUSTOMER SUBMISSION SERVICE CONTRACT REVIEW COMPLETE: MS01-MS24/,
@@ -61,14 +61,14 @@ test("Part 3B status records Owner freeze and keeps Part 3C separately gated", (
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3B OWNER FROZEN \/ NO RUNTIME IMPLEMENTED \/ PRODUCTION NOT APPLIED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3C LOCAL VALIDATED \/ FLAGS DISABLED \/ UI AND PRODUCTION NOT ACTIVATED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT PART 3C CUSTOMER SUBMISSION SERVICE IMPLEMENTATION/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D STOREFRONT SUBMISSION UI CONTRACT REVIEW/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 3C customer submission service implementation, staff verification, private proof Storage[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 3D Storefront submission UI, staff verification, private proof Storage[\s\S]*P16 remains mandatory for Production/,
   );
 });

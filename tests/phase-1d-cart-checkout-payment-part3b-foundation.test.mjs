@@ -83,11 +83,11 @@ test("Part 3B status and validation evidence preserve the production gate", () =
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: OWNER AUTHORIZATION FOR PHASE 1D MANUAL PAYMENT PART 3C CUSTOMER SUBMISSION SERVICE IMPLEMENTATION/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D STOREFRONT SUBMISSION UI CONTRACT REVIEW/,
   );
   assert.match(
     status,
-    /Part 3C customer submission service implementation, staff verification, private proof Storage[\s\S]*P16 remains mandatory for Production/,
+    /Part 3D Storefront submission UI, staff verification, private proof Storage[\s\S]*P16 remains mandatory for Production/,
   );
   assert.match(report, /LOCAL VALIDATED \/ PRODUCTION NOT APPLIED/);
   assert.match(report, new RegExp(migrationName.replace(".", "\\.")));
