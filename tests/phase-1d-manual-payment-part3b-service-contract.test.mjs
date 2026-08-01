@@ -61,14 +61,14 @@ test("Part 3B status preserves Owner freeze after Part 3C implementation", () =>
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-A3 GUARDED PAYMENT SNAPSHOT IMPLEMENTED \/ LOCAL VALIDATED \/ PRODUCTION NOT APPLIED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-B SERVER READ SERVICE AND STOREFRONT ROUTE\/FORM IMPLEMENTED \/ LOCAL VALIDATED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-B SERVER READ SERVICE AND STOREFRONT ROUTE\/FORM IMPLEMENTATION/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-C RESPONSIVE, ACCESSIBILITY AND WORKFLOW QA/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 3D-B\/3D-C UI delivery[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 3D-C visual\/workflow QA[\s\S]*P16 remains mandatory for Production/,
   );
 });

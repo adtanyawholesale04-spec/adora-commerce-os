@@ -16,6 +16,7 @@ import {
 } from "@/lib/storefront/checkout";
 import {
   createManualPaymentSubmissionService,
+  type ManualPaymentActionState,
   type ManualPaymentSubmissionResult,
 } from "@/lib/storefront/manual-payment";
 
@@ -109,7 +110,7 @@ export async function submitStorefrontCheckoutAction(
 }
 
 export async function submitStorefrontPaymentProofAction(
-  _previousState: ManualPaymentSubmissionResult,
+  _previousState: ManualPaymentActionState,
   formData: FormData,
 ): Promise<ManualPaymentSubmissionResult> {
   const organizationSlug = String(formData.get("organizationSlug") ?? "");
@@ -119,7 +120,9 @@ export async function submitStorefrontPaymentProofAction(
     paymentReference: String(formData.get("paymentReference") ?? ""),
     requestId: String(formData.get("requestId") ?? ""),
   });
-  if (result.ok) revalidateStorefrontOrders(organizationSlug);
+  if (result.ok) {
+    revalidateStorefrontPayment(organizationSlug, result.orderId);
+  }
   return result;
 }
 
@@ -150,7 +153,7 @@ export async function setStorefrontPreferencesAction(formData: FormData) {
 }
 
 function safeStorefrontReturnPath(value: string) {
-  return /^\/store\/[a-z0-9][a-z0-9-]{1,61}[a-z0-9](?:\/products\/[a-z0-9][a-z0-9-]{1,61}[a-z0-9])?$/.test(
+  return /^\/store\/[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:(?:\/products\/[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)|(?:\/orders\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\/payment))?$/.test(
     value,
   )
     ? value
@@ -186,9 +189,17 @@ function revalidateStorefrontOnSuccess(
   }
 }
 
-function revalidateStorefrontOrders(organizationSlug: string) {
+function revalidateStorefrontPayment(
+  organizationSlug: string,
+  orderId: string,
+) {
   const slug = organizationSlug.trim().toLowerCase();
-  if (/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(slug)) {
-    revalidatePath(`/store/${slug}/orders`);
+  if (
+    /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(slug) &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      orderId,
+    )
+  ) {
+    revalidatePath(`/store/${slug}/orders/${orderId}/payment`);
   }
 }

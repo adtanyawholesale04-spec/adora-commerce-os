@@ -1,11 +1,11 @@
 # Phase 1D Manual Payment Part 3D Storefront Submission UI Contract Review
 
 **Task ID:** `PHASE-1D-MANUAL-PAYMENT-PART3D-UI-CONTRACT`
-**Status:** OWNER APPROVED / MU01-MU24 FROZEN / IMPLEMENTATION BLOCKED
+**Status:** OWNER APPROVED / MU01-MU24 FROZEN / PART 3D-B IMPLEMENTED / LOCAL VALIDATED
 **Prepared:** 2026-08-01
 **Depends On:** Owner-frozen MS01-MS24 and locally validated Part 3C submission service
-**Migration:** A forward-only migration for the guarded read boundary is recommended before UI implementation, but it is not created or authorized by this review
-**Runtime / UI Implementation:** Not authorized and not created
+**Migration:** Guarded read migration `20260801054812_phase_1d_manual_payment_guarded_payment_snapshot.sql` is locally validated and not applied to Production
+**Runtime / UI Implementation:** Part 3D-B server read model and guarded route/form implemented locally
 **Storage / Bank Configuration / Staff Review / Production:** Not authorized
 
 ## Objective
@@ -16,10 +16,13 @@ truth, preserve the existing bilingual light/dark Storefront shell, communicate
 that a submission is awaiting staff review and keep bank references out of
 URLs, logs, browser persistence and read models.
 
-This review creates no route, component, read RPC, migration, translation key,
-feature activation, Storage object or Production change.
+The review stage itself created no route, component, read RPC, migration,
+translation key, feature activation, Storage object or Production change.
+The later Owner-authorized Part 3D-A3 and Part 3D-B outcomes are recorded below.
 
 ## Repository And Dependency Reconciliation
+
+At review time:
 
 1. `src/lib/storefront/manual-payment.ts` and
    `submitStorefrontPaymentProofAction` implement the disabled-by-default
@@ -114,10 +117,10 @@ until a separate approved source exists.
 | Offline | Existing Storefront offline banner plus disabled submit | Resume when online; no inferred result |
 | Unavailable/not owned | Non-enumerating not-found/unavailable state | No resource detail |
 
-## Required Guarded Read Contract Before UI
+## Required Guarded Read Contract Before UI (Satisfied By Part 3D-A3)
 
-Part 3D implementation is not ready to render until a guarded read design is
-Owner-approved. The candidate boundary must:
+The review required an Owner-approved guarded read design before Part 3D could
+render. The approved boundary had to:
 
 1. accept organization ID and order ID only;
 2. execute for `authenticated` only with explicit revoke/grant posture;
@@ -127,8 +130,9 @@ Owner-approved. The candidate boundary must:
 6. return the MU04 field allowlist and no bank reference; and
 7. expose no direct table select or service-role authorization bypass.
 
-This is expected to require a forward-only migration. The migration is not
-created or authorized by this review.
+The review did not create or authorize the expected forward-only migration.
+Part 3D-A3 was later authorized and implemented that migration locally; it has
+not been applied to Production.
 
 ## Validation Matrix
 
@@ -150,9 +154,6 @@ created or authorized by this review.
 
 ## Remaining Blocked Gates
 
-- separate Part 3D-A guarded customer order payment snapshot contract review
-  and explicit forward-only migration authorization;
-- Part 3D-B server read model and Storefront route/form implementation;
 - Part 3D-C responsive, accessibility and workflow QA;
 - canonical bank instruction configuration;
 - private binary proof Storage and retention;
@@ -162,8 +163,21 @@ created or authorized by this review.
 
 ## Review Outcome
 
-The submission action is locally ready but a safe customer UI requires a
-customer-owned read boundary first. MU01-MU24 preserve the existing Storefront
-visual baseline, prevent financial-status misrepresentation, keep the bank
-reference private and sequence the remaining work without inventing bank data
-or exposing Commerce Core tables.
+At review completion, the submission action was locally ready but a safe
+customer UI still required a customer-owned read boundary. MU01-MU24 preserve
+the existing Storefront visual baseline, prevent financial-status
+misrepresentation, keep the bank reference private and sequence the remaining
+work without inventing bank data or exposing Commerce Core tables. The later
+Part 3D-A3 and Part 3D-B outcomes satisfy the guarded-read and route/form stages.
+
+## Part 3D-B Implementation Outcome
+
+On 2026-08-01, the Owner separately authorized Part 3D-B. The implementation
+adds an authenticated cookie-session snapshot service, the approved private
+payment route, an exact reference-only Server Action form, bilingual copy and
+feature-gated pending/expired/closed states. The request UUID remains stable
+through same-intent retries, the bank reference is absent from URLs, cookies,
+browser storage and read responses, and no direct browser Supabase access was
+added. Checkout and Manual Payment flags remain disabled by default. No schema,
+bank configuration, binary Storage, staff review, settlement or Production
+change was made.

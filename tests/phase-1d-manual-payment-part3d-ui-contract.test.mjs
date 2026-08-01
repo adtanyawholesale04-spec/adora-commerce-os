@@ -11,7 +11,7 @@ const status = readFileSync(
   "utf8",
 );
 
-test("Part 3D freezes every Owner-approved UI decision without implementing UI", () => {
+test("Part 3D preserves every Owner-approved UI decision through implementation", () => {
   for (let index = 1; index <= 24; index += 1) {
     assert.match(
       contract,
@@ -23,16 +23,18 @@ test("Part 3D freezes every Owner-approved UI decision without implementing UI",
     contract,
     /Owner approved the recommended values for[\s\S]*MU01-MU24 in full/,
   );
-  assert.match(contract, /Runtime \/ UI Implementation:\*\* Not authorized and not created/);
-  assert.match(contract, /This review creates no route, component, read RPC, migration/);
+  assert.match(contract, /Runtime \/ UI Implementation:\*\* Part 3D-B server read model and guarded route\/form implemented locally/);
+  assert.match(contract, /The review stage itself created no route, component, read RPC, migration/);
+  assert.match(contract, /Part 3D-B Implementation Outcome/);
 });
 
-test("Part 3D requires a customer-owned read boundary before rendering", () => {
+test("Part 3D records the customer-owned read prerequisite and its local delivery", () => {
   assert.match(contract, /No existing guarded customer-owned read function/);
   assert.match(contract, /Required Guarded Read Contract Before UI/);
   assert.match(contract, /resolve `auth\.uid\(\)`, active profile, membership and customer link/);
   assert.match(contract, /return the MU04 field allowlist and no bank reference/);
-  assert.match(contract, /forward-only migration[\s\S]*not created or authorized/);
+  assert.match(contract, /Satisfied By Part 3D-A3/);
+  assert.match(contract, /Part 3D-A3 was later authorized and implemented that migration locally/);
   assert.match(contract, /Direct browser reads from `orders`, `payments`/);
 });
 
@@ -66,14 +68,14 @@ test("Part 3D status records Owner freeze before read or UI implementation", () 
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-A3 GUARDED PAYMENT SNAPSHOT IMPLEMENTED \/ LOCAL VALIDATED \/ PRODUCTION NOT APPLIED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-B SERVER READ SERVICE AND STOREFRONT ROUTE\/FORM IMPLEMENTED \/ LOCAL VALIDATED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-B SERVER READ SERVICE AND STOREFRONT ROUTE\/FORM IMPLEMENTATION/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-C RESPONSIVE, ACCESSIBILITY AND WORKFLOW QA/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 3D-B\/3D-C UI delivery[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 3D-C visual\/workflow QA[\s\S]*P16 remains mandatory for Production/,
   );
 });

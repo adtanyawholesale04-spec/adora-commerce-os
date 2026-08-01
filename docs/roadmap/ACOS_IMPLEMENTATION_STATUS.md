@@ -1253,15 +1253,17 @@ PHASE 1D MANUAL PAYMENT PART 3D OWNER DECISION FREEZE COMPLETE: Owner approved M
 PHASE 1D MANUAL PAYMENT PART 3D-A1 GUARDED PAYMENT SNAPSHOT CONTRACT REVIEW COMPLETE: MR01-MR24 recommend one authenticated customer-owned exact-field RPC, canonical identity/payment checks, non-enumerating unavailable result, stable privileged read posture, exact grants, no read-side writes and a function-only forward migration without creating SQL or runtime
 PHASE 1D MANUAL PAYMENT PART 3D-A2 OWNER DECISION FREEZE COMPLETE: Owner approved MR01-MR24 in full on 2026-08-01; signature, ownership, exact response, non-enumeration, financial serialization, privacy, privileged-read, grants, no-write, failure, concurrency and delivery contracts are frozen without authorizing SQL
 PHASE 1D MANUAL PAYMENT PART 3D-A3 GUARDED PAYMENT SNAPSHOT IMPLEMENTED / LOCAL VALIDATED: one authenticated STABLE SECURITY DEFINER RPC returns the exact customer-owned Storefront order/payment allowlist, derives pending reference-only evidence without identifier leakage, preserves non-enumeration and performs no read-side writes; fresh replay, functional, privacy, concurrency and database lint gates passed on 2026-08-01
-CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-A3 GUARDED PAYMENT SNAPSHOT IMPLEMENTED / LOCAL VALIDATED / PRODUCTION NOT APPLIED
-NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-B SERVER READ SERVICE AND STOREFRONT ROUTE/FORM IMPLEMENTATION
-BLOCKED: Part 3D-B/3D-C UI delivery, bank instruction configuration, staff verification, private proof Storage, Production preflight/apply and public activation remain unauthorized; P16 remains mandatory for Production
+PHASE 1D MANUAL PAYMENT PART 3D-B SERVER READ SERVICE AND STOREFRONT ROUTE/FORM IMPLEMENTED / LOCAL VALIDATED: authenticated cookie-session read resolves canonical organization and exact guarded snapshot; the approved private payment route renders canonical summary and feature-gated reference-only form with stable retry identity, bilingual controlled states, no browser Supabase access and no reference persistence or optimistic payment truth
+CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-B SERVER READ SERVICE AND STOREFRONT ROUTE/FORM IMPLEMENTED / LOCAL VALIDATED
+NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-C RESPONSIVE, ACCESSIBILITY AND WORKFLOW QA
+BLOCKED: Part 3D-C visual/workflow QA, bank instruction configuration, staff verification, private proof Storage, Production preflight/apply and public activation remain unauthorized; P16 remains mandatory for Production
 AFTER STOREFRONT: Checkout/Payment follows Storefront, and Finance/Tax remains blocked until Checkout/Payment sources are clear
 
 Implementation:
 CONTROLLED START
 
 Latest validation:
+Phase 1D Manual Payment Part 3D-B exact snapshot parsing, disabled/auth/tenant fail-closed behavior, eligibility/pending/expired state derivation, route/action privacy, stable request identity, bilingual copy, 333 static tests, lint, typecheck, production build, guarded snapshot/concurrency, customer submission/race/expiry, Storefront boundary and Supabase security gates passed on 2026-08-01; flags remain disabled and no schema, Storage, staff review, settlement or Production change occurred.
 Phase 1D Manual Payment Part 3D-A3 fresh replay, exact function security/grants, customer ownership, non-enumeration, response privacy, canonical payment consistency, no-write, snapshot-versus-submission concurrency, database lint, Manual Payment/Atomic Checkout/Storefront/Supabase/Commerce regressions, 310 static tests, lint, typecheck and build gates passed on 2026-08-01; server/UI and Production were not activated or applied.
 Phase 1D Manual Payment Part 3D-A2 Owner freeze reconciliation confirmed MR01-MR24 completeness and preserved migration, SQL, runtime, UI, bank configuration, Storage, staff review, Production and public rollout gates on 2026-08-01.
 Phase 1D Manual Payment Part 3D-A1 MR01-MR24 guarded snapshot contract and status gates passed on 2026-08-01; no SQL, migration, table, index, policy, grant, runtime, UI, audit/event write or Production change was made.
