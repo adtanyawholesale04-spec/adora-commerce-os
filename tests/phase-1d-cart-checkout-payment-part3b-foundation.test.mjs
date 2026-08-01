@@ -83,14 +83,15 @@ test("Part 3B status and validation evidence preserve the production gate", () =
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-E LOCAL FEATURE ACTIVATION AND REAL BROWSER WORKFLOW QA REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-E REAL BROWSER WORKFLOW QA REQUIRES BROWSER CONNECTION AND AUTHENTICATED UI SESSION/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 4G-E local feature activation,[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 4G-E real browser workflow QA,[\s\S]*P16 remains mandatory for Production/,
   );
   assert.match(report, /LOCAL VALIDATED \/ PRODUCTION NOT APPLIED/);
   assert.match(report, new RegExp(migrationName.replace(".", "\\.")));
 });
+
 
 

@@ -36,16 +36,19 @@ test("actions preserve guarded settlement, grants, and post-commit isolation", (
 test("Part 4B remains reconciled after guarded-action implementation", () => {
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-D GUARDED REVIEW ACTION UI IMPLEMENTED AND LOCAL VALIDATED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-E LOCAL ACTIVATION AND AUTH\/RLS VALIDATED; REAL BROWSER QA BLOCKED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-E LOCAL FEATURE ACTIVATION AND REAL BROWSER WORKFLOW QA REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-E REAL BROWSER WORKFLOW QA REQUIRES BROWSER CONNECTION AND AUTHENTICATED UI SESSION/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 4G-E local feature activation,[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 4G-E real browser workflow QA,[\s\S]*P16 remains mandatory for Production/,
   );
 });
+
+
+
 
 
