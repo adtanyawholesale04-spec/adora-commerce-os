@@ -44,14 +44,14 @@ test("implementation status records the freeze and advances to Part 1B design", 
   assert.match(status, /PHASE 1D MANUAL PAYMENT PART 1A OWNER DECISION FREEZE COMPLETE/);
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3C LOCAL VALIDATED \/ FLAGS DISABLED \/ UI AND PRODUCTION NOT ACTIVATED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D CONTRACT REVIEW COMPLETE \/ OWNER DECISION FREEZE REQUIRED \/ NO READ MIGRATION OR UI IMPLEMENTED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D STOREFRONT SUBMISSION UI CONTRACT REVIEW/,
+    /NEXT SUBSTEP: OWNER DECISION FREEZE FOR PHASE 1D MANUAL PAYMENT PART 3D MU01-MU24/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 3D Storefront submission UI, staff verification, private proof Storage[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 3D-A guarded customer order payment snapshot and Part 3D-B\/3D-C UI delivery[\s\S]*P16 remains mandatory for Production/,
   );
 });
