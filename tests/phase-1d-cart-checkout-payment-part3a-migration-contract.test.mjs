@@ -65,14 +65,14 @@ test("implementation status records Part 3B and stops before Part 3C runtime", (
   assert.match(status, /PHASE 1D PART 3A MIGRATION CONTRACT REVIEW PREPARED/);
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-A ADMIN REVIEW UI CONTRACT AND ROUTE DESIGN PREPARED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-A OWNER DECISION FREEZE COMPLETE/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-A OWNER DECISION FREEZE REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-B ADMIN REVIEW QUEUE UI IMPLEMENTATION REQUIRES OWNER APPROVAL/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 4G-A Owner freeze,[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 4G-B queue implementation,[\s\S]*P16 remains mandatory for Production/,
   );
 });

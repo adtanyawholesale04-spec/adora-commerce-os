@@ -8,12 +8,12 @@ const contract = readFileSync(
 );
 const status = readFileSync("docs/roadmap/ACOS_IMPLEMENTATION_STATUS.md", "utf8");
 
-test("Part 4G-A records every recommended UI decision without freezing it", () => {
+test("Part 4G-A freezes every Owner-approved UI decision", () => {
   for (let id = 1; id <= 30; id += 1) {
     assert.match(contract, new RegExp(`\\| UI${String(id).padStart(2, "0")} \\|`));
   }
-  assert.match(contract, /CONTRACT PREPARED \/ UI01-UI30 RECOMMENDED \/ OWNER FREEZE REQUIRED/);
-  assert.match(contract, /not frozen by[\s\S]*authorization to prepare Part 4G-A/i);
+  assert.match(contract, /OWNER APPROVED \/ UI01-UI30 FROZEN \/ PART 4G-B NOT AUTHORIZED/);
+  assert.match(contract, /explicitly approved all recommended values UI01-UI30 on[\s\S]*2026-08-01/);
 });
 
 test("routes isolate the reference-free queue from private detail", () => {
@@ -39,27 +39,27 @@ test("contract covers brand, accessibility and responsive requirements", () => {
   assert.match(contract, /320, 390, 768, 1024 and 1440 px/);
 });
 
-test("Part 4G-A creates no runtime route before Owner freeze", () => {
+test("Part 4G-A freeze creates no runtime route before Part 4G-B approval", () => {
   assert.equal(existsSync("src/app/admin/payments/review/page.tsx"), false);
   assert.equal(
     existsSync("src/app/admin/payments/review/[paymentTransactionId]/page.tsx"),
     false,
   );
   assert.match(contract, /Runtime UI \/ Feature Activation \/ Migration \/ Production:[*]* NOT AUTHORIZED/);
+  assert.match(contract, /Part 4G-B queue implementation[\s\S]*remain stopped/);
 });
 
-test("authoritative status advances only to Owner decision freeze", () => {
+test("authoritative status advances only to separately approved queue implementation", () => {
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-A ADMIN REVIEW UI CONTRACT AND ROUTE DESIGN PREPARED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-A OWNER DECISION FREEZE COMPLETE/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-A OWNER DECISION FREEZE REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-B ADMIN REVIEW QUEUE UI IMPLEMENTATION REQUIRES OWNER APPROVAL/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 4G-A Owner freeze,[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 4G-B queue implementation,[\s\S]*P16 remains mandatory for Production/,
   );
 });
-

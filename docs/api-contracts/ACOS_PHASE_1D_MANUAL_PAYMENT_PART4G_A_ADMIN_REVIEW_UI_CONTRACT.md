@@ -4,7 +4,9 @@
 
 **Prepared Date:** 2026-08-01
 
-**Status:** CONTRACT PREPARED / UI01-UI30 RECOMMENDED / OWNER FREEZE REQUIRED
+**Owner Approval Date:** 2026-08-01
+
+**Status:** OWNER APPROVED / UI01-UI30 FROZEN / PART 4G-B NOT AUTHORIZED
 
 **Depends On:** Owner-frozen RV01-RV24 and RM01-RM30; locally validated Parts 4D-4F
 
@@ -22,7 +24,10 @@ Operational Clarity: compact operational layout, Noto Sans Thai, bilingual
 copy, light/dark design tokens, consistent payment status colors and no
 marketing-style hero or decorative card composition.
 
-## 2. Recommended Owner Decisions
+## 2. Frozen Owner Decisions
+
+The Project Owner explicitly approved all recommended values UI01-UI30 on
+2026-08-01. These values are now the frozen Admin review UI baseline.
 
 | ID | Decision | Recommended safe value |
 |---|---|---|
@@ -156,9 +161,10 @@ Committed database output remains the only financial truth.
 - partial/over/under payment, reversal, refund, provider or notification flow;
 - customer contact/address display, export, print, copy-reference or bulk review.
 
-## 8. Approval Gate
+## 8. Owner Approval
 
-UI01-UI30 are recommendations prepared for Owner review. They are not frozen by
-the authorization to prepare Part 4G-A. Implementation must remain stopped
-until the Project Owner explicitly approves the recommended decision table.
-
+The Project Owner approved UI01-UI30 in full on 2026-08-01. Any change requires
+a new explicit Owner decision and must not silently alter this frozen baseline.
+This freeze closes Part 4G-A only. Part 4G-B queue implementation, private
+detail/action UI, feature activation, migration and Production remain stopped
+until separately authorized.

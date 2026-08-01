@@ -47,11 +47,11 @@ test("Part 4E closes direct writes and isolates post-commit failure events", () 
 test("Part 4E advances only to the separately approved server runtime", () => {
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-A ADMIN REVIEW UI CONTRACT AND ROUTE DESIGN PREPARED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-A OWNER DECISION FREEZE COMPLETE/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-A OWNER DECISION FREEZE REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-B ADMIN REVIEW QUEUE UI IMPLEMENTATION REQUIRES OWNER APPROVAL/,
   );
   assert.match(status, /Production was not queried or changed/);
 });

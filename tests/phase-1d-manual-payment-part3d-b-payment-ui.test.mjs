@@ -244,11 +244,11 @@ test("Part 3D-B includes complete Thai and English payment copy", () => {
 test("Part 3D-B evidence remains valid after Part 3D-C local completion", () => {
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-A ADMIN REVIEW UI CONTRACT AND ROUTE DESIGN PREPARED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-A OWNER DECISION FREEZE COMPLETE/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-A OWNER DECISION FREEZE REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-B ADMIN REVIEW QUEUE UI IMPLEMENTATION REQUIRES OWNER APPROVAL/,
   );
   assert.match(status, /P16 remains mandatory for Production/);
 });

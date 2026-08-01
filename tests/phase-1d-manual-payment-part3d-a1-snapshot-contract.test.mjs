@@ -78,14 +78,14 @@ test("Part 3D-A3 status records local implementation and preserves later gates",
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-A ADMIN REVIEW UI CONTRACT AND ROUTE DESIGN PREPARED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-A OWNER DECISION FREEZE COMPLETE/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-A OWNER DECISION FREEZE REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-B ADMIN REVIEW QUEUE UI IMPLEMENTATION REQUIRES OWNER APPROVAL/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 4G-A Owner freeze,[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 4G-B queue implementation,[\s\S]*P16 remains mandatory for Production/,
   );
 });
