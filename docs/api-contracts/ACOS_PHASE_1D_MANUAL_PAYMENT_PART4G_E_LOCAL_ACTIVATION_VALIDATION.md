@@ -14,6 +14,7 @@
 - Post-action evidence confirmed `SUCCEEDED` transaction, `VERIFIED` proof, `CONFIRMED` order, `PAID` payment, one inventory allocation, and `PAYMENT_VERIFIED` audit event.
 - Authenticated local Chrome QA completed the Reject action for a fresh local QA transaction; post-action evidence confirmed `FAILED` transaction, `REJECTED` proof, unchanged `PENDING_CONFIRMATION` order, unchanged `UNPAID` payment, and `PAYMENT_REJECTED` audit event.
 - Authenticated local Chrome QA confirmed keyboard/focus behavior: modal focus enters the reason textarea, bounded validation remains reachable, Escape closes the modal, and focus returns to the triggering action.
+- Focused local QA expansion locked the feature-disabled, anonymous, missing-membership, permission-denied, invalid/not-found, state-conflict, already-reviewed, expiry and controlled-error matrix; bilingual UI copy and private-field redaction remain covered.
 
 ## Remaining gates
 
