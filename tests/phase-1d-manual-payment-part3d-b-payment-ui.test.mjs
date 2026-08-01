@@ -244,11 +244,11 @@ test("Part 3D-B includes complete Thai and English payment copy", () => {
 test("Part 3D-B evidence remains valid after Part 3D-C local completion", () => {
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-C RESPONSIVE, ACCESSIBILITY AND WORKFLOW QA VALIDATED \/ LOCAL COMPLETE/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4A STAFF REVIEW REPOSITORY AND DEPENDENCY AUDIT COMPLETE/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT STAFF REVIEW IMPLEMENTATION CONTRACT REVIEW REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4B STAFF REVIEW SERVICE CONTRACT REVIEW REQUIRES OWNER APPROVAL/,
   );
   assert.match(status, /P16 remains mandatory for Production/);
 });

@@ -83,11 +83,11 @@ test("Part 3B status and validation evidence preserve the production gate", () =
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT STAFF REVIEW IMPLEMENTATION CONTRACT REVIEW REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4B STAFF REVIEW SERVICE CONTRACT REVIEW REQUIRES OWNER APPROVAL/,
   );
   assert.match(
     status,
-    /BLOCKED: Staff review implementation[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Staff Review migration, guarded actions, settlement runtime, Admin review UI,[\s\S]*P16 remains mandatory for Production/,
   );
   assert.match(report, /LOCAL VALIDATED \/ PRODUCTION NOT APPLIED/);
   assert.match(report, new RegExp(migrationName.replace(".", "\\.")));

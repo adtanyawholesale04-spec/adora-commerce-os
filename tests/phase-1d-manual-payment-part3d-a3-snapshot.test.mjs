@@ -73,11 +73,11 @@ test("Part 3D-A3 returns the exact privacy-bounded shape without writes", () => 
 test("Part 3D-A3 status records local validation and preserves Production gate", () => {
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-C RESPONSIVE, ACCESSIBILITY AND WORKFLOW QA VALIDATED \/ LOCAL COMPLETE/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4A STAFF REVIEW REPOSITORY AND DEPENDENCY AUDIT COMPLETE/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT STAFF REVIEW IMPLEMENTATION CONTRACT REVIEW REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4B STAFF REVIEW SERVICE CONTRACT REVIEW REQUIRES OWNER APPROVAL/,
   );
   assert.match(status, /P16 remains mandatory for Production/);
 });
