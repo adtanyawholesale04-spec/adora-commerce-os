@@ -28,7 +28,7 @@ test("Production preflight records identity and migration parity without apply",
 
 test("Production preflight preserves recovery and deployment blockers", () => {
   for (const required of [
-    "P16 recurring backup plus managed Auth/Storage recovery disposition",
+    "P16 approved recovery plan execution",
     "Fulfillment lint warning",
     "Vercel project link",
     "migration change window",
@@ -39,7 +39,7 @@ test("Production preflight preserves recovery and deployment blockers", () => {
 });
 
 test("Implementation status advances to Owner blocker disposition", () => {
-  assert.match(status, /CURRENT SUBSTEP: PRODUCTION PREFLIGHT LOCAL REPLAY VALIDATED; APPLY BLOCKED/);
-  assert.match(status, /NEXT SUBSTEP: OWNER PREFLIGHT BLOCKER DISPOSITION/);
-  assert.match(status, /BLOCKED: P16 recurring recovery,[\s\S]*Production apply remains unauthorized/);
+  assert.match(status, /CURRENT SUBSTEP: PRODUCTION PREFLIGHT P16 RECOVERY DECISION OWNER APPROVED; EXECUTION AND APPLY BLOCKED/);
+  assert.match(status, /NEXT SUBSTEP: OWNER FULFILLMENT LINT WARNING DISPOSITION/);
+  assert.match(status, /BLOCKED: P16 approved recovery plan execution,[\s\S]*Production apply remains unauthorized/);
 });

@@ -134,12 +134,26 @@ drill passed, but recurring restorable backup and compatible managed
 Auth/Storage recovery are still unproven. ACOS Production remains on the Free
 plan without a verified recurring provider-managed recovery set.
 
+The Owner approved and froze the execution policy in
+`docs/api-contracts/ACOS_PRODUCTION_PREFLIGHT_P16_RECOVERY_DECISION.md`:
+
+- Supabase Pro daily backups with seven-day retention are required before
+  Production migration apply;
+- PITR is deferred for the initial 24-hour RPO posture;
+- managed database/Auth restore-to-new-project and separate Storage object
+  recovery must be proven; and
+- every paid activation still requires separate cost approval.
+
+The policy decision is complete. P16 execution remains blocked and no provider
+setting or billing state was changed.
+
 ## Blocking Disposition
 
 Production migration apply is **BLOCKED** until the Owner separately approves
 and closes or accepts all of the following:
 
-1. P16 recurring backup plus managed Auth/Storage recovery disposition.
+1. P16 approved recovery plan execution: recurring backup plus managed
+   database/Auth and separate Storage object restore proof.
 2. Forward-fix or explicit acceptance of the existing Fulfillment lint warning.
 3. Vercel project link and secret-name-only Production environment inventory.
 4. A migration change window, rollback target and post-apply validation plan.
@@ -149,8 +163,9 @@ data changes, Vercel deployment, provider activation or public traffic.
 
 ## Recommended Next Gate
 
-`OWNER PREFLIGHT BLOCKER DISPOSITION`
+`OWNER FULFILLMENT LINT WARNING DISPOSITION`
 
-The local replay gate is complete. The next decision is Owner disposition of
-P16 recovery, the existing lint warning, Vercel environment readiness and the
-Production migration change window before any apply approval.
+The local replay and P16 policy decisions are complete. P16 execution remains
+binding while the next zero-spend decision resolves the existing Fulfillment
+lint warning. Vercel environment readiness and the Production migration change
+window remain later gates.
