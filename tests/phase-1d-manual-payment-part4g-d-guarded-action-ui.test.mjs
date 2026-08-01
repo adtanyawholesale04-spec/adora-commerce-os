@@ -24,6 +24,9 @@ test("each action requires an accessible confirmation and bounded reason", () =>
   assert.match(actionBar, /role="dialog"/);
   assert.match(actionBar, /aria-modal="true"/);
   assert.match(actionBar, /aria-labelledby="review-action-dialog-title"/);
+  assert.match(actionBar, /reasonRef = useRef<HTMLTextAreaElement>\(null\)/);
+  assert.match(actionBar, /requestAnimationFrame\(\(\) => reasonRef\.current\?\.focus\(\)\)/);
+  assert.match(actionBar, /triggerRef\.current\?\.focus\(\)/);
   assert.match(actionBar, /name="reason"/);
   assert.match(actionBar, /minLength=\{8\}/);
   assert.match(actionBar, /maxLength=\{500\}/);

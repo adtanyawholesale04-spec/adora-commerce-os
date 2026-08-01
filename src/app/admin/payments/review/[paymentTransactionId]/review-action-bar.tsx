@@ -40,14 +40,22 @@ export function ReviewActionBar({
     rejectManualPaymentAction,
     initialState,
   );
-  const dialogRef = useRef<HTMLDivElement>(null);
+  const reasonRef = useRef<HTMLTextAreaElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
   const pending = verifyPending || rejectPending;
   const activeState = selectedAction === "verify" ? verifyState : rejectState;
   const reasonError = getReasonError(reason, copy);
   const canSubmit = canReview && !pending && !reasonError;
 
   useEffect(() => {
-    if (selectedAction) dialogRef.current?.focus();
+    if (!selectedAction) return;
+
+    const focusFrame = requestAnimationFrame(() => reasonRef.current?.focus());
+    return () => {
+      cancelAnimationFrame(focusFrame);
+      triggerRef.current?.focus();
+      triggerRef.current = null;
+    };
   }, [selectedAction]);
 
   useEffect(() => {
@@ -79,6 +87,9 @@ export function ReviewActionBar({
 
   function openAction(action: ReviewAction) {
     if (!canReview || pending) return;
+    triggerRef.current = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
     setRequestId(createRequestId());
     setSelectedAction(action);
   }
@@ -131,9 +142,7 @@ export function ReviewActionBar({
           onKeyDown={(event) => {
             if (event.key === "Escape") closeDialog();
           }}
-          ref={dialogRef}
           role="dialog"
-          tabIndex={-1}
         >
           <form
             action={actionCopy.formAction}
@@ -184,6 +193,7 @@ export function ReviewActionBar({
                 }}
                 placeholder={copy.reasonHint}
                 required
+                ref={reasonRef}
                 value={reason}
               />
               <span className="text-xs text-muted" id="review-reason-hint">{copy.reasonHint}</span>
