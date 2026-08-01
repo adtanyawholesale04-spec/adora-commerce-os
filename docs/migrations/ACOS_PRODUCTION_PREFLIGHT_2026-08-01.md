@@ -1,12 +1,13 @@
 # ACOS Production Preflight 2026-08-01
 
-**Status:** PREPARED / READ-ONLY EVIDENCE COMPLETE / PRODUCTION APPLY BLOCKED
+**Status:** LOCAL REPLAY VALIDATED / PRODUCTION APPLY BLOCKED
 
 ## Scope
 
 This preflight inspected repository, local Supabase and linked Production
-metadata without applying migrations, changing data, deploying an Edge
-Function, connecting Vercel or enabling a public feature.
+metadata. Part 1 then reset only the local Supabase database and replayed all
+committed migrations. No Production migration, data, Edge Function, Vercel
+connection or public feature was changed.
 
 ## Production Identity
 
@@ -27,7 +28,7 @@ was not queried beyond project-list metadata.
 ```text
 repository migration files: 97
 duplicate migration versions: 0
-local migrations applied: 97
+local migrations applied after clean replay: 97 / 97
 Production migrations applied: 86
 Production pending migrations: 11
 remote-only migration drift: 0
@@ -50,7 +51,22 @@ The dry-run would apply these files in order:
 10. `20260801103336_phase_1d_manual_payment_staff_review_reads.sql`
 11. `20260801105844_phase_1d_manual_payment_staff_review_actions.sql`
 
-No migration was applied, repaired, pulled or edited during this preflight.
+No Production migration was applied, repaired or pulled. No historical
+migration file was edited.
+
+## Part 1 Local Replay Evidence
+
+```text
+target: Supabase local stack only
+reset: PASS / destructive local QA data cleared
+replay: PASS / all 97 repository migrations applied
+local migration history: PASS / every repository migration recorded
+Production write: NONE
+```
+
+The approved `supabase db reset --local` completed successfully on the local
+stack. The replay included the latest Phase 1C and Phase 1D migrations. The
+local database restarted cleanly after replay.
 
 ## Security And Compatibility Evidence
 
@@ -83,6 +99,7 @@ Phase 1C Storefront boundary: PASS
 Phase 1D promotion evaluator: PASS
 Phase 1D guarded cart functional/concurrency: PASS
 Phase 1D atomic checkout/coupon race: PASS
+Phase 1D checkout foundation after clean replay: PASS
 Phase 1D manual-payment schema/concurrency: PASS
 Phase 1D customer submission/races: PASS
 Phase 1D guarded payment snapshot/concurrency: PASS
@@ -90,16 +107,10 @@ Phase 1D staff review reads: PASS
 Phase 1D staff review actions/race: PASS
 ```
 
-Two local validation gates remain unresolved:
-
-1. Carrier webhook E2E was unstable across two bounded attempts. One run
-   reached Flash and Kerry before J&T returned HTTP 502; the second run did
-   not load the local provider secret before the 30-second timeout. No
-   Production function is deployed.
-2. Checkout foundation validation found the local-only QA checkout
-   entitlement created for browser testing. Its migration-origin assertion
-   requires a clean local reset/replay; the schema itself and downstream
-   Phase 1D suites passed.
+The earlier local-only checkout entitlement contamination was removed by the
+approved reset. The checkout migration-origin gate and carrier webhook E2E
+both pass after the clean replay. Production still has zero deployed Edge
+Functions, so carrier deployment remains a separately closed release scope.
 
 ## Environment And Deployment Evidence
 
@@ -129,12 +140,9 @@ Production migration apply is **BLOCKED** until the Owner separately approves
 and closes or accepts all of the following:
 
 1. P16 recurring backup plus managed Auth/Storage recovery disposition.
-2. Clean local reset/replay and complete regression rerun.
-3. Forward-fix or explicit acceptance of the existing Fulfillment lint warning.
-4. Carrier Edge Runtime stability if carrier deployment is included in the
-   release scope.
-5. Vercel project link and secret-name-only Production environment inventory.
-6. A migration change window, rollback target and post-apply validation plan.
+2. Forward-fix or explicit acceptance of the existing Fulfillment lint warning.
+3. Vercel project link and secret-name-only Production environment inventory.
+4. A migration change window, rollback target and post-apply validation plan.
 
 This report does not authorize `supabase db push`, migration repair, Production
 data changes, Vercel deployment, provider activation or public traffic.
@@ -143,6 +151,6 @@ data changes, Vercel deployment, provider activation or public traffic.
 
 `OWNER PREFLIGHT BLOCKER DISPOSITION`
 
-Resolve the clean local replay first because it is zero-provider-cost and
-produces the final database evidence needed before deciding on backup spend or
-Production application.
+The local replay gate is complete. The next decision is Owner disposition of
+P16 recovery, the existing lint warning, Vercel environment readiness and the
+Production migration change window before any apply approval.
