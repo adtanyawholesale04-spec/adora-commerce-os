@@ -4,7 +4,9 @@
 
 **Prepared Date:** 2026-08-01
 
-**Status:** CONTRACT REVIEW COMPLETE / OWNER DECISION REQUIRED
+**Owner Approval Date:** 2026-08-01
+
+**Status:** OWNER APPROVED / RV01-RV24 FROZEN / IMPLEMENTATION NOT AUTHORIZED
 
 **Depends On:** Part 4A audit; Owner-frozen SR01-SR24 and SC01-SC30
 
@@ -19,10 +21,10 @@ maker-checker separation, all-or-nothing settlement and private reference
 handling. It creates no SQL, Server Action, Admin route, feature flag or
 Production change.
 
-## 2. Recommended Owner Decisions
+## 2. Frozen Owner Decisions
 
-The following values are recommendations only. They become frozen only after
-an explicit Owner approval of RV01-RV24.
+The Project Owner explicitly approved all recommended values RV01-RV24 on
+2026-08-01. These values are now the frozen Staff Review service baseline.
 
 | ID | Decision | Recommended safe value |
 |---|---|---|
@@ -175,9 +177,10 @@ Codes contain no raw SQL, reference, proof, bank, customer or tenant detail.
 - customer contact/address display, notification delivery or fulfillment;
 - Production migration, secrets, rollout or activation.
 
-## 9. Decision Gate
+## 9. Owner Approval
 
-Part 4B design is complete, but RV01-RV24 are not frozen. The next permitted
-step is an explicit **Owner Decision Freeze for RV01-RV24**. Approval of those
-values would authorize migration contract design only; it would not authorize
-SQL generation, local apply, runtime, UI or Production.
+The Project Owner approved RV01-RV24 in full on 2026-08-01. Any change requires
+a new explicit Owner decision and must not silently alter this frozen baseline.
+This freeze authorizes **Part 4C forward-only migration contract review only**.
+It does not authorize SQL generation, local or Production apply, Server
+Actions, Admin UI, feature activation, Storage or provider work.
