@@ -61,14 +61,14 @@ test("Part 3B status preserves Owner freeze after Part 3C implementation", () =>
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4A STAFF REVIEW REPOSITORY AND DEPENDENCY AUDIT COMPLETE/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4B STAFF REVIEW SERVICE CONTRACT REVIEW COMPLETE/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4B STAFF REVIEW SERVICE CONTRACT REVIEW REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4B OWNER DECISION FREEZE FOR RV01-RV24 REQUIRES OWNER APPROVAL/,
   );
   assert.match(
     status,
-    /BLOCKED: Staff Review migration, guarded actions, settlement runtime, Admin review UI,[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: RV01-RV24 Owner freeze, Staff Review migration, guarded actions,[\s\S]*P16 remains mandatory for Production/,
   );
 });

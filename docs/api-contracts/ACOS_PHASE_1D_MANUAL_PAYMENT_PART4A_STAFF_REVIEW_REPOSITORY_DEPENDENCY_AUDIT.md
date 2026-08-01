@@ -58,10 +58,6 @@ This current-state reconciliation supersedes the historical Part 0 statement
 that order-level payment uniqueness was absent: `020_payments.sql` already
 defines `unique (order_id)`, and no duplicate constraint is needed.
 
-This current-state reconciliation supersedes the historical Part 0 statement
-that order-level payment uniqueness was absent: `020_payments.sql` already
-defines `unique (order_id)`, and no duplicate constraint is needed.
-
 ## 4. Ready Dependencies
 
 1. SR01-SR24 freeze explicit approve/reject, `payment.verify`, maker-checker,
