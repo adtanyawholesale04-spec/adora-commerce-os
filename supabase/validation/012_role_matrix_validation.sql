@@ -367,16 +367,16 @@ begin
     raise exception 'manager product update expected 1 row, got %', v_rows;
   end if;
 
-  update public.payments
-  set status = 'PAID',
-      amount_received = 100
-  where id = '14141414-1414-1414-1414-141414141481'::uuid;
+  begin
+    update public.payments
+    set status = 'PAID',
+        amount_received = 100
+    where id = '14141414-1414-1414-1414-141414141481'::uuid;
 
-  get diagnostics v_rows = row_count;
-
-  if v_rows <> 1 then
-    raise exception 'manager payment update expected 1 row, got %', v_rows;
-  end if;
+    raise exception 'manager direct payment update unexpectedly succeeded';
+  exception
+    when insufficient_privilege then null;
+  end;
 
   begin
     perform *

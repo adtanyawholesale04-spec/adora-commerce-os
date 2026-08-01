@@ -42,14 +42,14 @@ begin
 
   if to_regprocedure(
        'public.api_verify_storefront_payment(uuid,uuid,text,text,uuid)'
-     ) is not null
+     ) is null
      or to_regprocedure(
        'public.api_reject_storefront_payment(uuid,uuid,text,text,uuid)'
-     ) is not null then
-    raise exception 'Layer A unexpectedly created Staff Review actions';
+     ) is null then
+    raise exception 'Layer B Staff Review actions are missing';
   end if;
 
-  if not exists (
+  if exists (
     select 1
     from pg_policy policy
     join pg_class target on target.oid = policy.polrelid
@@ -62,13 +62,11 @@ begin
         ('payment_proofs', 'payment_proofs_permission_insert'),
         ('payment_proofs', 'payment_proofs_permission_update')
       )
-    group by namespace.nspname
-    having count(*) = 5
   )
-     or not has_table_privilege('authenticated', 'public.payments', 'UPDATE')
-     or not has_table_privilege('authenticated', 'public.payment_transactions', 'INSERT,UPDATE')
-     or not has_table_privilege('authenticated', 'public.payment_proofs', 'INSERT,UPDATE') then
-    raise exception 'Layer A changed direct-write posture reserved for Layer B';
+     or has_table_privilege('authenticated', 'public.payments', 'UPDATE')
+     or has_table_privilege('authenticated', 'public.payment_transactions', 'INSERT,UPDATE')
+     or has_table_privilege('authenticated', 'public.payment_proofs', 'INSERT,UPDATE') then
+    raise exception 'Layer B direct-write closure is incomplete';
   end if;
 end;
 $$;

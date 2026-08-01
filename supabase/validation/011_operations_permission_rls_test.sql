@@ -396,23 +396,29 @@ begin
     'Operations reply'
   );
 
-  insert into public.payment_transactions (
-    id,
-    organization_id,
-    payment_id,
-    transaction_type,
-    payment_method,
-    amount,
-    status
-  ) values (
-    '21212121-2121-2121-2121-212121212171',
-    'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbb71',
-    '14141414-1414-1414-1414-141414141471',
-    'PAYMENT',
-    'CASH',
-    100,
-    'SUCCEEDED'
-  );
+  begin
+    insert into public.payment_transactions (
+      id,
+      organization_id,
+      payment_id,
+      transaction_type,
+      payment_method,
+      amount,
+      status
+    ) values (
+      '21212121-2121-2121-2121-212121212171',
+      'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbb71',
+      '14141414-1414-1414-1414-141414141471',
+      'PAYMENT',
+      'CASH',
+      100,
+      'SUCCEEDED'
+    );
+
+    raise exception 'direct authenticated payment transaction insert unexpectedly succeeded';
+  exception
+    when insufficient_privilege then null;
+  end;
 
   insert into public.return_status_history (
     id,

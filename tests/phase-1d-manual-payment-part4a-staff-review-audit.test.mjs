@@ -48,17 +48,17 @@ test("Part 4A refuses to reuse checkout-only idempotency helpers silently", () =
   assert.match(audit, /No `api_verify_storefront_payment` or `api_reject_storefront_payment` exists/);
 });
 
-test("Part 4A advances only to the Staff Review contract gate", () => {
+test("Part 4A remains reconciled after guarded-action implementation", () => {
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4D LAYER A PRIVATE REVIEW READ MIGRATION IMPLEMENTED AND LOCAL VALIDATED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4E LAYER B GUARDED ACTION AND HARDENING MIGRATION IMPLEMENTED AND LOCAL VALIDATED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4E LAYER B GUARDED ACTION AND HARDENING MIGRATION IMPLEMENTATION REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4F SERVER ACTION SERVICE AND POST-COMMIT HANDOFF IMPLEMENTATION REQUIRES OWNER APPROVAL/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 4E Layer B guarded action SQL,[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 4F server action\/runtime orchestration,[\s\S]*P16 remains mandatory for Production/,
   );
 });

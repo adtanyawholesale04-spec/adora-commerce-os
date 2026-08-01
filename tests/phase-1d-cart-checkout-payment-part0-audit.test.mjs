@@ -91,14 +91,14 @@ test("implementation status advances only to the Owner freeze", () => {
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4D LAYER A PRIVATE REVIEW READ MIGRATION IMPLEMENTED AND LOCAL VALIDATED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4E LAYER B GUARDED ACTION AND HARDENING MIGRATION IMPLEMENTED AND LOCAL VALIDATED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4E LAYER B GUARDED ACTION AND HARDENING MIGRATION IMPLEMENTATION REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4F SERVER ACTION SERVICE AND POST-COMMIT HANDOFF IMPLEMENTATION REQUIRES OWNER APPROVAL/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 4E Layer B guarded action SQL,[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 4F server action\/runtime orchestration,[\s\S]*P16 remains mandatory for Production/,
   );
 });
