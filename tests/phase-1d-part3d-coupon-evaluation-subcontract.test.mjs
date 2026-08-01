@@ -106,14 +106,14 @@ test("implementation status records the validated coupon boundary and Part 3E ga
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4C OWNER DECISION FREEZE COMPLETE FOR RM01-RM30/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4D LAYER A PRIVATE REVIEW READ MIGRATION IMPLEMENTED AND LOCAL VALIDATED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4D LAYER A PRIVATE REVIEW READ MIGRATION GENERATION AND LOCAL VALIDATION REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4E LAYER B GUARDED ACTION AND HARDENING MIGRATION IMPLEMENTATION REQUIRES OWNER APPROVAL/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 4D Layer A SQL generation and apply, Layer B guarded action SQL,[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 4E Layer B guarded action SQL,[\s\S]*P16 remains mandatory for Production/,
   );
 });

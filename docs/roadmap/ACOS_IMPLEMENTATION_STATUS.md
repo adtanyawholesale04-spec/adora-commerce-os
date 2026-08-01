@@ -1262,15 +1262,17 @@ PHASE 1D MANUAL PAYMENT PART 4B STAFF REVIEW SERVICE CONTRACT REVIEW COMPLETE: R
 PHASE 1D MANUAL PAYMENT PART 4B OWNER DECISION FREEZE COMPLETE: Owner approved RV01-RV24 in full on 2026-08-01; queue/detail authorization, private reference handling, explicit actions, idempotency, direct-write hardening, settlement and post-commit handoff contracts are frozen without authorizing implementation
 PHASE 1D MANUAL PAYMENT PART 4C STAFF REVIEW FORWARD-ONLY MIGRATION CONTRACT REVIEW COMPLETE: RM01-RM30 recommend separate private-read and atomic guarded-write layers, exact grants, direct-write closure, dedicated idempotency, settlement/event boundaries, count-only preflight and forward-fix rollback posture without creating SQL or runtime
 PHASE 1D MANUAL PAYMENT PART 4C OWNER DECISION FREEZE COMPLETE: Owner approved RM01-RM30 in full on 2026-08-01; two-layer forward-only sequencing, read/action signatures, exact grants, direct-write closure, idempotency, settlement/events, preflight, rollback and delivery gates are frozen without authorizing SQL
-CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4C OWNER DECISION FREEZE COMPLETE FOR RM01-RM30
-NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4D LAYER A PRIVATE REVIEW READ MIGRATION GENERATION AND LOCAL VALIDATION REQUIRES OWNER APPROVAL
-BLOCKED: Part 4D Layer A SQL generation and apply, Layer B guarded action SQL, settlement runtime, Admin review UI, bank instruction configuration, private proof Storage, Production preflight/apply and public activation remain unauthorized; P16 remains mandatory for Production
+PHASE 1D MANUAL PAYMENT PART 4D LAYER A PRIVATE REVIEW READ MIGRATION IMPLEMENTED / LOCAL VALIDATED: two authenticated SECURITY DEFINER RPCs provide a reference-free keyset queue and payment.view plus payment.verify private detail with exact grants, non-enumeration, entitlement-aware eligibility and no read-side writes; Layer B and Production remain closed
+CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4D LAYER A PRIVATE REVIEW READ MIGRATION IMPLEMENTED AND LOCAL VALIDATED
+NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4E LAYER B GUARDED ACTION AND HARDENING MIGRATION IMPLEMENTATION REQUIRES OWNER APPROVAL
+BLOCKED: Part 4E Layer B guarded action SQL, direct-write closure, settlement runtime, Admin review UI, bank instruction configuration, private proof Storage, Production preflight/apply and public activation remain unauthorized; P16 remains mandatory for Production
 AFTER STOREFRONT: Checkout/Payment follows Storefront, and Finance/Tax remains blocked until Checkout/Payment sources are clear
 
 Implementation:
 CONTROLLED START
 
 Latest validation:
+Phase 1D Manual Payment Part 4D Layer A fresh replay, exact function/grant catalog, payment.view queue, payment.verify detail, keyset pagination, reference privacy, tenant/profile/entitlement denial, no-write evidence, database lint, 344 static tests, lint and typecheck gates passed locally on 2026-08-01; Layer B, runtime, UI and Production remained unchanged.
 Phase 1D Manual Payment Part 4C Owner freeze reconciliation confirmed RM01-RM30 completeness and preserved SQL, apply, guarded action, runtime, UI, feature, Storage, provider and Production gates on 2026-08-01.
 Phase 1D Manual Payment Part 4C RM01-RM30 forward-only migration contract, 339 static tests, lint, typecheck and Supabase security gates passed on 2026-08-01; two-layer reads/action-hardening, exact grants, direct-write closure, idempotency, settlement, events, preflight and rollback recommendations are recorded without SQL, apply, runtime, UI or Production changes.
 Phase 1D Manual Payment Part 4B Owner freeze reconciliation confirmed RV01-RV24 completeness; 348 static tests, lint, typecheck and Supabase security gates passed while SQL, apply, runtime, UI, feature, Storage, provider and Production gates remained closed on 2026-08-01.
