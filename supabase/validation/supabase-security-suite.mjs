@@ -68,6 +68,11 @@ runSqlSuite([
     file: "supabase/validation/038_profiles_rls_initplan_dry_run.sql",
     requiredRows: ["profiles_rls_initplan_dry_run|pass"],
   },
+  {
+    name: "authenticated_permission_metadata_grants",
+    file: "supabase/validation/058_authenticated_permission_metadata_grants_test.sql",
+    requiredRows: ["authenticated_permission_metadata_grants|pass"],
+  },
 ]);
 
 console.log("supabase_security_suite pass");

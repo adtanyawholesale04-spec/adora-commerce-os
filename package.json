@@ -14,6 +14,7 @@
     "validate:shipping-workflow": "node supabase/validation/shipping-workflow-suite.mjs",
     "validate:commerce-integration": "node supabase/validation/commerce-integration-suite.mjs",
     "validate:supabase-security": "node supabase/validation/supabase-security-suite.mjs",
+    "validate:permission-metadata-grants": "node supabase/validation/authenticated-permission-metadata-grants-suite.mjs",
     "validate:supabase-workflows": "node supabase/validation/supabase-workflows-suite.mjs",
     "validate:member-role-management": "node supabase/validation/member-role-management-suite.mjs",
     "validate:attribution-service-boundary": "node supabase/validation/attribution-service-boundary-suite.mjs",
