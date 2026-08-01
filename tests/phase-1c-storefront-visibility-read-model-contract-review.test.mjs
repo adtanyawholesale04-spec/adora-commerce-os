@@ -126,6 +126,6 @@ test("implementation status completes Phase 1C locally and advances to Phase 1D 
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-C RESPONSIVE, ACCESSIBILITY AND WORKFLOW QA/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT STAFF REVIEW IMPLEMENTATION CONTRACT REVIEW REQUIRES OWNER APPROVAL/,
   );
 });

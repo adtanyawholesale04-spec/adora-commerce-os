@@ -55,14 +55,14 @@ test("Part 2B preserves preflight, security and execution gates after Owner free
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-B SERVER READ SERVICE AND STOREFRONT ROUTE\/FORM IMPLEMENTED \/ LOCAL VALIDATED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-C RESPONSIVE, ACCESSIBILITY AND WORKFLOW QA VALIDATED \/ LOCAL COMPLETE/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-C RESPONSIVE, ACCESSIBILITY AND WORKFLOW QA/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT STAFF REVIEW IMPLEMENTATION CONTRACT REVIEW REQUIRES OWNER APPROVAL/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 3D-C visual\/workflow QA[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Staff review implementation[\s\S]*P16 remains mandatory for Production/,
   );
 });

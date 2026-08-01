@@ -38,7 +38,7 @@ export function ManualPaymentForm({
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const summaryRef = useRef<HTMLDivElement>(null);
-  const [state, action] = useActionState(
+  const [state, action, pending] = useActionState(
     submitStorefrontPaymentProofAction,
     INITIAL_STATE,
   );
@@ -102,7 +102,7 @@ export function ManualPaymentForm({
   }
 
   return (
-    <form action={action} onSubmit={validate} noValidate aria-busy={undefined}>
+    <form action={action} onSubmit={validate} noValidate aria-busy={pending}>
       <input type="hidden" name="organizationSlug" value={organizationSlug} />
       <input type="hidden" name="orderId" value={orderId} />
       <input type="hidden" name="requestId" value={requestId} />
@@ -140,6 +140,7 @@ export function ManualPaymentForm({
           id="payment-reference"
           name="paymentReference"
           value={reference}
+          disabled={pending}
           onChange={(event) => {
             setReference(event.target.value);
             setLocalInvalid(false);
@@ -157,7 +158,7 @@ export function ManualPaymentForm({
               ? "payment-reference-help payment-reference-error"
               : "payment-reference-help payment-reference-preview"
           }
-          className="mt-3 h-12 w-full rounded-md border border-line bg-panel px-4 text-base text-ink shadow-sm placeholder:text-muted/70 focus:border-brand"
+          className="mt-3 h-12 w-full rounded-md border border-line bg-panel px-4 text-base text-ink shadow-sm placeholder:text-muted/70 focus:border-brand disabled:cursor-wait disabled:opacity-70"
           placeholder={text.paymentReferencePlaceholder}
         />
         {fieldInvalid ? (
@@ -185,8 +186,9 @@ export function ManualPaymentForm({
         failureCode === "payment_reference_conflict" ? (
           <button
             type="button"
+            disabled={pending}
             onClick={startNewIntent}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-line bg-panel px-4 text-sm font-semibold text-ink hover:bg-panel-strong"
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-line bg-panel px-4 text-sm font-semibold text-ink hover:bg-panel-strong disabled:cursor-wait disabled:opacity-70"
           >
             <RefreshCcw aria-hidden className="h-4 w-4" />
             {text.paymentNewIntent}
