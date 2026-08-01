@@ -11,14 +11,18 @@ const status = readFileSync(
   "utf8",
 );
 
-test("Part 3D defines every recommended UI decision without implementing UI", () => {
+test("Part 3D freezes every Owner-approved UI decision without implementing UI", () => {
   for (let index = 1; index <= 24; index += 1) {
     assert.match(
       contract,
       new RegExp(`\\| MU${String(index).padStart(2, "0")} \\|`),
     );
   }
-  assert.match(contract, /MU01-MU24 OWNER DECISIONS REQUIRED/);
+  assert.match(contract, /OWNER APPROVED \/ MU01-MU24 FROZEN/);
+  assert.match(
+    contract,
+    /Owner approved the recommended values for[\s\S]*MU01-MU24 in full/,
+  );
   assert.match(contract, /Runtime \/ UI Implementation:\*\* Not authorized and not created/);
   assert.match(contract, /This review creates no route, component, read RPC, migration/);
 });
@@ -51,18 +55,22 @@ test("Part 3D preserves the current bilingual responsive visual baseline", () =>
   assert.match(contract, /do not adopt the proposed purple palette/);
 });
 
-test("Part 3D status stops at Owner freeze before read or UI implementation", () => {
+test("Part 3D status records Owner freeze before read or UI implementation", () => {
   assert.match(
     status,
     /PHASE 1D MANUAL PAYMENT PART 3D STOREFRONT SUBMISSION UI CONTRACT REVIEW COMPLETE: MU01-MU24/,
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D CONTRACT REVIEW COMPLETE \/ OWNER DECISION FREEZE REQUIRED \/ NO READ MIGRATION OR UI IMPLEMENTED/,
+    /PHASE 1D MANUAL PAYMENT PART 3D OWNER DECISION FREEZE COMPLETE: Owner approved MU01-MU24 in full/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: OWNER DECISION FREEZE FOR PHASE 1D MANUAL PAYMENT PART 3D MU01-MU24/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D OWNER APPROVED \/ MU01-MU24 FROZEN \/ NO READ MIGRATION OR UI IMPLEMENTED/,
+  );
+  assert.match(
+    status,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-A GUARDED CUSTOMER ORDER PAYMENT SNAPSHOT CONTRACT REVIEW/,
   );
   assert.match(
     status,

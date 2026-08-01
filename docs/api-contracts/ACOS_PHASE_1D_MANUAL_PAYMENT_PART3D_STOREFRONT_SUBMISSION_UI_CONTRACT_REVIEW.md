@@ -1,7 +1,7 @@
 # Phase 1D Manual Payment Part 3D Storefront Submission UI Contract Review
 
 **Task ID:** `PHASE-1D-MANUAL-PAYMENT-PART3D-UI-CONTRACT`
-**Status:** CONTRACT REVIEW COMPLETE / MU01-MU24 OWNER DECISIONS REQUIRED / IMPLEMENTATION BLOCKED
+**Status:** OWNER APPROVED / MU01-MU24 FROZEN / IMPLEMENTATION BLOCKED
 **Prepared:** 2026-08-01
 **Depends On:** Owner-frozen MS01-MS24 and locally validated Part 3C submission service
 **Migration:** A forward-only migration for the guarded read boundary is recommended before UI implementation, but it is not created or authorized by this review
@@ -66,6 +66,17 @@ feature activation, Storage object or Production change.
 | MU22 | Offline and stale data | Disable submission while offline, announce the state, refresh canonical eligibility before/after action and never infer success from a lost response; retry uses the same request ID |
 | MU23 | Rollout gate | Show the route/form only when authenticated, eligible and both checkout/manual-payment server flags permit it; server and database checks remain mandatory even if the UI is hidden |
 | MU24 | Delivery sequence | After Owner freeze, deliver 3D-A guarded read contract/migration, 3D-B server read model and route/form, then 3D-C responsive/accessibility/E2E QA; each step requires focused tests and Production remains separately gated |
+
+## Owner Decision Freeze
+
+On 2026-08-01, the Project Owner approved the recommended values for
+MU01-MU24 in full. This freezes the route, guarded-read prerequisite, exact
+snapshot, eligibility, reference-only form, payment-truth, privacy, retry,
+accessibility, responsive, bilingual, theme and delivery-sequence contracts.
+
+This approval freezes decisions only. It does not authorize a read RPC,
+forward-only migration, route, component, translation, feature activation,
+bank configuration, Storage, staff review, Production apply or public rollout.
 
 ## Proposed Screen Structure
 
@@ -139,8 +150,8 @@ created or authorized by this review.
 
 ## Remaining Blocked Gates
 
-- Owner freeze of MU01-MU24;
-- Part 3D-A guarded customer order payment snapshot contract and migration;
+- separate Part 3D-A guarded customer order payment snapshot contract review
+  and explicit forward-only migration authorization;
 - Part 3D-B server read model and Storefront route/form implementation;
 - Part 3D-C responsive, accessibility and workflow QA;
 - canonical bank instruction configuration;

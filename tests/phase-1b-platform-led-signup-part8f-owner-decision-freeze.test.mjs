@@ -82,6 +82,6 @@ test("implementation status advances to the approved Storefront Web app work", (
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: OWNER DECISION FREEZE FOR PHASE 1D MANUAL PAYMENT PART 3D MU01-MU24/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-A GUARDED CUSTOMER ORDER PAYMENT SNAPSHOT CONTRACT REVIEW/,
   );
 });
