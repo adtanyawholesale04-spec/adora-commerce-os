@@ -1,4 +1,4 @@
-import assert from "node:assert/strict";
+﻿import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 
@@ -39,11 +39,11 @@ test("contract covers brand, accessibility and responsive requirements", () => {
   assert.match(contract, /320, 390, 768, 1024 and 1440 px/);
 });
 
-test("Part 4G-A freeze remains intact after the separately approved queue", () => {
+test("Part 4G-A freeze remains intact after the separately approved detail", () => {
   assert.equal(existsSync("src/app/admin/payments/review/page.tsx"), true);
   assert.equal(
     existsSync("src/app/admin/payments/review/[paymentTransactionId]/page.tsx"),
-    false,
+    true,
   );
   assert.match(contract, /Runtime UI \/ Feature Activation \/ Migration \/ Production:[*]* NOT AUTHORIZED/);
   assert.match(contract, /Part 4G-B queue implementation[\s\S]*until separately authorized/);
@@ -52,14 +52,15 @@ test("Part 4G-A freeze remains intact after the separately approved queue", () =
 test("authoritative status advances only to separately approved queue implementation", () => {
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-B ADMIN REVIEW QUEUE UI IMPLEMENTED AND LOCAL VALIDATED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-C PRIVATE REVIEW DETAIL UI IMPLEMENTED AND LOCAL VALIDATED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-C PRIVATE REVIEW DETAIL UI IMPLEMENTATION REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-D GUARDED REVIEW ACTION UI IMPLEMENTATION REQUIRES OWNER APPROVAL/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 4G-C private detail UI,[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 4G-D action confirmation UI,[\s\S]*P16 remains mandatory for Production/,
   );
 });
+

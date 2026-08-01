@@ -1,4 +1,4 @@
-import assert from "node:assert/strict";
+﻿import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
@@ -88,7 +88,7 @@ test("Part 2 preserves P16 after the validated Part 3 handoff", () => {
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-C PRIVATE REVIEW DETAIL UI IMPLEMENTATION REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-D GUARDED REVIEW ACTION UI IMPLEMENTATION REQUIRES OWNER APPROVAL/,
   );
 });
 
@@ -105,3 +105,4 @@ test("Part 2 Owner freeze preserves exact contracts and closed runtime gates", (
   assert.match(freeze, /public Storefront runtime: NOT AUTHORIZED/);
   assert.match(freeze, /production activation: BLOCKED BY P16/);
 });
+

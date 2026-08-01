@@ -6,7 +6,6 @@ import {
   Clock3,
   CreditCard,
   ListChecks,
-  LockKeyhole,
   ShieldCheck,
 } from "lucide-react";
 import { AdminPreferenceSwitcher } from "@/app/admin/_components/admin-preference-switcher";
@@ -165,7 +164,10 @@ function QueueContent({
                     <EligibilityBadge canReview={item.canReview} copy={copy} />
                   </td>
                   <td className="px-5 py-4 text-right">
-                    <PendingDetailControl copy={copy} />
+                    <DetailLink
+                      paymentTransactionId={item.paymentTransactionId}
+                      copy={copy}
+                    />
                   </td>
                 </tr>
               ))}
@@ -195,7 +197,10 @@ function QueueContent({
               <QueueDatum label={copy.deadline} value={formatDate(item.paymentDueAt, locale)} />
             </dl>
             <div className="mt-4 flex justify-end">
-              <PendingDetailControl copy={copy} />
+              <DetailLink
+                paymentTransactionId={item.paymentTransactionId}
+                copy={copy}
+              />
             </div>
           </article>
         ))}
@@ -242,17 +247,22 @@ function EligibilityBadge({
   );
 }
 
-function PendingDetailControl({ copy }: { copy: Record<string, string> }) {
+function DetailLink({
+  paymentTransactionId,
+  copy,
+}: {
+  paymentTransactionId: string;
+  copy: Record<string, string>;
+}) {
   return (
-    <button
-      type="button"
-      disabled
-      title={copy.detailPendingTitle}
-      className="inline-flex min-h-11 items-center gap-2 rounded-md border border-line bg-panel-strong px-3 text-sm font-semibold text-muted disabled:cursor-not-allowed disabled:opacity-75"
+    <Link
+      href={`/admin/payments/review/${paymentTransactionId}`}
+      title={copy.detailTitle}
+      className="inline-flex min-h-11 items-center gap-2 rounded-md border border-brand bg-panel px-3 text-sm font-semibold text-brand hover:bg-panel-strong"
     >
-      <LockKeyhole aria-hidden className="h-4 w-4" />
-      {copy.detailPending}
-    </button>
+      <ChevronRight aria-hidden className="h-4 w-4" />
+      {copy.detail}
+    </Link>
   );
 }
 

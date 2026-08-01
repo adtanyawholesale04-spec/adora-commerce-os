@@ -47,14 +47,14 @@ test("Payments entry is permission and feature aware", () => {
   assert.match(paymentsPage, /href="\/admin\/payments\/review"/);
 });
 
-test("queue is responsive and private detail remains locked", () => {
+test("queue is responsive and opens the opaque private detail route", () => {
   assert.match(queuePage, /hidden[^"]*md:block/);
   assert.match(queuePage, /md:hidden/);
-  assert.match(queuePage, /<PendingDetailControl/);
-  assert.match(queuePage, /disabled/);
+  assert.match(queuePage, /function DetailLink/);
+  assert.match(queuePage, /href={`\/admin\/payments\/review\/\$\{paymentTransactionId\}`}/);
   assert.equal(
     existsSync("src/app/admin/payments/review/[paymentTransactionId]/page.tsx"),
-    false,
+    true,
   );
   assert.match(loadingPage, /aria-busy="true"/);
 });
@@ -81,19 +81,18 @@ test("queue copy is complete in Thai and English", () => {
   }
 });
 
-test("Part 4G-B advances only to private detail approval", () => {
+test("Part 4G-B advances only to private detail validation", () => {
   assert.match(contract, /\*\*Status:\*\* IMPLEMENTED LOCALLY \/ VALIDATED/);
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-B ADMIN REVIEW QUEUE UI IMPLEMENTED AND LOCAL VALIDATED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-C PRIVATE REVIEW DETAIL UI IMPLEMENTED AND LOCAL VALIDATED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-C PRIVATE REVIEW DETAIL UI IMPLEMENTATION REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-D GUARDED REVIEW ACTION UI IMPLEMENTATION REQUIRES OWNER APPROVAL/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 4G-C private detail UI,[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 4G-D action confirmation UI,[\s\S]*P16 remains mandatory for Production/,
   );
 });
-

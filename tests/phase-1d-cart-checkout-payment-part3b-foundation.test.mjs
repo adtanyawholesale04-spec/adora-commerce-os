@@ -1,4 +1,4 @@
-import assert from "node:assert/strict";
+﻿import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 
@@ -83,12 +83,13 @@ test("Part 3B status and validation evidence preserve the production gate", () =
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-C PRIVATE REVIEW DETAIL UI IMPLEMENTATION REQUIRES OWNER APPROVAL/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-D GUARDED REVIEW ACTION UI IMPLEMENTATION REQUIRES OWNER APPROVAL/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 4G-C private detail UI,[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 4G-D action confirmation UI,[\s\S]*P16 remains mandatory for Production/,
   );
   assert.match(report, /LOCAL VALIDATED \/ PRODUCTION NOT APPLIED/);
   assert.match(report, new RegExp(migrationName.replace(".", "\\.")));
 });
+
