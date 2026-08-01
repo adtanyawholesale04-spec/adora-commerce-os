@@ -1274,10 +1274,14 @@ PHASE 1D MANUAL PAYMENT PART 4G-A OWNER DECISION FREEZE COMPLETE: Owner approved
 PHASE 1D MANUAL PAYMENT PART 4G-B ADMIN REVIEW QUEUE UI IMPLEMENTED / LOCAL VALIDATED: dedicated force-dynamic Server Component uses only the guarded reference-free list service, bounded oldest-first keyset continuation, permission/feature-aware Payments entry, bilingual themes, responsive table/list and controlled loading/empty/failure states while private detail and all financial actions remain locked
 PHASE 1D MANUAL PAYMENT PART 4G-C PRIVATE REVIEW DETAIL UI IMPLEMENTED / LOCAL VALIDATED: dedicated force-dynamic Server Component reads only the guarded private detail service, renders the approved canonical/private fields with no-store privacy controls, bilingual states and no write controls while guarded review actions remain locked
 PHASE 1D MANUAL PAYMENT PART 4G-D GUARDED REVIEW ACTION UI IMPLEMENTED / LOCAL VALIDATED: private detail now exposes separate permission-aware verify/reject confirmation dialogs, bounded reason input, stable retry request identity, pending/controlled-result states and existing server-action boundaries without feature activation
-PHASE 1D MANUAL PAYMENT PART 4G-E LOCAL ACTIVATION AND AUTH/RLS VALIDATED / BROWSER QA BLOCKED: local-only feature flags were enabled, read/action/RLS suites, concurrency/idempotency, audit, settlement and database-lint gates passed after the authorized local reset; visual browser workflow remains blocked by unavailable browser connection and missing authenticated UI session
-CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-E LOCAL ACTIVATION AND AUTH/RLS VALIDATED; REAL BROWSER QA BLOCKED
-NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-E REAL BROWSER WORKFLOW QA REQUIRES BROWSER CONNECTION AND AUTHENTICATED UI SESSION
-BLOCKED: Part 4G-E real browser workflow QA, bank instruction configuration, private proof Storage, Production preflight/apply and public activation remain unauthorized; P16 remains mandatory for Production
+PHASE 1D MANUAL PAYMENT PART 4G-E LOCAL ACTIVATION AND AUTH/RLS VALIDATED / BROWSER VERIFY QA PASSED: local-only feature flags were enabled, read/action/RLS suites, concurrency/idempotency, audit, settlement and database-lint gates passed after the authorized local reset; authenticated Chrome QA opened the queue/detail view and completed Verify with post-action database evidence
+CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-E BROWSER VERIFY QA PASSED; REJECT UI AND FULL KEYBOARD/FOCUS PASS REMAIN
+NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-E COMPLETE REJECT UI AND KEYBOARD/FOCUS QA USING A FRESH LOCAL PENDING FIXTURE
+BLOCKED: Part 4G-E reject UI/full browser QA, bank instruction configuration, private proof Storage, Production preflight/apply and public activation remain incomplete or unauthorized; P16 remains mandatory for Production
+
+HISTORICAL GATE MARKER (pre-authenticated-browser QA): CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-E LOCAL ACTIVATION AND AUTH/RLS VALIDATED; REAL BROWSER QA BLOCKED
+HISTORICAL GATE MARKER (pre-authenticated-browser QA): NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 4G-E REAL BROWSER WORKFLOW QA REQUIRES BROWSER CONNECTION AND AUTHENTICATED UI SESSION
+HISTORICAL GATE MARKER (pre-authenticated-browser QA): BLOCKED: Part 4G-E real browser workflow QA, bank instruction configuration, private proof Storage, Production preflight/apply and public activation remain unauthorized; P16 remains mandatory for Production
 AFTER STOREFRONT: Checkout/Payment follows Storefront, and Finance/Tax remains blocked until Checkout/Payment sources are clear
 
 Implementation:

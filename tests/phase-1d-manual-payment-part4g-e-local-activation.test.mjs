@@ -6,7 +6,7 @@ const evidence = readFileSync("docs/api-contracts/ACOS_PHASE_1D_MANUAL_PAYMENT_P
 const status = readFileSync("docs/roadmap/ACOS_IMPLEMENTATION_STATUS.md", "utf8");
 
 test("Part 4G-E records local Auth/RLS validation without Production activation", () => {
-  assert.match(evidence, /\*\*Status:\*\* PARTIALLY VALIDATED \/ BROWSER QA BLOCKED/);
+  assert.match(evidence, /\*\*Status:\*\* PARTIALLY VALIDATED \/ BROWSER VERIFY QA PASSED \/ REJECT UI QA PENDING/);
   assert.match(evidence, /staff-review action suite passed/);
   assert.match(evidence, /concurrency race/);
   assert.match(evidence, /No Production project, migration, public activation/);
