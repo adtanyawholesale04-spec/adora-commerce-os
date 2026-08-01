@@ -1,11 +1,11 @@
 # Phase 1D Manual Payment Part 3D-A1 Guarded Payment Snapshot Contract Review
 
 **Task ID:** `PHASE-1D-MANUAL-PAYMENT-PART3D-A1-SNAPSHOT-CONTRACT`
-**Status:** OWNER APPROVED / MR01-MR24 FROZEN / IMPLEMENTATION BLOCKED
+**Status:** OWNER APPROVED / MR01-MR24 FROZEN / IMPLEMENTED / LOCAL VALIDATED
 **Prepared:** 2026-08-01
 **Depends On:** Owner-frozen MU01-MU24, CO-BR-001 through CO-BR-044 and locally validated Manual Payment Part 3A
-**Migration:** Not created or authorized
-**Runtime / UI / Production:** Not created or authorized
+**Migration:** `20260801054812_phase_1d_manual_payment_guarded_payment_snapshot.sql`
+**Runtime / UI / Production:** Not created, activated or applied
 
 ## Objective
 
@@ -150,3 +150,12 @@ The repository can support the future payment page with one narrow guarded
 read function and no new source of truth. MR01-MR24 keep customer ownership
 inside the database, preserve staff RLS, return only the MU04 facts and stop
 before every migration, runtime, UI and Production boundary.
+
+## Implementation Outcome
+
+On 2026-08-01, the Owner separately authorized Part 3D-A3. The forward-only
+function migration, focused SQL suite, snapshot-versus-submission concurrency
+gate, fresh local replay and database lint passed. No table, column, index,
+policy, source-table grant, event, audit, ledger, consent, idempotency, server
+runtime, UI or Production change was added. Production remains unapplied and
+blocked by P16.

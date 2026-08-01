@@ -11,7 +11,7 @@ const status = readFileSync(
   "utf8",
 );
 
-test("Part 3D-A2 freezes every Owner-approved snapshot decision without SQL", () => {
+test("Part 3D-A2 freezes every Owner-approved snapshot decision", () => {
   for (let index = 1; index <= 24; index += 1) {
     assert.match(
       contract,
@@ -23,7 +23,7 @@ test("Part 3D-A2 freezes every Owner-approved snapshot decision without SQL", ()
     contract,
     /Owner approved the recommended values for[\s\S]*MR01-MR24 in full/,
   );
-  assert.match(contract, /Migration:\*\* Not created or authorized/);
+  assert.match(contract, /Migration:\*\* `20260801054812_phase_1d_manual_payment_guarded_payment_snapshot\.sql`/);
   assert.match(contract, /creates no SQL function, migration, table, index, policy, grant/);
 });
 
@@ -67,7 +67,7 @@ test("Part 3D-A1 keeps the privileged read boundary fail closed", () => {
   assert.match(contract, /no row\/advisory locks/);
 });
 
-test("Part 3D-A2 status records Owner freeze and stops before migration", () => {
+test("Part 3D-A3 status records local implementation and preserves later gates", () => {
   assert.match(
     status,
     /PHASE 1D MANUAL PAYMENT PART 3D-A1 GUARDED PAYMENT SNAPSHOT CONTRACT REVIEW COMPLETE: MR01-MR24/,
@@ -78,14 +78,14 @@ test("Part 3D-A2 status records Owner freeze and stops before migration", () => 
   );
   assert.match(
     status,
-    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-A2 OWNER APPROVED \/ MR01-MR24 FROZEN \/ NO SNAPSHOT MIGRATION IMPLEMENTED/,
+    /CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-A3 GUARDED PAYMENT SNAPSHOT IMPLEMENTED \/ LOCAL VALIDATED \/ PRODUCTION NOT APPLIED/,
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-A3 GUARDED PAYMENT SNAPSHOT MIGRATION AUTHORIZATION/,
+    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-B SERVER READ SERVICE AND STOREFRONT ROUTE\/FORM IMPLEMENTATION/,
   );
   assert.match(
     status,
-    /BLOCKED: Part 3D-A3 snapshot migration and Part 3D-B\/3D-C UI delivery[\s\S]*P16 remains mandatory for Production/,
+    /BLOCKED: Part 3D-B\/3D-C UI delivery[\s\S]*P16 remains mandatory for Production/,
   );
 });

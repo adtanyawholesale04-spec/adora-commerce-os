@@ -42,6 +42,7 @@
     "validate:phase-1d-atomic-checkout-layer3": "node supabase/validation/phase-1d-atomic-checkout-layer3-suite.mjs",
     "validate:phase-1d-manual-payment-additive-schema": "node supabase/validation/phase-1d-manual-payment-additive-schema-suite.mjs",
     "validate:phase-1d-manual-payment-customer-submission": "node supabase/validation/phase-1d-manual-payment-customer-submission-suite.mjs",
+    "validate:phase-1d-manual-payment-payment-snapshot": "node supabase/validation/phase-1d-manual-payment-guarded-payment-snapshot-suite.mjs",
     "validate:supabase": "npm run validate:supabase-security && npm run validate:supabase-workflows && npm run validate:commerce-integration"
   },
   "dependencies": {

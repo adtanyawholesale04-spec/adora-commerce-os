@@ -1252,15 +1252,17 @@ PHASE 1D MANUAL PAYMENT PART 3D STOREFRONT SUBMISSION UI CONTRACT REVIEW COMPLET
 PHASE 1D MANUAL PAYMENT PART 3D OWNER DECISION FREEZE COMPLETE: Owner approved MU01-MU24 in full on 2026-08-01; guarded-read prerequisite, exact snapshot, reference-only form, payment truth, privacy, retry, accessibility, responsive, bilingual, theme and delivery-sequence contracts are frozen without authorizing migration or UI
 PHASE 1D MANUAL PAYMENT PART 3D-A1 GUARDED PAYMENT SNAPSHOT CONTRACT REVIEW COMPLETE: MR01-MR24 recommend one authenticated customer-owned exact-field RPC, canonical identity/payment checks, non-enumerating unavailable result, stable privileged read posture, exact grants, no read-side writes and a function-only forward migration without creating SQL or runtime
 PHASE 1D MANUAL PAYMENT PART 3D-A2 OWNER DECISION FREEZE COMPLETE: Owner approved MR01-MR24 in full on 2026-08-01; signature, ownership, exact response, non-enumeration, financial serialization, privacy, privileged-read, grants, no-write, failure, concurrency and delivery contracts are frozen without authorizing SQL
-CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-A2 OWNER APPROVED / MR01-MR24 FROZEN / NO SNAPSHOT MIGRATION IMPLEMENTED
-NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-A3 GUARDED PAYMENT SNAPSHOT MIGRATION AUTHORIZATION
-BLOCKED: Part 3D-A3 snapshot migration and Part 3D-B/3D-C UI delivery, bank instruction configuration, staff verification, private proof Storage, Production preflight/apply and public activation remain unauthorized; P16 remains mandatory for Production
+PHASE 1D MANUAL PAYMENT PART 3D-A3 GUARDED PAYMENT SNAPSHOT IMPLEMENTED / LOCAL VALIDATED: one authenticated STABLE SECURITY DEFINER RPC returns the exact customer-owned Storefront order/payment allowlist, derives pending reference-only evidence without identifier leakage, preserves non-enumeration and performs no read-side writes; fresh replay, functional, privacy, concurrency and database lint gates passed on 2026-08-01
+CURRENT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-A3 GUARDED PAYMENT SNAPSHOT IMPLEMENTED / LOCAL VALIDATED / PRODUCTION NOT APPLIED
+NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-B SERVER READ SERVICE AND STOREFRONT ROUTE/FORM IMPLEMENTATION
+BLOCKED: Part 3D-B/3D-C UI delivery, bank instruction configuration, staff verification, private proof Storage, Production preflight/apply and public activation remain unauthorized; P16 remains mandatory for Production
 AFTER STOREFRONT: Checkout/Payment follows Storefront, and Finance/Tax remains blocked until Checkout/Payment sources are clear
 
 Implementation:
 CONTROLLED START
 
 Latest validation:
+Phase 1D Manual Payment Part 3D-A3 fresh replay, exact function security/grants, customer ownership, non-enumeration, response privacy, canonical payment consistency, no-write, snapshot-versus-submission concurrency, database lint, Manual Payment/Atomic Checkout/Storefront/Supabase/Commerce regressions, 310 static tests, lint, typecheck and build gates passed on 2026-08-01; server/UI and Production were not activated or applied.
 Phase 1D Manual Payment Part 3D-A2 Owner freeze reconciliation confirmed MR01-MR24 completeness and preserved migration, SQL, runtime, UI, bank configuration, Storage, staff review, Production and public rollout gates on 2026-08-01.
 Phase 1D Manual Payment Part 3D-A1 MR01-MR24 guarded snapshot contract and status gates passed on 2026-08-01; no SQL, migration, table, index, policy, grant, runtime, UI, audit/event write or Production change was made.
 Phase 1D Manual Payment Part 3D Owner freeze reconciliation confirmed MU01-MU24 completeness and preserved read RPC, migration, UI, bank configuration, Storage, staff review, Production and public rollout gates on 2026-08-01.
