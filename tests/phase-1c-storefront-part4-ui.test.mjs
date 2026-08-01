@@ -102,6 +102,6 @@ test("Part 4 records local completion without opening production", () => {
   );
   assert.match(
     status,
-    /NEXT SUBSTEP: PHASE 1D MANUAL PAYMENT PART 3D-A GUARDED CUSTOMER ORDER PAYMENT SNAPSHOT CONTRACT REVIEW/,
+    /NEXT SUBSTEP: OWNER DECISION FREEZE FOR PHASE 1D MANUAL PAYMENT PART 3D-A1 MR01-MR24/,
   );
 });
