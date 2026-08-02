@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "seed:local-admin-qa": "node scripts/local/seed-admin-qa.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",

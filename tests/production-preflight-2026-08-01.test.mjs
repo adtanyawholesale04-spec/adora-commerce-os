@@ -39,7 +39,7 @@ test("Production preflight preserves recovery and deployment blockers", () => {
 });
 
 test("Implementation status advances to Owner blocker disposition", () => {
-  assert.match(status, /CURRENT SUBSTEP: OWNER FULFILLMENT LINT WARNING DISPOSITION OWNER APPROVED; LOCAL FORWARD FIX VALIDATED/);
-  assert.match(status, /NEXT SUBSTEP: P16 RECOVERY EXECUTION AND PRODUCTION CHANGE-WINDOW PREPARATION/);
+  assert.match(status, /CURRENT SUBSTEP: LOCAL RELEASE CANDIDATE AND UI\/UX POLISH/);
+  assert.match(status, /NEXT SUBSTEP: P16 RECOVERY EXECUTION AND PRODUCTION CHANGE-WINDOW PREPARATION AFTER LOCAL RELEASE CANDIDATE/);
   assert.match(status, /BLOCKED: P16 approved recovery plan execution,[\s\S]*Production apply remains unauthorized/);
 });

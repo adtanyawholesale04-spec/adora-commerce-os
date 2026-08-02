@@ -1,5 +1,5 @@
 -- Local-only QA fixture. Never apply this file to Production.
--- Requires the local Auth user ceoacos@example.com to exist.
+-- Run scripts/local/seed-admin-qa.mjs first so Auth owns the local QA user.
 
 begin;
 
@@ -23,7 +23,7 @@ begin
   where email = 'ceoacos@example.com';
 
   if v_auth_user_id is null then
-    raise exception 'Local Auth user ceoacos@example.com does not exist';
+    raise exception 'Run scripts/local/seed-admin-qa.mjs first to create the Local Auth user';
   end if;
 
   insert into public.organizations (id, name, slug, status, timezone, currency_code)

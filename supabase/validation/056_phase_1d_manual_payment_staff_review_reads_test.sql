@@ -161,7 +161,7 @@ insert into public.payment_transactions (
   amount, currency_code, external_reference, status, created_by
 ) values
   ('f8000000-0000-4000-8000-000000000001', 'f1000000-0000-4000-8000-000000000001', 'f7000000-0000-4000-8000-000000000001', 'PAYMENT', 'BANK_TRANSFER', 100, 'THB', 'secret-self-001', 'PENDING', 'f2000000-0000-4000-8000-000000000002'),
-  ('f8000000-0000-4000-8000-000000000002', 'f1000000-0000-4000-8000-000000000001', 'f7000000-0000-4000-8000-000000000002', 'PAYMENT', 'BANK_TRANSFER', 200, 'THB', ' secret-review-002 ', 'PENDING', 'f2000000-0000-4000-8000-000000000003'),
+  ('f8000000-0000-4000-8000-000000000002', 'f1000000-0000-4000-8000-000000000001', 'f7000000-0000-4000-8000-000000000002', 'PAYMENT', 'BANK_TRANSFER', 200, 'THB', ' secret-review-002 ', 'PENDING', null),
   ('f8000000-0000-4000-8000-000000000003', 'f1000000-0000-4000-8000-000000000001', 'f7000000-0000-4000-8000-000000000003', 'PAYMENT', 'BANK_TRANSFER', 300, 'THB', 'secret-expired-003', 'PENDING', 'f2000000-0000-4000-8000-000000000003'),
   ('f8000000-0000-4000-8000-000000000004', 'f1000000-0000-4000-8000-000000000002', 'f7000000-0000-4000-8000-000000000004', 'PAYMENT', 'BANK_TRANSFER', 400, 'THB', 'secret-tenant-b-004', 'PENDING', 'f2000000-0000-4000-8000-000000000003');
 
@@ -272,6 +272,7 @@ begin
 
   if v_detail ->> 'available' <> 'true'
      or v_detail ->> 'payment_reference' <> 'SECRET-REVIEW-002'
+     or v_detail ->> 'self_review' <> 'false'
      or v_detail ->> 'review_eligible' <> 'true'
      or v_detail ? 'metadata_json'
      or v_detail ? 'storage_path'

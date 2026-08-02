@@ -3,7 +3,7 @@
 **Task:** Local Full Workflow QA
 **Scope:** Storefront -> Checkout -> Manual Payment Submission -> Admin Review
 **Environment:** Local Supabase Docker stack and `http://127.0.0.1:3000`
-**Status:** VALIDATED LOCALLY / PRODUCTION NOT APPLIED
+**Status:** VALIDATED LOCALLY / FOLLOW-UP FIX VALIDATED / PRODUCTION NOT APPLIED
 
 ## Boundary
 
@@ -25,6 +25,7 @@ Customer submission, retry race and expiry race: PASS
 Guarded payment snapshot and concurrency: PASS
 Staff review reads, permission and private-field scope: PASS
 Staff review approve/reject, settlement, audit, idempotency and race: PASS
+Staff review detail null-maker regression (`self_review: false`): PASS
 Supabase security suite: PASS
 Supabase workflow suite: PASS
 Carrier webhook E2E and duplicate handling: PASS
@@ -33,7 +34,7 @@ HTTP route smoke (`/`, `/signup`, `/admin`, `/admin/payments`,
   `/admin/payments/review`, `/store/acos-local-qa`): PASS / HTTP 200
 ```
 
-The local QA identity was present after the approved local reset:
+The local QA identity was recreated after the approved local reset:
 
 ```text
 email: ceoacos@example.com
@@ -58,13 +59,19 @@ payment permissions: payment.view, payment.verify
 
 ## Browser Note
 
-The local HTTP route smoke passed. A fresh authenticated browser session was
-not replayed automatically in this run because the Magic Link callback returns
-session data in a browser fragment and the available automation environment
-cannot retain that browser cookie. No token or cookie was printed. The prior
-authenticated Chrome QA evidence remains recorded in the Part 4G-E report;
-the local QA account can be signed in again through Mailpit for manual visual
-replay if needed.
+The final authenticated browser replay passed after the forward-only fix. The
+reproducible local fixture is restored with `npm run seed:local-admin-qa`,
+which creates the Auth user through the local Auth Admin API before applying
+the tenant-scoped SQL fixture.
+
+The browser replay itself:
+`/admin` -> `Payments` -> `Review` -> `Details` opened the seeded pending
+transaction and rendered the private reference, amount, statuses and guarded
+controls without the unavailable-queue state. The connected browser could not
+complete the Turnstile-backed UI Magic Link form, so the local Auth callback
+was completed with a one-time local QA token generated in memory; no token or
+cookie was printed. Approve/reject was intentionally not clicked so the
+pending fixture remains reusable for the next QA pass.
 
 ## Production Disposition
 
@@ -78,6 +85,6 @@ P16 recovery gate: BLOCKED / DEFERRED
 
 ## Next Local Gate
 
-Proceed with local UI/UX polish and manual browser replay using the restored
-Local QA account. Production P16 recovery and migration change-window work
-remain separately gated and require paid-provider approval.
+Proceed with local UI/UX polish and local release-candidate QA. Production
+P16 recovery and migration change-window work remain separately gated and
+require paid-provider approval.
