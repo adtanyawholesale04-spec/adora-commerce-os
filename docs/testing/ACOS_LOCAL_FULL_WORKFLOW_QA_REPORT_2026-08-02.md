@@ -5,6 +5,31 @@
 **Environment:** Local Supabase Docker stack and `http://127.0.0.1:3000`
 **Status:** VALIDATED LOCALLY / FOLLOW-UP FIX VALIDATED / LOCAL RC UI-UX PASS VALIDATED / PRODUCTION NOT APPLIED
 
+## Clean Replay Re-run 2026-08-02
+
+The local Supabase stack was reset and replayed from the repository migration
+set before the workflow suites. All 99 local migrations applied successfully,
+and the checkout foundation preflight passed before the browser-only QA
+fixture was seeded. The fixture intentionally grants `storefront.checkout`
+only to the local QA organization so the browser workflow can be exercised;
+it is not part of the migration or Production state.
+
+```text
+Static regression: 397/397 PASS
+Storefront boundary: PASS
+Checkout foundation + lint: PASS
+Promotion evaluator + lint: PASS
+Guarded cart + concurrency: PASS
+Atomic checkout + coupon race: PASS
+Manual payment schema + concurrency: PASS
+Customer submission + retry/expiry races: PASS
+Guarded payment snapshot + concurrency: PASS
+Staff review reads + lint: PASS
+Staff review actions + race + lint: PASS
+Integrated security/workflows/Commerce suites: PASS
+Production changes: NONE
+```
+
 ## Boundary
 
 This run covered the local-only customer and staff workflow using the existing
@@ -96,6 +121,13 @@ same route confirmed the persisted theme state and the server returned HTTP
 200. This is recorded as a browser-tool limitation, not a product data or
 authorization failure.
 
+The clean replay browser pass confirmed the same route sequence after fixture
+recreation: `/admin` -> `Payments` -> `Review` -> `Details`. The private
+reference `LOCAL-QA-REFERENCE-001`, amount, payment/order statuses and guarded
+controls rendered correctly. The rejection dialog opened with focus in the
+bounded reason field and was cancelled without mutating the pending fixture;
+browser console errors were empty for the final authenticated pass.
+
 ## Production Disposition
 
 ```text
@@ -108,6 +140,8 @@ P16 recovery gate: BLOCKED / DEFERRED
 
 ## Next Local Gate
 
-Proceed with local UI/UX polish and local release-candidate QA. Production
-P16 recovery and migration change-window work remain separately gated and
-require paid-provider approval.
+Local Full Workflow QA and the Local Release Candidate UI/UX pass are
+validated. The next roadmap gate is P16 recovery and Production change-window
+preparation, which remains separately blocked and requires paid-provider
+approval. No Production migration, provider activation or public traffic is
+authorized by this report.
