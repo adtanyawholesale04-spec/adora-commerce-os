@@ -2,8 +2,9 @@
 
 **Phase:** `1E Finance & Tax Control MVP`
 **Task:** `FIN-TAX-001-PART7`
-**Status:** CONTRACT PREPARED / OWNER FREEZE REQUIRED / SQL NOT AUTHORIZED
+**Status:** OWNER APPROVED / FM01-FM30 FROZEN / SQL NOT AUTHORIZED
 **Date:** 2026-08-03
+**Owner Approval Date:** 2026-08-03
 **Depends on:** Owner-frozen FS01-FS30
 **Migration files:** Not created
 **Local apply:** Not authorized
@@ -74,40 +75,40 @@ has_org_permission, current_profile_id
 No receipt, tax-invoice, bill, ledger, customer, order, payment, refund,
 idempotency, ownership, or audit master is duplicated.
 
-## Proposed migration decisions
+## Frozen migration decisions
 
 | ID | Recommended contract | State |
 |---|---|---|
-| FM01 | Use three separately generated forward-only migration layers | Owner freeze required |
-| FM02 | Generate every filename with Supabase CLI after rechecking the migration tail | Owner freeze required |
-| FM03 | Layer A owns schema foundation, protections, RLS/grants, permission seeds, idempotency allowlists, and sequence-helper hardening | Owner freeze required |
-| FM04 | Layer B owns only create/void/reverse guarded actions | Owner freeze required |
-| FM05 | Layer C owns only staff and Customer Portal list/detail reads | Owner freeze required |
-| FM06 | Each layer has a separate explicit generation/local-apply instruction | Owner freeze required |
-| FM07 | Create only `finance_documents` and `finance_document_lines` | Owner freeze required |
-| FM08 | Use the exact Part 6 columns, types, same-tenant FKs, and no-cascade history posture | Owner freeze required |
-| FM09 | Name every constraint, index, trigger, and function explicitly | Owner freeze required |
-| FM10 | Enforce one root Receipt per payment and one replacement per predecessor with partial unique indexes | Owner freeze required |
-| FM11 | Enforce exact number/year/sequence/lifecycle consistency with database checks | Owner freeze required |
-| FM12 | Protect header snapshot identity and reject every line update/delete with dedicated triggers | Owner freeze required |
-| FM13 | Extend existing idempotency allowlists; do not create a new request-key table | Owner freeze required |
-| FM14 | Seed four finance permission metadata rows but no role permission or entitlement | Owner freeze required |
-| FM15 | Harden `next_document_number` to an empty search path without changing output behavior | Owner freeze required |
-| FM16 | Keep the numbering helper non-executable by browser and service roles | Owner freeze required |
-| FM17 | Enable RLS and revoke all direct table access from `PUBLIC`, `anon`, `authenticated`, and `service_role` | Owner freeze required |
-| FM18 | Expose exact authenticated RPC execution only; no broad default execute | Owner freeze required |
-| FM19 | Every privileged function authenticates and authorizes internally with `search_path = ''` | Owner freeze required |
-| FM20 | Use deterministic lock order and one transaction per mutation | Owner freeze required |
-| FM21 | Create derives every snapshot field server-side and allocates the number last after eligibility locks | Owner freeze required |
-| FM22 | Void and reverse change lifecycle fields only; money sources remain read-only | Owner freeze required |
-| FM23 | Staff reads require exact finance permission and remain tenant-scoped/non-enumerating | Owner freeze required |
-| FM24 | Portal reads derive active customer ownership and never accept `customer_id` authority | Owner freeze required |
-| FM25 | Detail reads write one sanitized view audit; list reads do not audit each returned row | Owner freeze required |
-| FM26 | Preflight is privacy-bounded, count-only, fail-fast, and never repairs data | Owner freeze required |
-| FM27 | No backfill or automatic Receipt issuance occurs in any layer | Owner freeze required |
-| FM28 | Operational rollback is forward-only disable/revoke while retaining financial history | Owner freeze required |
-| FM29 | Each layer requires fresh replay, lint/advisors, focused suites, and full regressions | Owner freeze required |
-| FM30 | Production remains separately blocked by recovery/change-window approval and explicit Owner apply approval | Owner freeze required |
+| FM01 | Use three separately generated forward-only migration layers | Owner approved / frozen |
+| FM02 | Generate every filename with Supabase CLI after rechecking the migration tail | Owner approved / frozen |
+| FM03 | Layer A owns schema foundation, protections, RLS/grants, permission seeds, idempotency allowlists, and sequence-helper hardening | Owner approved / frozen |
+| FM04 | Layer B owns only create/void/reverse guarded actions | Owner approved / frozen |
+| FM05 | Layer C owns only staff and Customer Portal list/detail reads | Owner approved / frozen |
+| FM06 | Each layer has a separate explicit generation/local-apply instruction | Owner approved / frozen |
+| FM07 | Create only `finance_documents` and `finance_document_lines` | Owner approved / frozen |
+| FM08 | Use the exact Part 6 columns, types, same-tenant FKs, and no-cascade history posture | Owner approved / frozen |
+| FM09 | Name every constraint, index, trigger, and function explicitly | Owner approved / frozen |
+| FM10 | Enforce one root Receipt per payment and one replacement per predecessor with partial unique indexes | Owner approved / frozen |
+| FM11 | Enforce exact number/year/sequence/lifecycle consistency with database checks | Owner approved / frozen |
+| FM12 | Protect header snapshot identity and reject every line update/delete with dedicated triggers | Owner approved / frozen |
+| FM13 | Extend existing idempotency allowlists; do not create a new request-key table | Owner approved / frozen |
+| FM14 | Seed four finance permission metadata rows but no role permission or entitlement | Owner approved / frozen |
+| FM15 | Harden `next_document_number` to an empty search path without changing output behavior | Owner approved / frozen |
+| FM16 | Keep the numbering helper non-executable by browser and service roles | Owner approved / frozen |
+| FM17 | Enable RLS and revoke all direct table access from `PUBLIC`, `anon`, `authenticated`, and `service_role` | Owner approved / frozen |
+| FM18 | Expose exact authenticated RPC execution only; no broad default execute | Owner approved / frozen |
+| FM19 | Every privileged function authenticates and authorizes internally with `search_path = ''` | Owner approved / frozen |
+| FM20 | Use deterministic lock order and one transaction per mutation | Owner approved / frozen |
+| FM21 | Create derives every snapshot field server-side and allocates the number last after eligibility locks | Owner approved / frozen |
+| FM22 | Void and reverse change lifecycle fields only; money sources remain read-only | Owner approved / frozen |
+| FM23 | Staff reads require exact finance permission and remain tenant-scoped/non-enumerating | Owner approved / frozen |
+| FM24 | Portal reads derive active customer ownership and never accept `customer_id` authority | Owner approved / frozen |
+| FM25 | Detail reads write one sanitized view audit; list reads do not audit each returned row | Owner approved / frozen |
+| FM26 | Preflight is privacy-bounded, count-only, fail-fast, and never repairs data | Owner approved / frozen |
+| FM27 | No backfill or automatic Receipt issuance occurs in any layer | Owner approved / frozen |
+| FM28 | Operational rollback is forward-only disable/revoke while retaining financial history | Owner approved / frozen |
+| FM29 | Each layer requires fresh replay, lint/advisors, focused suites, and full regressions | Owner approved / frozen |
+| FM30 | Production remains separately blocked by recovery/change-window approval and explicit Owner apply approval | Owner approved / frozen |
 
 ## Planned migration layers
 
@@ -553,7 +554,11 @@ bypass, migration edit, data rewrite, or security reduction is allowed.
 
 ## Part 7 disposition
 
-The Part 7 migration contract is prepared, but implementation remains
-**BLOCKED** until the Owner freezes FM01-FM30. The next permitted step is
-**Part 7 Owner Decision Freeze**. That freeze may authorize later migration
-planning; it does not by itself create/apply SQL or activate runtime.
+The Project Owner approved FM01-FM30 in full on 2026-08-03. These decisions are
+frozen for the Receipt MVP. Any change requires a new explicit Owner decision
+record.
+
+Part 7 decision freeze is complete. The next permitted step is **Layer A
+Receipt foundation migration generation** under a separate explicit approval.
+This freeze does not itself create or apply SQL, seed role mappings, enable
+runtime/UI, change Production, or authorize public activation.
