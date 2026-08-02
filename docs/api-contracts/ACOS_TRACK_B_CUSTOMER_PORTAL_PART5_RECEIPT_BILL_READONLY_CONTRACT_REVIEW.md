@@ -34,7 +34,7 @@ but must not label a payment or payment proof as a Receipt.
 
 ## Required dependency before implementation
 
-1. Owner decision for Receipt permission-to-role mapping.
+1. Owner approval of the prepared Receipt role-mapping decisions RM01-RM24.
 2. Separately approved server-only read-service integration that calls only
    the validated Layer C RPCs.
 3. Portal UI implementation using the frozen response allowlist, unavailable
@@ -63,7 +63,7 @@ but must not label a payment or payment proof as a Receipt.
 
 ## Next safe step
 
-Request the Owner decision for Receipt permission-to-role mapping, then review
-the server read-service and Admin/Portal UI integration as separately gated
-work. Do not apply Layers A-C to Production or activate the Portal Receipt UI
-without the remaining Production approvals.
+Obtain Owner approval for RM01-RM24, validate the separately approved role
+mapping boundary, then review the server read-service and Admin/Portal UI
+integration as separately gated work. Do not apply Layers A-C to Production
+or activate the Portal Receipt UI without the remaining Production approvals.

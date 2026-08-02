@@ -48,6 +48,6 @@ test("Receipt Layer A evidence keeps runtime and Production gated", () => {
   assert.match(report, /creates no Receipt row/);
   assert.match(report, /Layer B guarded Receipt create\/void\/reverse actions/);
   assert.match(status, /Migration 069 Phase 1E Receipt Foundation Validation/);
-  assert.match(status, /NEXT SUBSTEP: OWNER DECISION FOR RECEIPT PERMISSION ROLE MAPPING AND READ SERVICE\/UI INTEGRATION/);
+  assert.match(status, /NEXT SUBSTEP: OWNER APPROVAL OR AMENDMENT FOR RECEIPT ROLE MAPPING RM01-RM24/);
   assert.match(status, /Production apply remains unauthorized/);
 });

@@ -36,6 +36,6 @@ test("P16 keeps Auth, Storage and paid actions separately guarded", () => {
 test("P16 decision advances preflight without claiming execution", () => {
   assert.match(preflight, /The policy decision is complete\. P16 execution remains blocked/);
   assert.match(preflight, /P16 RECOVERY EXECUTION AND PRODUCTION CHANGE-WINDOW PREPARATION/);
-  assert.match(status, /PHASE 1E RECEIPT READ BOUNDARIES LAYER C IMPLEMENTED \/ LOCAL VALIDATED/);
+  assert.match(status, /PHASE 1E RECEIPT ROLE MAPPING OWNER DECISION REQUIRED \/ RM01-RM24 PREPARED/);
   assert.match(status, /BLOCKED: P16 approved recovery plan execution,[\s\S]*Production apply remains unauthorized/);
 });

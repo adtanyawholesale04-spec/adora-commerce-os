@@ -62,5 +62,5 @@ test("Receipt Layer B keeps idempotency, lifecycle races, tenant security and so
   assert.match(report, /LOCAL VALIDATED \/ PRODUCTION NOT APPLIED/);
   assert.match(report, /zero remote-only drift/);
   assert.match(status, /Migration 070 Phase 1E Receipt Guarded Actions Validation/);
-  assert.match(status, /NEXT SUBSTEP: OWNER DECISION FOR RECEIPT PERMISSION ROLE MAPPING AND READ SERVICE\/UI INTEGRATION/);
+  assert.match(status, /NEXT SUBSTEP: OWNER APPROVAL OR AMENDMENT FOR RECEIPT ROLE MAPPING RM01-RM24/);
 });

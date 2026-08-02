@@ -589,8 +589,9 @@ frozen for the Receipt MVP. Any change requires a new explicit Owner decision
 record.
 
 Part 7 decision freeze and the separately approved Layer A, Layer B, and Layer
-C local implementations are complete. The next permitted step requires a
-separate Owner decision for **Receipt permission-to-role mapping**, followed
-by separately approved server read-service and permission-aware Admin/Portal
-UI integration. Role mapping, runtime/UI, Production apply, and public
-activation remain closed.
+C local implementations are complete. The Receipt permission-to-role mapping
+review now recommends RM01-RM24 for explicit Owner approval. No mapping is
+frozen or implemented yet. After approval, a separately gated forward-only
+mapping migration contract and validation must complete before server
+read-service and permission-aware Admin/Portal UI integration. Role mapping,
+runtime/UI, Production apply, and public activation remain closed.

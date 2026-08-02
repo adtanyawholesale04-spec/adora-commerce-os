@@ -39,7 +39,7 @@ test("Production preflight preserves recovery and deployment blockers", () => {
 });
 
 test("Implementation status advances to Owner blocker disposition", () => {
-  assert.match(status, /CURRENT SUBSTEP: PHASE 1E RECEIPT READ BOUNDARIES LAYER C IMPLEMENTED \/ LOCAL VALIDATED/);
-  assert.match(status, /NEXT SUBSTEP: OWNER DECISION FOR RECEIPT PERMISSION ROLE MAPPING AND READ SERVICE\/UI INTEGRATION/);
+  assert.match(status, /CURRENT SUBSTEP: PHASE 1E RECEIPT ROLE MAPPING OWNER DECISION REQUIRED \/ RM01-RM24 PREPARED/);
+  assert.match(status, /NEXT SUBSTEP: OWNER APPROVAL OR AMENDMENT FOR RECEIPT ROLE MAPPING RM01-RM24/);
   assert.match(status, /BLOCKED: P16 approved recovery plan execution,[\s\S]*Production apply remains unauthorized/);
 });

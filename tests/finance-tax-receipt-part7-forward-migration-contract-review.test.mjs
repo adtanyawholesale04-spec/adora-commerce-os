@@ -41,7 +41,7 @@ test("Part 7 freezes fail-closed security, preflight, rollback, and validation r
   assert.match(contract, /rollback is a new\s+forward migration/s);
   assert.match(contract, /approved FM01-FM30 in full/);
   assert.match(contract, /Part 7 decision freeze and the separately approved Layer A, Layer B, and Layer[\s\S]*C local implementations are complete/);
-  assert.match(contract, /separate Owner decision for \*\*Receipt permission-to-role mapping\*\*/);
+  assert.match(contract, /permission-to-role mapping[\s\S]*recommends RM01-RM24 for explicit Owner approval/);
   assert.match(status, /FINANCE & TAX PART 7 OWNER DECISION FREEZE COMPLETE/);
   assert.match(status, /FM01-FM30 are Owner approved\/frozen/);
   assert.match(status, /Part 7 Forward-only Migration Contract.*OWNER APPROVED \/ FM01-FM30 FROZEN \/ LAYERS A-C LOCAL VALIDATED/);

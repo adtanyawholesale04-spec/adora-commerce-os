@@ -71,8 +71,8 @@ migration push or Production SQL was executed.
 
 ## Deferred Gates
 
-- Explicit Owner decision for permission-to-role mapping of
-  `finance.document.view` and the other Receipt permissions.
+- Explicit Owner approval of the prepared permission-to-role mapping decisions
+  RM01-RM24, followed by a separately approved mapping migration contract.
 - Server read-service integration and permission-aware Admin/Portal UI.
 - PDF/download, provider delivery, notification, and public activation.
 - Production migration apply; P16 recovery execution, Vercel Production

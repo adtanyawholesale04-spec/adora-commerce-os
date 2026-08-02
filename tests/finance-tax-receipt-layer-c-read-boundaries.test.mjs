@@ -49,6 +49,6 @@ test("Receipt Layer C enforces permission, active ownership, privacy and sanitiz
   assert.match(report, /LOCAL VALIDATED \/ PRODUCTION NOT APPLIED/);
   assert.match(report, /zero remote-only drift/);
   assert.match(status, /Migration 071 Phase 1E Receipt Read Boundaries Validation/);
-  assert.match(status, /CURRENT SUBSTEP: PHASE 1E RECEIPT READ BOUNDARIES LAYER C IMPLEMENTED \/ LOCAL VALIDATED/);
-  assert.match(status, /NEXT SUBSTEP: OWNER DECISION FOR RECEIPT PERMISSION ROLE MAPPING AND READ SERVICE\/UI INTEGRATION/);
+  assert.match(status, /CURRENT SUBSTEP: PHASE 1E RECEIPT ROLE MAPPING OWNER DECISION REQUIRED \/ RM01-RM24 PREPARED/);
+  assert.match(status, /NEXT SUBSTEP: OWNER APPROVAL OR AMENDMENT FOR RECEIPT ROLE MAPPING RM01-RM24/);
 });
