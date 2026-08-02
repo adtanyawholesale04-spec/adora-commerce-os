@@ -3,11 +3,13 @@ import {
   CircleAlert,
   Coins,
   Gift,
+  Home,
   MapPin,
   Bell,
   LogIn,
   LogOut,
   Package,
+  ReceiptText,
   ShieldCheck,
   Sparkles,
   UserRound
@@ -88,7 +90,9 @@ const copy = {
     signInCta: "เข้าสู่ระบบลูกค้า",
     signOut: "ออกจากระบบ",
     signedIn: "เข้าสู่ระบบแล้ว",
-    callbackError: "ลิงก์เข้าสู่ระบบไม่ถูกต้องหรือหมดอายุ กรุณาขอลิงก์ใหม่"
+    callbackError: "ลิงก์เข้าสู่ระบบไม่ถูกต้องหรือหมดอายุ กรุณาขอลิงก์ใหม่",
+    overview: "ภาพรวม",
+    accountShort: "บัญชี"
   },
   en: {
     eyebrow: "ADORA CUSTOMER",
@@ -151,7 +155,9 @@ const copy = {
     signInCta: "Customer sign in",
     signOut: "Sign out",
     signedIn: "Signed in",
-    callbackError: "The sign-in link is invalid or expired. Please request a new one."
+    callbackError: "The sign-in link is invalid or expired. Please request a new one.",
+    overview: "Overview",
+    accountShort: "Account"
   }
 } as const;
 
@@ -169,9 +175,9 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
   const snapshot = model.snapshot;
 
   return (
-    <main className="min-h-screen bg-surface text-ink">
-      <div className="mx-auto max-w-7xl px-5 py-6 lg:px-8 lg:py-10">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-line pb-5">
+    <main className="min-h-screen bg-surface pb-24 text-ink md:pb-0">
+      <div className="mx-auto max-w-7xl px-4 py-4 sm:px-5 lg:px-8 lg:py-8">
+        <div className="sticky top-0 z-30 -mx-4 mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-line bg-surface/95 px-4 py-3 backdrop-blur sm:-mx-5 sm:px-5 lg:-mx-8 lg:px-8">
           <Link className="text-sm font-semibold tracking-[0.08em] text-brand" href="/">
             <span className="font-extrabold text-accent">ADORA</span>{" "}
             <span className="font-normal text-ink">ACOS</span>
@@ -202,7 +208,7 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
             <AdminPreferenceSwitcher preferences={preferences} returnPath="/portal" />
           </div>
         </div>
-        <header className="flex flex-col gap-6 border-b border-line pb-8 sm:flex-row sm:items-end sm:justify-between">
+        <header className="flex flex-col gap-5 border-b border-line pb-7 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-brand">
               <Sparkles aria-hidden className="h-4 w-4" />
@@ -222,7 +228,7 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
 
         <nav
           aria-label={preferences.locale === "th" ? "เมนูพอร์ทัลลูกค้า" : "Customer portal navigation"}
-          className="-mx-1 flex gap-1 overflow-x-auto py-4"
+          className="-mx-1 hidden gap-1 overflow-x-auto py-4 md:flex"
         >
           <a className="shrink-0 rounded-md px-3 py-2 text-sm font-semibold text-brand hover:bg-brand/10" href="#portal-home">
             {text.home}
@@ -247,8 +253,8 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
             />
           </section>
         ) : (
-          <div id="portal-home" className="grid gap-6 py-8">
-            <section id="portal-account" className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+          <div id="portal-home" className="grid scroll-mt-24 gap-5 py-6 lg:gap-6 lg:py-8">
+            <section id="portal-account" className="grid scroll-mt-24 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
               <div className="rounded-lg border border-line bg-panel p-6 shadow-[var(--shadow-panel)]">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-start gap-4">
@@ -277,14 +283,14 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
               </div>
             </section>
 
-            <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <section aria-label={text.overview} className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
               <Stat icon={<Package aria-hidden />} label={text.orders} value={(snapshot.orders ?? []).length.toString()} />
               <Stat icon={<Coins aria-hidden />} label={text.loyalty} value={formatPoints(snapshot.loyalty?.reduce((sum, account) => sum + Number(account.points_balance), 0) ?? 0)} />
               <Stat icon={<Gift aria-hidden />} label={text.coupons} value={(snapshot.coupons ?? []).length.toString()} />
               <Stat icon={<MapPin aria-hidden />} label={text.addresses} value={(snapshot.addresses ?? []).length.toString()} />
             </section>
 
-            <div id="portal-notifications">
+            <div id="portal-notifications" className="scroll-mt-24">
               <NotificationInbox
                 notifications={model.notifications}
                 hasError={model.notificationsError}
@@ -294,9 +300,9 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
             </div>
 
             <section className="grid gap-6 xl:grid-cols-[minmax(0,1.4fr)_minmax(280px,0.6fr)]">
-              <div id="portal-orders">
+              <div id="portal-orders" className="scroll-mt-24">
                 <Panel title={text.orders} icon={<Package aria-hidden className="h-4 w-4 text-brand" />}>
-                {(snapshot.orders ?? []).length === 0 ? <Empty text={text.emptyOrders} /> : <OrderList orders={snapshot.orders ?? []} text={text} />}
+                {(snapshot.orders ?? []).length === 0 ? <Empty text={text.emptyOrders} /> : <OrderList orders={snapshot.orders ?? []} text={text} locale={preferences.locale} />}
                 </Panel>
               </div>
               <div className="grid content-start gap-6">
@@ -330,6 +336,7 @@ export default async function PortalPage({ searchParams }: PortalPageProps) {
           </div>
         )}
       </div>
+      {model.state === "ready" ? <MobilePortalNavigation text={text} /> : null}
     </main>
   );
 }
@@ -421,12 +428,46 @@ function Panel({ title, icon, children }: { title: string; icon: React.ReactNode
   return <section className="rounded-lg border border-line bg-panel p-5 shadow-[var(--shadow-panel)]"><div className="flex items-center gap-2 border-b border-line pb-4"><span>{icon}</span><h2 className="text-base font-semibold">{title}</h2></div><div className="pt-1">{children}</div></section>;
 }
 
-function OrderList({ orders, text }: { orders: PortalOrder[]; text: (typeof copy)["th"] | (typeof copy)["en"] }) {
-  return <div className="divide-y divide-line">{orders.map((order) => <div key={order.id} className="grid gap-4 py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"><div><div className="flex flex-wrap items-center gap-2"><span className="font-mono text-sm font-semibold">{order.order_number}</span><span className="rounded-full bg-panel-strong px-2 py-1 text-[11px] font-semibold text-muted">{order.order_status}</span></div><p className="mt-2 text-xs text-muted">{new Date(order.created_at).toLocaleDateString()} · {order.payment_status}</p><p className="mt-2 text-xs text-muted">{order.items.map((item) => `${item.product_name} × ${item.quantity}`).join(", ")}</p></div><div className="text-left sm:text-right"><p className="text-lg font-semibold">{formatMoney(Number(order.grand_total), order.currency_code)}</p><p className="text-xs text-muted">{Number(order.amount_due) > 0 ? text.due : text.paid}</p></div></div>)}</div>;
+function OrderList({ orders, text, locale }: { orders: PortalOrder[]; text: (typeof copy)["th"] | (typeof copy)["en"]; locale: "th" | "en" }) {
+  return <div className="divide-y divide-line">{orders.map((order) => <article key={order.id} className="grid gap-4 py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"><div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><span className="font-mono text-sm font-semibold">{order.order_number}</span><OrderStatusBadge status={order.order_status} /></div><p className="mt-2 text-xs text-muted">{formatDate(order.created_at, locale)} · {order.payment_status}</p><p className="mt-2 line-clamp-2 text-xs leading-5 text-muted">{order.items.map((item) => `${item.product_name} × ${item.quantity}`).join(", ")}</p></div><div className="flex items-end justify-between gap-4 sm:block sm:text-right"><p className="text-lg font-semibold">{formatMoney(Number(order.grand_total), order.currency_code, locale)}</p><p className={`text-xs font-semibold ${Number(order.amount_due) > 0 ? "text-warning" : "text-success"}`}>{Number(order.amount_due) > 0 ? text.due : text.paid}</p></div></article>)}</div>;
 }
 
-function Stat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) { return <div className="flex items-center gap-4 rounded-lg border border-line bg-panel p-5 shadow-[var(--shadow-panel)]"><span className="text-brand">{icon}</span><div><p className="text-xs text-muted">{label}</p><p className="mt-1 text-2xl font-semibold">{value}</p></div></div>; }
+function MobilePortalNavigation({ text }: { text: (typeof copy)["th"] | (typeof copy)["en"] }) {
+  const items = [
+    { href: "#portal-home", label: text.overview, icon: Home },
+    { href: "#portal-orders", label: text.orders, icon: ReceiptText },
+    { href: "#portal-notifications", label: text.notifications, icon: Bell },
+    { href: "#portal-account", label: text.accountShort, icon: UserRound }
+  ];
+
+  return (
+    <nav
+      aria-label={text.overview}
+      className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-line bg-panel/95 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-8px_24px_rgb(2_44_74/0.08)] backdrop-blur md:hidden"
+    >
+      {items.map(({ href, label, icon: Icon }) => (
+        <a key={href} className="grid min-h-14 place-items-center content-center gap-1 rounded-md px-1 text-center text-[11px] font-semibold text-muted hover:bg-panel-strong hover:text-brand" href={href}>
+          <Icon aria-hidden className="h-5 w-5" />
+          <span className="max-w-full truncate">{label}</span>
+        </a>
+      ))}
+    </nav>
+  );
+}
+
+function OrderStatusBadge({ status }: { status: string }) {
+  const normalized = status.toUpperCase();
+  const tone = normalized === "COMPLETED" || normalized === "DELIVERED"
+    ? "border-success/30 bg-success/10 text-success"
+    : normalized === "CANCELLED" || normalized === "FAILED"
+      ? "border-danger/30 bg-danger/10 text-danger"
+      : "border-warning/30 bg-warning/10 text-warning";
+  return <span className={`rounded-full border px-2 py-1 text-[11px] font-semibold ${tone}`}>{status}</span>;
+}
+
+function Stat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) { return <div className="grid min-h-28 content-between gap-3 rounded-lg border border-line bg-panel p-4 shadow-[var(--shadow-panel)] lg:flex lg:min-h-0 lg:items-center lg:gap-4 lg:p-5"><span className="[&>svg]:h-5 [&>svg]:w-5 text-brand">{icon}</span><div className="min-w-0"><p className="truncate text-xs text-muted">{label}</p><p className="mt-1 text-2xl font-semibold">{value}</p></div></div>; }
 function Info({ label, value }: { label: string; value: string }) { return <div><p className="text-xs text-muted">{label}</p><p className="mt-1 text-sm font-medium">{value}</p></div>; }
 function Empty({ text }: { text: string }) { return <p className="py-5 text-sm text-muted">{text}</p>; }
 function formatPoints(value: number) { return new Intl.NumberFormat("th-TH", { maximumFractionDigits: 0 }).format(value); }
-function formatMoney(value: number, currency: string) { return new Intl.NumberFormat("th-TH", { style: "currency", currency: currency === "THB" ? "THB" : "USD", maximumFractionDigits: 2 }).format(value); }
+function formatDate(value: string, locale: "th" | "en") { return new Intl.DateTimeFormat(locale === "th" ? "th-TH" : "en-US", { dateStyle: "medium" }).format(new Date(value)); }
+function formatMoney(value: number, currency: string, locale: "th" | "en") { return new Intl.NumberFormat(locale === "th" ? "th-TH" : "en-US", { style: "currency", currency: currency === "THB" ? "THB" : "USD", maximumFractionDigits: 2 }).format(value); }
