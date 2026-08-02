@@ -2,6 +2,7 @@ import {
   ArrowRight,
   CircleAlert,
   Coins,
+  ChevronDown,
   Gift,
   Home,
   MapPin,
@@ -63,6 +64,13 @@ const copy = {
     notificationError: "ไม่สามารถโหลดการแจ้งเตือนได้ในขณะนี้",
     unread: "ยังไม่อ่าน",
     order: "คำสั่งซื้อ",
+    orderDetails: "ดูรายละเอียด",
+    paymentStatus: "สถานะการชำระเงิน",
+    fulfillmentStatus: "สถานะการจัดส่ง",
+    item: "สินค้า",
+    quantity: "จำนวน",
+    unitPrice: "ราคาต่อหน่วย",
+    lineTotal: "รวมรายการ",
     paid: "ชำระแล้ว",
     due: "ค้างชำระ",
     emptyOrders: "ยังไม่มีคำสั่งซื้อที่แสดงได้",
@@ -128,6 +136,13 @@ const copy = {
     notificationError: "Notifications are unavailable right now.",
     unread: "Unread",
     order: "Order",
+    orderDetails: "View details",
+    paymentStatus: "Payment status",
+    fulfillmentStatus: "Fulfillment status",
+    item: "Item",
+    quantity: "Quantity",
+    unitPrice: "Unit price",
+    lineTotal: "Line total",
     paid: "Paid",
     due: "Due",
     emptyOrders: "No orders to show yet",
@@ -429,7 +444,7 @@ function Panel({ title, icon, children }: { title: string; icon: React.ReactNode
 }
 
 function OrderList({ orders, text, locale }: { orders: PortalOrder[]; text: (typeof copy)["th"] | (typeof copy)["en"]; locale: "th" | "en" }) {
-  return <div className="divide-y divide-line">{orders.map((order) => <article key={order.id} className="grid gap-4 py-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"><div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><span className="font-mono text-sm font-semibold">{order.order_number}</span><OrderStatusBadge status={order.order_status} /></div><p className="mt-2 text-xs text-muted">{formatDate(order.created_at, locale)} · {order.payment_status}</p><p className="mt-2 line-clamp-2 text-xs leading-5 text-muted">{order.items.map((item) => `${item.product_name} × ${item.quantity}`).join(", ")}</p></div><div className="flex items-end justify-between gap-4 sm:block sm:text-right"><p className="text-lg font-semibold">{formatMoney(Number(order.grand_total), order.currency_code, locale)}</p><p className={`text-xs font-semibold ${Number(order.amount_due) > 0 ? "text-warning" : "text-success"}`}>{Number(order.amount_due) > 0 ? text.due : text.paid}</p></div></article>)}</div>;
+  return <div className="divide-y divide-line">{orders.map((order) => <details key={order.id} className="group py-4"><summary className="grid cursor-pointer list-none gap-4 rounded-md outline-none sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center focus-visible:ring-2 focus-visible:ring-brand"><div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><span className="font-mono text-sm font-semibold">{order.order_number}</span><OrderStatusBadge status={order.order_status} /></div><p className="mt-2 text-xs text-muted">{formatDate(order.created_at, locale)} · {order.payment_status}</p><p className="mt-2 line-clamp-2 text-xs leading-5 text-muted">{order.items.map((item) => `${item.product_name} × ${item.quantity}`).join(", ")}</p></div><div className="flex items-end justify-between gap-4 sm:block sm:text-right"><p className="text-lg font-semibold">{formatMoney(Number(order.grand_total), order.currency_code, locale)}</p><div className="mt-1 flex items-center justify-end gap-1 text-xs font-semibold text-brand"><span>{text.orderDetails}</span><ChevronDown aria-hidden className="h-4 w-4 transition-transform group-open:rotate-180" /></div><p className={`text-xs font-semibold ${Number(order.amount_due) > 0 ? "text-warning" : "text-success"}`}>{Number(order.amount_due) > 0 ? text.due : text.paid}</p></div></summary><div className="mt-4 rounded-md border border-line bg-surface p-4"><div className="grid gap-3 border-b border-line pb-4 text-xs sm:grid-cols-2"><Info label={text.paymentStatus} value={order.payment_status} /><Info label={text.fulfillmentStatus} value={order.fulfillment_status} /></div><div className="divide-y divide-line">{order.items.map((item) => <div key={item.id} className="grid gap-2 py-3 text-sm sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-center"><div className="min-w-0"><p className="font-medium">{item.product_name}{item.variant_name ? ` · ${item.variant_name}` : ""}</p>{item.sku ? <p className="mt-1 font-mono text-xs text-muted">{item.sku}</p> : null}</div><span className="text-xs text-muted">{text.quantity}: {item.quantity}</span><span className="text-right font-semibold">{formatMoney(Number(item.line_total), order.currency_code, locale)}</span></div>)}</div></div></details>)}</div>;
 }
 
 function MobilePortalNavigation({ text }: { text: (typeof copy)["th"] | (typeof copy)["en"] }) {
