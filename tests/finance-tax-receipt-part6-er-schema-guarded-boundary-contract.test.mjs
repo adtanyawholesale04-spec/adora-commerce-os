@@ -9,12 +9,17 @@ const contract = fs.readFileSync(
 const status = fs.readFileSync("docs/roadmap/ACOS_IMPLEMENTATION_STATUS.md", "utf8");
 
 test("Part 6 proposes one additive Receipt snapshot boundary without duplicating canonical masters", () => {
-  assert.match(contract, /CONTRACT PREPARED \/ OWNER FREEZE REQUIRED/);
+  assert.match(contract, /OWNER APPROVED \/ FROZEN/);
+  assert.match(contract, /Owner Approval Date:\*\* 2026-08-03/);
   assert.match(contract, /finance_documents/);
   assert.match(contract, /finance_document_lines/);
   assert.match(contract, /do\s+not become another order, payment, refund, ledger, customer, or tax engine/);
   assert.match(contract, /FS01/);
   assert.match(contract, /FS30/);
+  assert.equal(
+    contract.match(/^\| FS\d{2} \|.*\| Owner approved \/ frozen \|$/gm)?.length,
+    30
+  );
   assert.match(contract, /Migration:\*\* Not authorized/);
 });
 
@@ -29,9 +34,11 @@ test("Part 6 keeps mutations guarded, idempotent, tenant-scoped, and directly in
   assert.match(contract, /append-only `audit_logs`/);
 });
 
-test("Part 6 preserves owner and migration gates in the current implementation status", () => {
-  assert.match(contract, /BLOCKED.*Owner freezes FS01-FS30/s);
-  assert.match(contract, /Part 7\s+migration contract review/);
-  assert.match(status, /FINANCE & TAX PART 6 ER\/SCHEMA AND GUARDED DATABASE BOUNDARY CONTRACT PREPARED/);
-  assert.match(status, /FS01-FS30.*Owner freeze/s);
+test("Part 6 freezes FS01-FS30 while preserving migration and runtime gates", () => {
+  assert.match(contract, /approved FS01-FS30 in full/);
+  assert.match(contract, /Part 7 Migration Contract\s+Review/);
+  assert.match(contract, /does not authorize migration generation/);
+  assert.match(status, /FINANCE & TAX PART 6 OWNER DECISION FREEZE COMPLETE/);
+  assert.match(status, /FS01-FS30 are Owner approved\/frozen/);
+  assert.match(status, /Part 7 migration contract review may proceed/);
 });

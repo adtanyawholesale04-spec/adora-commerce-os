@@ -2,8 +2,9 @@
 
 **Phase:** `1E Finance & Tax Control MVP`
 **Task:** `FIN-TAX-001-PART6`
-**Status:** CONTRACT PREPARED / OWNER FREEZE REQUIRED
+**Status:** OWNER APPROVED / FROZEN
 **Date:** 2026-08-03
+**Owner Approval Date:** 2026-08-03
 **Depends on:** Owner-approved Parts 0-5
 **Migration:** Not authorized
 **Runtime:** Not authorized
@@ -13,14 +14,14 @@
 
 Map the frozen Receipt scope, eligibility, numbering, immutable snapshot,
 reversal, security, audit, and Portal-read decisions into one additive database
-contract before SQL is written. This contract proposes exact entities,
+contract before SQL is written. This contract freezes exact entities,
 constraints, grants, RPC signatures, idempotency behavior, and replay gates for
-Owner freeze.
+the later migration contract review.
 
 This document does not create a table, column, permission, function, event,
-role, entitlement, route, or migration. Proposed names below are not executable
-authority until the Owner freezes FS01-FS30 and separately authorizes migration
-generation.
+role, entitlement, route, or migration. The frozen names below authorize Part 7
+migration contract design only. Migration generation still requires a separate
+explicit instruction.
 
 ## Canonical reuse map
 
@@ -49,36 +50,36 @@ not become another order, payment, refund, ledger, customer, or tax engine.
 
 | ID | Recommended contract | State |
 |---|---|---|
-| FS01 | MVP persists only `document_type = RECEIPT` | Owner freeze required |
-| FS02 | Reuse every canonical source listed above; no duplicate master | Owner freeze required |
-| FS03 | Add one header entity named `finance_documents` | Owner freeze required |
-| FS04 | Add one line entity named `finance_document_lines` | Owner freeze required |
-| FS05 | Every row carries `organization_id` and same-tenant keys | Owner freeze required |
-| FS06 | Header lifecycle is exactly `ISSUED`, `VOID`, or `REVERSED` | Owner freeze required |
-| FS07 | Allocate `RC-{YYYY}-{NNNNNN}` through the existing protected sequence helper | Owner freeze required |
-| FS08 | Enforce unique number and unique year/sequence within tenant/type | Owner freeze required |
-| FS09 | Allow one root Receipt per canonical payment | Owner freeze required |
-| FS10 | A replacement is a new Receipt linked through `replaces_document_id` | Owner freeze required |
-| FS11 | Require same-tenant order, payment, successful transaction, and customer references | Owner freeze required |
-| FS12 | Store only the Part 3 approved header and settlement snapshot | Owner freeze required |
-| FS13 | Address source is order `BILLING`, otherwise order `SHIPPING`; phone is excluded | Owner freeze required |
-| FS14 | Copy approved order-item values into immutable document lines | Owner freeze required |
-| FS15 | Exclude tax/VAT calculation, cost, proof, bank, provider, secret, and raw payload data | Owner freeze required |
-| FS16 | Protect header identity/snapshot and all lines from update/delete | Owner freeze required |
-| FS17 | Permit only guarded `ISSUED -> VOID` or `ISSUED -> REVERSED` lifecycle changes | Owner freeze required |
-| FS18 | Reversal requires exactly one matching completed refund or reversed payment-transaction reference | Owner freeze required |
-| FS19 | Reuse `commerce_idempotency_keys` with Receipt operation/result codes | Owner freeze required |
-| FS20 | Create through `api_create_receipt_document` only | Owner freeze required |
-| FS21 | Void through `api_void_receipt_document` only | Owner freeze required |
-| FS22 | Reverse through `api_reverse_receipt_document` only | Owner freeze required |
-| FS23 | Staff list/detail reads require `finance.document.view` | Owner freeze required |
-| FS24 | Portal list/detail reads resolve an active `customer_profile_links` owner | Owner freeze required |
-| FS25 | Enable RLS and revoke direct table access from browser roles | Owner freeze required |
-| FS26 | All exposed RPCs use exact grants, `security definer`, empty search path, and schema-qualified objects | Owner freeze required |
-| FS27 | Seed only the four Part 5 frozen permission codes in the later migration | Owner freeze required |
-| FS28 | Reuse append-only `audit_logs`; do not add a Receipt audit/event master | Owner freeze required |
-| FS29 | Add only tenant, source, queue, lifecycle, and replacement indexes justified below | Owner freeze required |
-| FS30 | Require fresh replay, concurrency, RLS, privacy, idempotency, audit, and regression gates before runtime | Owner freeze required |
+| FS01 | MVP persists only `document_type = RECEIPT` | Owner approved / frozen |
+| FS02 | Reuse every canonical source listed above; no duplicate master | Owner approved / frozen |
+| FS03 | Add one header entity named `finance_documents` | Owner approved / frozen |
+| FS04 | Add one line entity named `finance_document_lines` | Owner approved / frozen |
+| FS05 | Every row carries `organization_id` and same-tenant keys | Owner approved / frozen |
+| FS06 | Header lifecycle is exactly `ISSUED`, `VOID`, or `REVERSED` | Owner approved / frozen |
+| FS07 | Allocate `RC-{YYYY}-{NNNNNN}` through the existing protected sequence helper | Owner approved / frozen |
+| FS08 | Enforce unique number and unique year/sequence within tenant/type | Owner approved / frozen |
+| FS09 | Allow one root Receipt per canonical payment | Owner approved / frozen |
+| FS10 | A replacement is a new Receipt linked through `replaces_document_id` | Owner approved / frozen |
+| FS11 | Require same-tenant order, payment, successful transaction, and customer references | Owner approved / frozen |
+| FS12 | Store only the Part 3 approved header and settlement snapshot | Owner approved / frozen |
+| FS13 | Address source is order `BILLING`, otherwise order `SHIPPING`; phone is excluded | Owner approved / frozen |
+| FS14 | Copy approved order-item values into immutable document lines | Owner approved / frozen |
+| FS15 | Exclude tax/VAT calculation, cost, proof, bank, provider, secret, and raw payload data | Owner approved / frozen |
+| FS16 | Protect header identity/snapshot and all lines from update/delete | Owner approved / frozen |
+| FS17 | Permit only guarded `ISSUED -> VOID` or `ISSUED -> REVERSED` lifecycle changes | Owner approved / frozen |
+| FS18 | Reversal requires exactly one matching completed refund or reversed payment-transaction reference | Owner approved / frozen |
+| FS19 | Reuse `commerce_idempotency_keys` with Receipt operation/result codes | Owner approved / frozen |
+| FS20 | Create through `api_create_receipt_document` only | Owner approved / frozen |
+| FS21 | Void through `api_void_receipt_document` only | Owner approved / frozen |
+| FS22 | Reverse through `api_reverse_receipt_document` only | Owner approved / frozen |
+| FS23 | Staff list/detail reads require `finance.document.view` | Owner approved / frozen |
+| FS24 | Portal list/detail reads resolve an active `customer_profile_links` owner | Owner approved / frozen |
+| FS25 | Enable RLS and revoke direct table access from browser roles | Owner approved / frozen |
+| FS26 | All exposed RPCs use exact grants, `security definer`, empty search path, and schema-qualified objects | Owner approved / frozen |
+| FS27 | Seed only the four Part 5 frozen permission codes in the later migration | Owner approved / frozen |
+| FS28 | Reuse append-only `audit_logs`; do not add a Receipt audit/event master | Owner approved / frozen |
+| FS29 | Add only tenant, source, queue, lifecycle, and replacement indexes justified below | Owner approved / frozen |
+| FS30 | Require fresh replay, concurrency, RLS, privacy, idempotency, audit, and regression gates before runtime | Owner approved / frozen |
 
 ## Proposed entity: `finance_documents`
 
@@ -409,7 +410,7 @@ must not reach the browser.
 
 ## Migration and validation gates
 
-After Owner freeze, the next migration contract must include:
+The next migration contract must include:
 
 1. privacy-bounded count-only preflight for sequence and source conflicts;
 2. forward-only additive DDL; no edit to a frozen migration;
@@ -448,7 +449,11 @@ Production migration and public activation
 
 ## Part 6 disposition
 
-The Part 6 design is complete, but protected implementation remains
-**BLOCKED** until the Owner freezes FS01-FS30. The next permitted step is
-**Part 6 Owner Decision Freeze**. After that freeze, a separate Part 7
-migration contract review may be prepared; no SQL or apply is implied.
+The Project Owner approved FS01-FS30 in full on 2026-08-03. These decisions are
+frozen for the Receipt MVP. Any change requires a new explicit Owner decision
+record.
+
+Part 6 is complete. The next permitted step is **Part 7 Migration Contract
+Review**. This freeze does not authorize migration generation, SQL execution,
+local or Production apply, permission seeding, runtime, UI, PDF/provider work,
+or public activation.
