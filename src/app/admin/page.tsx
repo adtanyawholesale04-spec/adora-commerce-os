@@ -45,6 +45,10 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   const params = await searchParams;
   const preferences = await getAdminPreferences();
   const copy = adminCopy[preferences.locale];
+  const navigationCopy = copy.navigation as Record<
+    string,
+    { label: string; actionBoundary: string }
+  >;
   const model = await getDashboardReadModel();
   const context = model.context;
   const visibleItems = model.moduleRows;
@@ -52,9 +56,9 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   return (
     <main className="min-h-screen bg-surface text-ink">
       <div className="grid min-h-screen lg:grid-cols-[248px_minmax(0,1fr)]">
-        <aside className="border-r border-white/10 bg-sidebar text-white lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
+        <aside className="max-h-screen overflow-y-auto border-r border-white/10 bg-sidebar text-white lg:sticky lg:top-0 lg:h-screen">
           <div className="border-b border-white/10 px-5 py-6">
-            <p className="text-xs font-bold uppercase tracking-[0.08em] text-[#50C3FF]">
+            <p className="text-xs font-bold uppercase tracking-[0.08em] text-brand">
               {copy.shell.productName}
             </p>
             <h1 className="mt-2 text-xl font-semibold tracking-tight">{copy.shell.sectionName}</h1>
@@ -67,30 +71,51 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             {visibleItems.map((item) => {
               const navItem = adminNavigation.find((navigationItem) => navigationItem.id === item.id);
               const Icon = navItem?.icon ?? Gauge;
+              const itemCopy = navigationCopy[item.id] ?? {
+                label: item.label,
+                actionBoundary: item.actionBoundary,
+              };
+              const itemClassName = `grid grid-cols-[18px_minmax(0,1fr)_auto] items-center gap-3 rounded-lg border px-3 py-2.5 text-sm font-medium ${
+                item.allowed
+                  ? "border-transparent text-white hover:border-white/10 hover:bg-white/10"
+                  : "cursor-not-allowed border-transparent text-white/55 opacity-75"
+              }`;
+              const itemContent = (
+                <>
+                  <Icon aria-hidden className="h-4 w-4" />
+                  <span className="truncate">{itemCopy.label}</span>
+                  {item.allowed ? (
+                    <CheckCircle2 aria-label={copy.common.allowed} className="h-4 w-4 text-brand" />
+                  ) : (
+                    <LockKeyhole
+                      aria-label={copy.common.permissionRequired}
+                      className="h-4 w-4"
+                    />
+                  )}
+                </>
+              );
+
+              if (!item.allowed) {
+                return (
+                  <div
+                    key={item.id}
+                    aria-disabled="true"
+                    className={itemClassName}
+                    title={`${copy.common.requires} ${item.requiredPermissions.join(" or ")}`}
+                  >
+                    {itemContent}
+                  </div>
+                );
+              }
 
               return (
                 <a
                   key={item.id}
                   href={item.href}
-                  aria-disabled={!item.allowed}
-                  className={`grid grid-cols-[18px_minmax(0,1fr)_auto] items-center gap-3 rounded-lg border px-3 py-2.5 text-sm font-medium ${
-                    item.allowed
-                      ? "border-transparent text-white hover:border-white/10 hover:bg-white/10"
-                      : "border-transparent cursor-not-allowed text-white/55 opacity-75"
-                  }`}
-                  title={
-                    item.allowed
-                      ? item.actionBoundary
-                      : `${copy.common.requires} ${item.requiredPermissions.join(" or ")}`
-                  }
+                  className={itemClassName}
+                  title={itemCopy.actionBoundary}
                 >
-                  <Icon aria-hidden className="h-4 w-4" />
-                  <span className="truncate">{item.label}</span>
-                  {item.allowed ? (
-                    <CheckCircle2 aria-label="Allowed" className="h-4 w-4 text-brand" />
-                  ) : (
-                    <LockKeyhole aria-label="Permission required" className="h-4 w-4" />
-                  )}
+                  {itemContent}
                 </a>
               );
             })}
@@ -110,7 +135,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         </aside>
 
         <section className="min-w-0">
-          <header className="border-b border-line bg-panel px-5 py-5 lg:px-7">
+          <header className="sticky top-0 z-30 border-b border-line bg-panel/95 px-5 py-5 backdrop-blur lg:px-7">
             <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.08em] text-brand">{copy.shell.pageCode}</p>
@@ -210,6 +235,10 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                   {visibleItems.map((item) => {
                     const navItem = adminNavigation.find((navigationItem) => navigationItem.id === item.id);
                     const Icon = navItem?.icon ?? Gauge;
+                    const itemCopy = navigationCopy[item.id] ?? {
+                      label: item.label,
+                      actionBoundary: item.actionBoundary,
+                    };
 
                     return (
                       <div
@@ -219,14 +248,14 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                         <div className="flex items-center gap-3">
                           <Icon aria-hidden className="h-5 w-5 text-brand" />
                           <div>
-                            <p className="font-medium">{item.label}</p>
+                            <p className="font-medium">{itemCopy.label}</p>
                             <p className="text-xs text-muted">
                               {item.requiredPermissions.join(" or ")}
                             </p>
                           </div>
                         </div>
                         <p className="text-sm leading-6 text-muted">
-                          {item.actionBoundary}
+                          {itemCopy.actionBoundary}
                         </p>
                         <div className="flex items-center justify-between gap-3 lg:justify-end">
                           <span
@@ -266,7 +295,20 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                 />
                 <ContextPanel
                   title={copy.shell.guardrails}
-                  rows={model.guardrailRows.map((row) => [row.label, row.value])}
+                  rows={model.guardrailRows.map((row) => [
+                    {
+                      Tenant: copy.shell.tenantScope,
+                      Membership: copy.shell.membership,
+                      Authorization: copy.shell.authorization,
+                      Writes: copy.shell.sensitiveWrites,
+                      "Service role": copy.shell.serviceRole,
+                    }[row.label] ?? row.label,
+                    {
+                      "Authentication + active membership + permission": copy.shell.authorizationValue,
+                      "Guarded service/RPC only": copy.shell.guardedWritesValue,
+                      "Never exposed to browser": copy.shell.serviceRoleValue,
+                    }[row.value] ?? row.value,
+                  ])}
                 />
               </aside>
             </section>

@@ -3,7 +3,7 @@
 **Task:** Local Full Workflow QA
 **Scope:** Storefront -> Checkout -> Manual Payment Submission -> Admin Review
 **Environment:** Local Supabase Docker stack and `http://127.0.0.1:3000`
-**Status:** VALIDATED LOCALLY / FOLLOW-UP FIX VALIDATED / PRODUCTION NOT APPLIED
+**Status:** VALIDATED LOCALLY / FOLLOW-UP FIX VALIDATED / LOCAL RC UI-UX PASS VALIDATED / PRODUCTION NOT APPLIED
 
 ## Boundary
 
@@ -33,6 +33,22 @@ Commerce integration suite: PASS
 HTTP route smoke (`/`, `/signup`, `/admin`, `/admin/payments`,
   `/admin/payments/review`, `/store/acos-local-qa`): PASS / HTTP 200
 ```
+
+## Local Release Candidate UI/UX Pass
+
+```text
+Permission-aware navigation: PASS
+Thai/English navigation and guardrail copy: PASS
+Light/dark preference persistence: PASS after reload
+Sticky Admin header and bounded sidebar scroll: PASS
+Payments empty states: PASS / semantic status presentation
+```
+
+The Admin shell now renders unauthorized modules as non-interactive boundary
+items, while authorized modules remain real links. Navigation labels, action
+boundaries and guardrails use the selected locale. Payments list, transaction
+and refund sections use a consistent empty-state treatment without changing
+their read model or action boundary.
 
 The local QA identity was recreated after the approved local reset:
 
@@ -72,6 +88,13 @@ complete the Turnstile-backed UI Magic Link form, so the local Auth callback
 was completed with a one-time local QA token generated in memory; no token or
 cookie was printed. Approve/reject was intentionally not clicked so the
 pending fixture remains reusable for the next QA pass.
+
+The UI pass additionally verified the authenticated Admin shell, Payments and
+Review/Details route in the local browser. The in-app browser can show a
+transient error page during a Server Action preference redirect; reloading the
+same route confirmed the persisted theme state and the server returned HTTP
+200. This is recorded as a browser-tool limitation, not a product data or
+authorization failure.
 
 ## Production Disposition
 

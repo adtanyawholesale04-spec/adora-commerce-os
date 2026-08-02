@@ -26,6 +26,8 @@ export const adminCopy = {
       unavailable: "Unavailable",
       anonymous: "Anonymous",
       granted: "Granted",
+      allowed: "Allowed",
+      permissionRequired: "Permission required",
       requires: "Requires",
       noOrganization: "No organization",
       noDirectUiAction: "No direct UI action",
@@ -59,6 +61,9 @@ export const adminCopy = {
       membershipDerived: "Membership-derived",
       authorization: "Authorization",
       permissionAndEntitlement: "Permission + entitlement",
+      authorizationValue: "Authentication + active membership + permission",
+      guardedWritesValue: "Guarded service/RPC only",
+      serviceRoleValue: "Never exposed to browser",
       signedIn: "Signed in",
       notSignedIn: "Not signed in",
       signOut: "Sign out",
@@ -90,6 +95,22 @@ export const adminCopy = {
       warehousePickRequired: "Requires warehouse.pick",
       warehouseQcRequired: "Requires warehouse.qc",
       shippingCreateRequired: "Requires shipping.create"
+    },
+    navigation: {
+      dashboard: { label: "Dashboard", actionBoundary: "Server aggregation only" },
+      products: { label: "Products", actionBoundary: "Cost fields use guarded wrappers" },
+      inventory: { label: "Inventory", actionBoundary: "Inventory mutations use RPC wrappers" },
+      customers: { label: "Customers", actionBoundary: "Writes need customer service" },
+      orders: { label: "Orders", actionBoundary: "Order actions need server service" },
+      payments: { label: "Payments", actionBoundary: "Refund uses guarded wrapper" },
+      fulfillment: { label: "Fulfillment", actionBoundary: "State changes need approved service" },
+      qc: { label: "QC", actionBoundary: "Completion and override use wrappers" },
+      shipping: { label: "Shipping", actionBoundary: "Label, handoff, tracking use wrappers" },
+      returns: { label: "Returns", actionBoundary: "Disposition and restock need service" },
+      promotions: { label: "Promotions", actionBoundary: "Publish/evaluate needs promotion engine" },
+      users: { label: "Users / Roles", actionBoundary: "Mutations need audited admin service" },
+      settings: { label: "Settings", actionBoundary: "Subscription writes require owner decision" },
+      support: { label: "Support Access", actionBoundary: "Support grants require time-bound audit" }
     },
     dashboardStates: {
       missing_env: {
@@ -1295,6 +1316,8 @@ export const adminCopy = {
       unavailable: "ไม่มีข้อมูล",
       anonymous: "ยังไม่เข้าสู่ระบบ",
       granted: "มีสิทธิ์",
+      allowed: "มีสิทธิ์ใช้งาน",
+      permissionRequired: "ต้องมีสิทธิ์",
       requires: "ต้องมีสิทธิ์",
       noOrganization: "ไม่มีองค์กร",
       noDirectUiAction: "ไม่มีปุ่มสั่งงานตรงจากหน้า UI",
@@ -1321,13 +1344,16 @@ export const adminCopy = {
       organizationStatus: "สถานะองค์กร",
       membership: "สมาชิก",
       guardrails: "กติกาป้องกัน",
-      sensitiveWrites: "Sensitive writes",
-      serviceRole: "Service role",
+      sensitiveWrites: "การเขียนข้อมูลสำคัญ",
+      serviceRole: "สิทธิ์ Service role",
       neverInBrowser: "ห้ามอยู่ใน browser",
       tenantScope: "Tenant scope",
       membershipDerived: "อิงจาก membership",
-      authorization: "Authorization",
+      authorization: "การอนุญาต",
       permissionAndEntitlement: "Permission + entitlement",
+      authorizationValue: "เข้าสู่ระบบ + active membership + permission",
+      guardedWritesValue: "ผ่าน guarded service/RPC เท่านั้น",
+      serviceRoleValue: "ห้ามเปิดเผยใน browser",
       signedIn: "เข้าสู่ระบบแล้ว",
       notSignedIn: "ยังไม่เข้าสู่ระบบ",
       signOut: "ออกจากระบบ",
@@ -1359,6 +1385,22 @@ export const adminCopy = {
       warehousePickRequired: "ต้องมี warehouse.pick",
       warehouseQcRequired: "ต้องมี warehouse.qc",
       shippingCreateRequired: "ต้องมี shipping.create"
+    },
+    navigation: {
+      dashboard: { label: "ภาพรวม", actionBoundary: "อ่าน aggregate ผ่าน server เท่านั้น" },
+      products: { label: "สินค้า", actionBoundary: "ฟิลด์ต้นทุนใช้ guarded wrapper" },
+      inventory: { label: "สต๊อก", actionBoundary: "การเปลี่ยนสต๊อกใช้ RPC wrapper" },
+      customers: { label: "ลูกค้า", actionBoundary: "การเขียนต้องผ่าน customer service" },
+      orders: { label: "คำสั่งซื้อ", actionBoundary: "คำสั่งซื้อต้องผ่าน server service" },
+      payments: { label: "การชำระเงิน", actionBoundary: "การคืนเงินใช้ guarded wrapper" },
+      fulfillment: { label: "Fulfillment", actionBoundary: "การเปลี่ยนสถานะต้องผ่าน service ที่อนุมัติ" },
+      qc: { label: "QC", actionBoundary: "การจบงานและ override ใช้ wrapper" },
+      shipping: { label: "การจัดส่ง", actionBoundary: "label, handoff และ tracking ใช้ wrapper" },
+      returns: { label: "การคืนสินค้า", actionBoundary: "การจัดการผลตรวจและคืนสต๊อกต้องผ่าน service" },
+      promotions: { label: "โปรโมชั่น", actionBoundary: "การเผยแพร่/ประเมินต้องผ่าน promotion engine" },
+      users: { label: "ผู้ใช้ / บทบาท", actionBoundary: "การเปลี่ยนแปลงต้องผ่าน audited admin service" },
+      settings: { label: "ตั้งค่า", actionBoundary: "การเขียนเชิงพาณิชย์ต้องผ่าน owner decision" },
+      support: { label: "สิทธิ์ช่วยเหลือ", actionBoundary: "การให้สิทธิ์ต้อง audit และจำกัดเวลา" }
     },
     dashboardStates: {
       missing_env: {
@@ -2556,6 +2598,7 @@ export const adminCopy = {
   {
     common: Record<string, string>;
     shell: Record<string, string>;
+    navigation: Record<string, { label: string; actionBoundary: string }>;
     dashboardStates: Record<DashboardReadModelState, { title: string; detail: string }>;
     products: Record<string, string>;
     inventory: Record<string, string>;

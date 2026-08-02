@@ -194,7 +194,10 @@ function PaymentsTable({
         </span>
       </div>
       {payments.length === 0 ? (
-        <p className="px-5 py-6 text-sm text-muted">{copy.noPayments}</p>
+        <EmptyTableState
+          icon={<CreditCard aria-hidden className="h-5 w-5" />}
+          message={copy.noPayments}
+        />
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[900px] border-collapse text-left text-sm">
@@ -269,7 +272,10 @@ function TransactionsTable({
         </span>
       </div>
       {transactions.length === 0 ? (
-        <p className="px-5 py-6 text-sm text-muted">{copy.noTransactions}</p>
+        <EmptyTableState
+          icon={<ReceiptText aria-hidden className="h-5 w-5" />}
+          message={copy.noTransactions}
+        />
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[920px] border-collapse text-left text-sm">
@@ -337,7 +343,10 @@ function RefundsTable({
         </span>
       </div>
       {refunds.length === 0 ? (
-        <p className="px-5 py-6 text-sm text-muted">{copy.noRefunds}</p>
+        <EmptyTableState
+          icon={<RefreshCcw aria-hidden className="h-5 w-5" />}
+          message={copy.noRefunds}
+        />
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[840px] border-collapse text-left text-sm">
@@ -452,6 +461,21 @@ function EmptyState({ title, detail }: { title: string; detail: string }) {
       </div>
       <h2 className="mt-4 text-lg font-semibold">{title}</h2>
       <p className="mt-2 max-w-xl text-sm leading-6 text-muted">{detail}</p>
+    </div>
+  );
+}
+
+function EmptyTableState({ icon, message }: { icon: ReactNode; message: string }) {
+  return (
+    <div
+      aria-live="polite"
+      className="grid min-h-32 place-items-center gap-3 px-5 py-8 text-center"
+      role="status"
+    >
+      <div className="grid h-10 w-10 place-items-center rounded-full bg-panel-strong text-muted">
+        {icon}
+      </div>
+      <p className="text-sm text-muted">{message}</p>
     </div>
   );
 }
