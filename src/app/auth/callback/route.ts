@@ -37,7 +37,9 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  return NextResponse.redirect(`${origin}/admin?auth=callback_error`);
+  return NextResponse.redirect(
+    `${origin}${appendAuthCallbackError(next)}`
+  );
 }
 
 function sanitizeNextPath(next: string | null) {
@@ -46,4 +48,10 @@ function sanitizeNextPath(next: string | null) {
   }
 
   return next;
+}
+
+function appendAuthCallbackError(nextPath: string) {
+  const url = new URL(nextPath, "http://acos.local");
+  url.searchParams.set("auth", "callback_error");
+  return `${url.pathname}${url.search}`;
 }

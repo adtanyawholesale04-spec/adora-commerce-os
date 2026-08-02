@@ -5,6 +5,8 @@ import {
   Gift,
   MapPin,
   Bell,
+  LogIn,
+  LogOut,
   Package,
   ShieldCheck,
   Sparkles,
@@ -19,6 +21,7 @@ import { getAdminPreferences } from "@/lib/admin/preferences";
 import { AddressManager } from "@/app/portal/address-manager";
 import { ConsentPreferenceManager } from "@/app/portal/consent-preference-manager";
 import { AdminPreferenceSwitcher } from "@/app/admin/_components/admin-preference-switcher";
+import { signOutFromCustomerPortalAction } from "@/app/portal/auth-actions";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -81,7 +84,11 @@ const copy = {
     granted: "อนุญาต",
     revoked: "ยกเลิกแล้ว",
     private: "Private portal",
-    home: "หน้าหลัก"
+    home: "หน้าหลัก",
+    signInCta: "เข้าสู่ระบบลูกค้า",
+    signOut: "ออกจากระบบ",
+    signedIn: "เข้าสู่ระบบแล้ว",
+    callbackError: "ลิงก์เข้าสู่ระบบไม่ถูกต้องหรือหมดอายุ กรุณาขอลิงก์ใหม่"
   },
   en: {
     eyebrow: "ADORA CUSTOMER",
@@ -140,12 +147,23 @@ const copy = {
     granted: "Granted",
     revoked: "Revoked",
     private: "Private portal",
-    home: "Portal home"
+    home: "Portal home",
+    signInCta: "Customer sign in",
+    signOut: "Sign out",
+    signedIn: "Signed in",
+    callbackError: "The sign-in link is invalid or expired. Please request a new one."
   }
 } as const;
 
-export default async function PortalPage() {
-  const preferences = await getAdminPreferences();
+type PortalPageProps = {
+  searchParams: Promise<{ auth?: string }>;
+};
+
+export default async function PortalPage({ searchParams }: PortalPageProps) {
+  const [{ auth }, preferences] = await Promise.all([
+    searchParams,
+    getAdminPreferences()
+  ]);
   const text = copy[preferences.locale];
   const model = await getCustomerPortalReadModel();
   const snapshot = model.snapshot;
@@ -158,7 +176,31 @@ export default async function PortalPage() {
             <span className="font-extrabold text-accent">ADORA</span>{" "}
             <span className="font-normal text-ink">ACOS</span>
           </Link>
-          <AdminPreferenceSwitcher preferences={preferences} returnPath="/portal" />
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            {model.context.userEmail ? (
+              <form action={signOutFromCustomerPortalAction} className="flex items-center gap-2">
+                <span className="hidden max-w-48 truncate text-xs text-muted sm:inline">
+                  {text.signedIn}: {model.context.userEmail}
+                </span>
+                <button
+                  className="inline-flex h-10 items-center gap-2 rounded-lg border border-line bg-panel px-3 text-sm font-semibold hover:bg-panel-strong"
+                  type="submit"
+                >
+                  <LogOut aria-hidden className="h-4 w-4" />
+                  {text.signOut}
+                </button>
+              </form>
+            ) : model.state === "anonymous" ? (
+              <Link
+                className="inline-flex h-10 items-center gap-2 rounded-lg bg-brand px-3 text-sm font-semibold text-white hover:brightness-95"
+                href="/portal/login"
+              >
+                <LogIn aria-hidden className="h-4 w-4" />
+                {text.signInCta}
+              </Link>
+            ) : null}
+            <AdminPreferenceSwitcher preferences={preferences} returnPath="/portal" />
+          </div>
         </div>
         <header className="flex flex-col gap-6 border-b border-line pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -198,7 +240,11 @@ export default async function PortalPage() {
 
         {model.state !== "ready" || !snapshot ? (
           <section id="portal-home">
-            <PortalState state={model.state} text={text} detail={model.errorMessage} />
+            <PortalState
+              state={model.state}
+              text={text}
+              detail={auth === "callback_error" ? text.callbackError : model.errorMessage}
+            />
           </section>
         ) : (
           <div id="portal-home" className="grid gap-6 py-8">
@@ -368,7 +414,7 @@ function formatNotificationLabel(value: string) {
 function PortalState({ state, text, detail }: { state: string; text: (typeof copy)["th"] | (typeof copy)["en"]; detail: string | null }) {
   const title = state === "anonymous" ? text.signIn : state === "unlinked" ? text.notLinked : state === "missing_membership" ? text.noMembership : text.unavailable;
   const message = state === "unlinked" ? text.notLinkedDetail : detail ?? text.tryAgain;
-  return <section className="mx-auto grid max-w-xl place-items-center py-24 text-center"><div className="grid h-14 w-14 place-items-center rounded-lg bg-warning/15 text-warning"><CircleAlert aria-hidden className="h-7 w-7" /></div><h2 className="mt-5 text-xl font-semibold">{title}</h2><p className="mt-2 text-sm leading-6 text-muted">{message}</p><ArrowRight aria-hidden className="mt-6 h-5 w-5 text-brand" /></section>;
+  return <section className="mx-auto grid max-w-xl place-items-center py-24 text-center"><div className="grid h-14 w-14 place-items-center rounded-lg bg-warning/15 text-warning"><CircleAlert aria-hidden className="h-7 w-7" /></div><h2 className="mt-5 text-xl font-semibold">{title}</h2><p className="mt-2 text-sm leading-6 text-muted">{message}</p>{state === "anonymous" ? <Link className="mt-6 inline-flex h-11 items-center gap-2 rounded-lg bg-brand px-4 text-sm font-semibold text-white hover:brightness-95" href="/portal/login">{text.signInCta}<ArrowRight aria-hidden className="h-4 w-4" /></Link> : <ArrowRight aria-hidden className="mt-6 h-5 w-5 text-brand" />}</section>;
 }
 
 function Panel({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
