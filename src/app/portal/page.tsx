@@ -18,6 +18,8 @@ import {
 import { getAdminPreferences } from "@/lib/admin/preferences";
 import { AddressManager } from "@/app/portal/address-manager";
 import { ConsentPreferenceManager } from "@/app/portal/consent-preference-manager";
+import { AdminPreferenceSwitcher } from "@/app/admin/_components/admin-preference-switcher";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -78,7 +80,8 @@ const copy = {
     active: "ใช้งานอยู่",
     granted: "อนุญาต",
     revoked: "ยกเลิกแล้ว",
-    private: "Private portal"
+    private: "Private portal",
+    home: "หน้าหลัก"
   },
   en: {
     eyebrow: "ADORA CUSTOMER",
@@ -136,7 +139,8 @@ const copy = {
     active: "Active",
     granted: "Granted",
     revoked: "Revoked",
-    private: "Private portal"
+    private: "Private portal",
+    home: "Portal home"
   }
 } as const;
 
@@ -149,6 +153,13 @@ export default async function PortalPage() {
   return (
     <main className="min-h-screen bg-surface text-ink">
       <div className="mx-auto max-w-7xl px-5 py-6 lg:px-8 lg:py-10">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-line pb-5">
+          <Link className="text-sm font-semibold tracking-[0.08em] text-brand" href="/">
+            <span className="font-extrabold text-accent">ADORA</span>{" "}
+            <span className="font-normal text-ink">ACOS</span>
+          </Link>
+          <AdminPreferenceSwitcher preferences={preferences} returnPath="/portal" />
+        </div>
         <header className="flex flex-col gap-6 border-b border-line pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-brand">
@@ -167,11 +178,31 @@ export default async function PortalPage() {
           </div>
         </header>
 
+        <nav
+          aria-label={preferences.locale === "th" ? "เมนูพอร์ทัลลูกค้า" : "Customer portal navigation"}
+          className="-mx-1 flex gap-1 overflow-x-auto py-4"
+        >
+          <a className="shrink-0 rounded-md px-3 py-2 text-sm font-semibold text-brand hover:bg-brand/10" href="#portal-home">
+            {text.home}
+          </a>
+          <a className="shrink-0 rounded-md px-3 py-2 text-sm font-semibold text-muted hover:bg-panel-strong hover:text-ink" href="#portal-orders">
+            {text.orders}
+          </a>
+          <a className="shrink-0 rounded-md px-3 py-2 text-sm font-semibold text-muted hover:bg-panel-strong hover:text-ink" href="#portal-notifications">
+            {text.notifications}
+          </a>
+          <a className="shrink-0 rounded-md px-3 py-2 text-sm font-semibold text-muted hover:bg-panel-strong hover:text-ink" href="#portal-account">
+            {text.account}
+          </a>
+        </nav>
+
         {model.state !== "ready" || !snapshot ? (
-          <PortalState state={model.state} text={text} detail={model.errorMessage} />
+          <section id="portal-home">
+            <PortalState state={model.state} text={text} detail={model.errorMessage} />
+          </section>
         ) : (
-          <div className="grid gap-6 py-8">
-            <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+          <div id="portal-home" className="grid gap-6 py-8">
+            <section id="portal-account" className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
               <div className="rounded-lg border border-line bg-panel p-6 shadow-[var(--shadow-panel)]">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-start gap-4">
@@ -207,17 +238,21 @@ export default async function PortalPage() {
               <Stat icon={<MapPin aria-hidden />} label={text.addresses} value={(snapshot.addresses ?? []).length.toString()} />
             </section>
 
-            <NotificationInbox
-              notifications={model.notifications}
-              hasError={model.notificationsError}
-              text={text}
-              locale={preferences.locale}
-            />
+            <div id="portal-notifications">
+              <NotificationInbox
+                notifications={model.notifications}
+                hasError={model.notificationsError}
+                text={text}
+                locale={preferences.locale}
+              />
+            </div>
 
             <section className="grid gap-6 xl:grid-cols-[minmax(0,1.4fr)_minmax(280px,0.6fr)]">
-              <Panel title={text.orders} icon={<Package aria-hidden className="h-4 w-4 text-brand" />}>
+              <div id="portal-orders">
+                <Panel title={text.orders} icon={<Package aria-hidden className="h-4 w-4 text-brand" />}>
                 {(snapshot.orders ?? []).length === 0 ? <Empty text={text.emptyOrders} /> : <OrderList orders={snapshot.orders ?? []} text={text} />}
-              </Panel>
+                </Panel>
+              </div>
               <div className="grid content-start gap-6">
                 <section className="rounded-lg border border-line bg-panel p-5 shadow-[var(--shadow-panel)]">
                   <AddressManager addresses={snapshot.addresses ?? []} copy={text} />
