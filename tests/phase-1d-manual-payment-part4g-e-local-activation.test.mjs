@@ -12,8 +12,8 @@ test("Part 4G-E records local Auth/RLS validation without Production activation"
   assert.match(evidence, /keyboard\/focus behavior/);
   assert.match(evidence, /No Production project, migration, public activation/);
   assert.match(status, /PHASE 1D MANUAL PAYMENT PART 4G-E LOCAL ACTIVATION, AUTH\/RLS, BROWSER QA AND CONTROLLED-STATE MATRIX VALIDATED/);
-  assert.match(status, /CURRENT SUBSTEP: PHASE 1E RECEIPT FOUNDATION LAYER A IMPLEMENTED \/ LOCAL VALIDATED/);
-  assert.match(status, /NEXT SUBSTEP: OWNER APPROVAL FOR LAYER B GUARDED RECEIPT ACTIONS/);
+  assert.match(status, /CURRENT SUBSTEP: PHASE 1E RECEIPT GUARDED ACTIONS LAYER B IMPLEMENTED \/ LOCAL VALIDATED/);
+  assert.match(status, /NEXT SUBSTEP: OWNER APPROVAL FOR LAYER C STAFF AND CUSTOMER PORTAL RECEIPT READ BOUNDARIES/);
   assert.match(status, /BLOCKED: P16 approved recovery plan execution,[\s\S]*Production apply remains unauthorized/);
   assert.match(status, /Latest validation:[\s\S]*authenticated Chrome QA also completed queue\/detail, Verify, Reject, queue removal and keyboard\/focus checks/);
   assert.match(status, /HISTORICAL GATE MARKER \(pre-authenticated-browser QA\): CURRENT SUBSTEP:/);
