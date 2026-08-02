@@ -47,6 +47,7 @@
     "validate:phase-1d-manual-payment-payment-snapshot": "node supabase/validation/phase-1d-manual-payment-guarded-payment-snapshot-suite.mjs",
     "validate:phase-1d-manual-payment-staff-review-reads": "node supabase/validation/phase-1d-manual-payment-staff-review-reads-suite.mjs",
     "validate:phase-1d-manual-payment-staff-review-actions": "node supabase/validation/phase-1d-manual-payment-staff-review-actions-suite.mjs",
+    "validate:phase-1e-receipt-foundation": "node supabase/validation/phase-1e-receipt-foundation-suite.mjs",
     "validate:supabase": "npm run validate:supabase-security && npm run validate:supabase-workflows && npm run validate:commerce-integration"
   },
   "dependencies": {

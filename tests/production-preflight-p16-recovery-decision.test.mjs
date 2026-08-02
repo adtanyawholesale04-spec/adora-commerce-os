@@ -36,6 +36,6 @@ test("P16 keeps Auth, Storage and paid actions separately guarded", () => {
 test("P16 decision advances preflight without claiming execution", () => {
   assert.match(preflight, /The policy decision is complete\. P16 execution remains blocked/);
   assert.match(preflight, /P16 RECOVERY EXECUTION AND PRODUCTION CHANGE-WINDOW PREPARATION/);
-  assert.match(status, /LOCAL RELEASE CANDIDATE AND UI\/UX POLISH/);
+  assert.match(status, /PHASE 1E RECEIPT FOUNDATION LAYER A IMPLEMENTED \/ LOCAL VALIDATED/);
   assert.match(status, /BLOCKED: P16 approved recovery plan execution,[\s\S]*Production apply remains unauthorized/);
 });

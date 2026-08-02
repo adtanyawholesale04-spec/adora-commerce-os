@@ -2,13 +2,22 @@
 
 **Phase:** `1E Finance & Tax Control MVP`
 **Task:** `FIN-TAX-001-PART7`
-**Status:** OWNER APPROVED / FM01-FM30 FROZEN / SQL NOT AUTHORIZED
+**Status:** OWNER APPROVED / FM01-FM30 FROZEN / LAYER A LOCAL VALIDATED / LAYERS B-C GATED
 **Date:** 2026-08-03
 **Owner Approval Date:** 2026-08-03
 **Depends on:** Owner-frozen FS01-FS30
-**Migration files:** Not created
-**Local apply:** Not authorized
+**Migration files:** `supabase/migrations/20260802182034_phase_1e_receipt_foundation.sql`
+**Local apply:** Layer A validated on 2026-08-03
 **Production apply:** Not authorized / blocked by P16
+
+## Layer A implementation checkpoint
+
+The Project Owner separately approved Layer A on 2026-08-03. The
+CLI-generated foundation migration and validation suite replayed locally from
+migration 001, passed the frozen schema/security/immutability checks, database
+lint, financial-source regressions, 430 repository tests, lint, typecheck, and
+production build. No Receipt row, runtime API, role mapping, UI, or Production
+change was created.
 
 ## Objective
 
@@ -558,7 +567,7 @@ The Project Owner approved FM01-FM30 in full on 2026-08-03. These decisions are
 frozen for the Receipt MVP. Any change requires a new explicit Owner decision
 record.
 
-Part 7 decision freeze is complete. The next permitted step is **Layer A
-Receipt foundation migration generation** under a separate explicit approval.
-This freeze does not itself create or apply SQL, seed role mappings, enable
-runtime/UI, change Production, or authorize public activation.
+Part 7 decision freeze and the separately approved Layer A local
+implementation are complete. The next permitted step requires separate Owner
+approval for **Layer B Guarded Receipt actions**. Layers B/C, role mapping,
+runtime/UI, Production apply, and public activation remain closed.

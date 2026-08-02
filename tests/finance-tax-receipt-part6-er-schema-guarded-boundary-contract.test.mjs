@@ -40,5 +40,6 @@ test("Part 6 freezes FS01-FS30 while preserving migration and runtime gates", ()
   assert.match(contract, /does not authorize migration generation/);
   assert.match(status, /FINANCE & TAX PART 6 OWNER DECISION FREEZE COMPLETE/);
   assert.match(status, /FS01-FS30 are Owner approved\/frozen/);
-  assert.match(status, /Part 7 migration contract review may proceed/);
+  assert.match(status, /Layer A foundation is now locally validated/);
+  assert.match(status, /guarded actions, reads, runtime, UI[\s\S]*Production remain separately gated/);
 });
