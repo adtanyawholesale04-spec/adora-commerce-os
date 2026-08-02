@@ -1329,6 +1329,10 @@ CUSTOMER PORTAL EXPERIENCE PART 4 ORDER DETAIL IMPLEMENTED / LOCAL VALIDATED: ex
   entities, canonical source reuse, protected numbering, idempotency, immutable lifecycle, exact RPC/RLS/grant/audit
   posture and replay gates; Part 7 migration contract review may proceed, but no migration, SQL, permission seed,
   runtime, UI or Production change is authorized
+  FINANCE & TAX PART 7 FORWARD-ONLY MIGRATION CONTRACT PREPARED: FM01-FM30 propose three separately gated CLI-generated
+  layers for foundation, guarded actions and staff/Portal reads with exact object catalogs, count-only preflight,
+  lock order, RLS/grants, rollback and validation gates; Owner freeze is required and no migration, SQL, local apply,
+  runtime, UI or Production change is authorized
   CURRENT SUBSTEP: LOCAL RELEASE CANDIDATE AND UI/UX POLISH VALIDATED
 NEXT SUBSTEP: P16 RECOVERY EXECUTION AND PRODUCTION CHANGE-WINDOW PREPARATION AFTER LOCAL RELEASE CANDIDATE
 BLOCKED: P16 approved recovery plan execution, Vercel Production environment inventory and migration change-window approval remain incomplete; Production apply remains unauthorized
@@ -1342,6 +1346,7 @@ Implementation:
 CONTROLLED START
 
 Latest validation:
+Finance & Tax Receipt Part 7 forward-only migration contract review on 2026-08-03 prepared FM01-FM30 across separately gated foundation, guarded-action and staff/Portal-read layers with exact object catalogs, count-only preflight, lock order, RLS/grants, rollback and validation gates; 427 tests, lint, typecheck and production build passed. Owner freeze is still required, and no migration, SQL, local apply, runtime, UI or Production change was authorized.
 Finance & Tax Receipt Part 6 Owner freeze on 2026-08-03 approved FS01-FS30 in full for two additive immutable snapshot entities, canonical source reuse, protected numbering, idempotency, guarded RPC/RLS/grant/audit posture and migration replay gates; 424 tests, lint, typecheck and production build passed, Part 7 migration contract review is ready, and migration, runtime, UI and Production remain closed.
 Production preflight P16 recovery decision on 2026-08-01 froze Pro daily seven-day backups, initial RPO 24 hours, gated RTO 4 hours, managed database/Auth restore-to-new-project, separate Storage object recovery and fail-closed billing/public activation boundaries. No plan, provider, billing, Production data or configuration was changed; P16 execution remains blocking.
 Production preflight on 2026-08-01 verified healthy linked Tokyo project identity, 99 local versus 86 Production migrations, 13 ordered pending migrations, zero remote-only drift, and dry-run without writes. The Owner-approved forward-only Fulfillment lint fix was then replayed locally; all local migrations applied cleanly, local database lint reported no schema errors, and security, workflow, carrier webhook, commerce, Storefront, Checkout, Manual Payment, 394 repository tests, lint, typecheck and production build passed. The historical Production warning remains pending until controlled apply; P16 recovery, Vercel environment inventory and migration change-window approval remain blocking, and Production was not changed.
