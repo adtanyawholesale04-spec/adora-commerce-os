@@ -128,6 +128,49 @@ controls rendered correctly. The rejection dialog opened with focus in the
 bounded reason field and was cancelled without mutating the pending fixture;
 browser console errors were empty for the final authenticated pass.
 
+## Local Release Candidate Acceptance Matrix
+
+The follow-up localhost acceptance pass reused the seeded QA identity and did
+not create a new customer, product, order or payment source.
+
+```text
+Authenticated route matrix: PASS
+  /, /signup, /admin, /admin/products, /admin/inventory,
+  /admin/customers, /admin/orders, /admin/payments,
+  /admin/payments/review, /admin/fulfillment, /admin/qc,
+  /admin/shipping, /admin/returns, /admin/promotions, /admin/users,
+  /admin/settings, /portal, /store/acos-local-qa
+
+Admin permission context: PASS
+  ceoacos@example.com / ACOS Local QA / ACTIVE membership
+  payment.view and payment.verify available
+  authorized modules render as links; guardrails remain visible
+
+Locale and theme controls: PASS
+  English -> Thai -> English labels changed in the authenticated shell
+  light/dark control responded and persisted after route reload
+  no preference Server Action error remained after reload
+
+Payment review workflow: PASS
+  queue -> valid detail -> guarded reject dialog
+  reason textbox received initial focus
+  dialog cancellation left the pending fixture unchanged
+
+Controlled error state: PASS
+  invalid payment detail rendered the unavailable-queue state
+  no raw error, private reference or financial mutation was exposed
+
+Customer-facing route state: PASS / controlled local fixture state
+  /portal rendered the unlinked-customer state
+  /store/acos-local-qa rendered the not-found/unavailable storefront state
+  customer checkout behavior remains covered by the passing SQL/workflow suites
+```
+
+The anonymous permission-denial and cross-tenant denial cases remain covered by
+the existing focused and combined security suites and the preceding browser
+QA evidence. This pass deliberately stopped before approve/reject mutation so
+the reusable pending fixture remains intact.
+
 ## Production Disposition
 
 ```text
