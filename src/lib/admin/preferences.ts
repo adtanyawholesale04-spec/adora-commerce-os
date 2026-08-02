@@ -28,7 +28,10 @@ export function parseTheme(value: string | null | undefined): AdminTheme {
 }
 
 export function safeAdminReturnPath(value: string | null | undefined) {
-  if (!value || !value.startsWith("/admin")) {
+  if (
+    !value ||
+    (!value.startsWith("/admin") && value !== "/login" && !value.startsWith("/login/"))
+  ) {
     return "/admin";
   }
 
