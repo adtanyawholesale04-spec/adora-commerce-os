@@ -1325,6 +1325,10 @@ CUSTOMER PORTAL EXPERIENCE PART 4 ORDER DETAIL IMPLEMENTED / LOCAL VALIDATED: ex
   FINANCE & TAX PART 5 SECURITY, AUDIT AND PORTAL READ FREEZE OWNER APPROVED / FROZEN: least-privilege
   finance.document.* permission direction, tenant/RLS/direct-write denial, active customer-profile ownership,
   sanitized append-only audit and limited Portal fields are frozen; permission seeding, schema, RPC and UI remain deferred
+  FINANCE & TAX PART 6 ER/SCHEMA AND GUARDED DATABASE BOUNDARY CONTRACT PREPARED: FS01-FS30 map the approved Receipt
+  decisions to two additive snapshot entities, canonical source reuse, protected numbering, idempotency, immutable
+  lifecycle, exact RPC/RLS/grant/audit posture and replay gates; Owner freeze remains required and no migration, SQL,
+  permission seed, runtime, UI or Production change is authorized
   CURRENT SUBSTEP: LOCAL RELEASE CANDIDATE AND UI/UX POLISH VALIDATED
 NEXT SUBSTEP: P16 RECOVERY EXECUTION AND PRODUCTION CHANGE-WINDOW PREPARATION AFTER LOCAL RELEASE CANDIDATE
 BLOCKED: P16 approved recovery plan execution, Vercel Production environment inventory and migration change-window approval remain incomplete; Production apply remains unauthorized
@@ -1338,6 +1342,7 @@ Implementation:
 CONTROLLED START
 
 Latest validation:
+Finance & Tax Receipt Part 6 on 2026-08-03 prepared FS01-FS30 for two additive immutable snapshot entities, canonical source reuse, protected numbering, idempotency, guarded RPC/RLS/grant/audit posture and migration replay gates; 424 tests, lint, typecheck and production build passed, while Owner freeze, migration, runtime, UI and Production remain closed.
 Production preflight P16 recovery decision on 2026-08-01 froze Pro daily seven-day backups, initial RPO 24 hours, gated RTO 4 hours, managed database/Auth restore-to-new-project, separate Storage object recovery and fail-closed billing/public activation boundaries. No plan, provider, billing, Production data or configuration was changed; P16 execution remains blocking.
 Production preflight on 2026-08-01 verified healthy linked Tokyo project identity, 99 local versus 86 Production migrations, 13 ordered pending migrations, zero remote-only drift, and dry-run without writes. The Owner-approved forward-only Fulfillment lint fix was then replayed locally; all local migrations applied cleanly, local database lint reported no schema errors, and security, workflow, carrier webhook, commerce, Storefront, Checkout, Manual Payment, 394 repository tests, lint, typecheck and production build passed. The historical Production warning remains pending until controlled apply; P16 recovery, Vercel environment inventory and migration change-window approval remain blocking, and Production was not changed.
 Local Admin QA Auth/Profile/Membership/Permission/RLS validation passed after the forward-only permission metadata grant migration on 2026-08-01: Magic Link session, active profile/membership, 14 permission codes including payment.view/payment.verify, tenant-scoped visibility, authenticated-only SELECT, anonymous denial and write denial passed locally; Production was not applied.
