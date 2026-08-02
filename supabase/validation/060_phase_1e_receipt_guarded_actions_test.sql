@@ -84,13 +84,6 @@ begin
     raise exception 'Receipt tables gained direct API access';
   end if;
 
-  if to_regprocedure('public.api_list_receipt_documents(uuid,text,timestamp with time zone,uuid,integer)') is not null
-     or to_regprocedure('public.api_get_receipt_document(uuid,uuid)') is not null
-     or to_regprocedure('public.api_list_customer_portal_receipts(uuid,timestamp with time zone,uuid,integer)') is not null
-     or to_regprocedure('public.api_get_customer_portal_receipt(uuid,uuid)') is not null then
-    raise exception 'Layer B unexpectedly created Layer C read functions';
-  end if;
-
   if exists (
     select 1
     from public.role_permissions role_permission

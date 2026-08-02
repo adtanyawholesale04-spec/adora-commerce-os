@@ -1,8 +1,8 @@
 # ACOS Track B Customer Portal Part 5 Receipt/Bill Read-only Contract Review
 
 **Part:** `PORTAL-P1-PART5-RECEIPT`
-**Status:** BLOCKED / DEPENDENCY REQUIRED
-**Date:** 2026-08-02
+**Status:** READ BOUNDARY LOCAL VALIDATED / PORTAL UI GATED
+**Date:** 2026-08-03
 
 ## Objective
 
@@ -19,30 +19,33 @@ The current canonical Commerce Core sources are:
 - `refunds` and `refund_transactions` for refund state;
 - `document_sequences` and `next_document_number` as a reusable numbering helper.
 
-The repository does not currently contain a canonical `receipts`, `bills`,
-`tax_invoices`, or equivalent financial document record, nor a validated
-Customer Portal receipt/bill read RPC.
+The repository now contains the canonical immutable Receipt sources
+`finance_documents` and `finance_document_lines`, the guarded Layer B Receipt
+actions, and the Layer C active-customer-owned read RPCs. These migrations are
+locally validated and have not been applied to Production.
 
 ## Safe decision
 
-Part 5 cannot add a Portal receipt/bill screen yet. The existing Portal order
-detail may continue to show order and payment status, but it must not label a
-payment or payment proof as a receipt/bill.
+The data and security dependency for a Receipt-only Portal view is satisfied
+locally. Part 5 still cannot add runtime UI until the server read-service and
+permission-aware Portal integration are separately approved and validated.
+The existing Portal order detail may continue to show order and payment status
+but must not label a payment or payment proof as a Receipt.
 
 ## Required dependency before implementation
 
-1. Freeze Finance & Tax MVP business rules for receipt/bill scope.
-2. Freeze the ER/schema addendum for the canonical document record, document
-   number lifecycle, immutable financial snapshot, reversal/cancellation
-   behavior, and organization/branch scope.
-3. Define the ownership-scoped read contract and RPC allowlist for Portal.
-4. Define document privacy, audit evidence, and whether a confirmed payment is
-   sufficient to create the document or requires a separate guarded service.
+1. Owner decision for Receipt permission-to-role mapping.
+2. Separately approved server-only read-service integration that calls only
+   the validated Layer C RPCs.
+3. Portal UI implementation using the frozen response allowlist, unavailable
+   shape, bilingual themes, responsive behavior, and no browser table access.
+4. Local Auth/RLS/browser QA before any Production or public activation.
 
 ## Explicit non-scope
 
-- No new receipt, bill, invoice, or document table.
-- No migration, RPC, view, grant, RLS policy, or permission change.
+- No new receipt, bill, invoice, or duplicate financial source.
+- No new migration, RPC, view, grant, RLS policy, or permission change beyond
+  the already validated Layers A-C.
 - No document number allocation or financial event/ledger mutation.
 - No payment, refund, tax, Storage, provider, or Production change.
 - No duplicate customer, order, payment, or financial source.
@@ -60,6 +63,7 @@ payment or payment proof as a receipt/bill.
 
 ## Next safe step
 
-Proceed with Finance & Tax receipt/document contract review and Owner decision
-freeze. Do not implement the Customer Portal receipt/bill UI until that gate
-is complete.
+Request the Owner decision for Receipt permission-to-role mapping, then review
+the server read-service and Admin/Portal UI integration as separately gated
+work. Do not apply Layers A-C to Production or activate the Portal Receipt UI
+without the remaining Production approvals.

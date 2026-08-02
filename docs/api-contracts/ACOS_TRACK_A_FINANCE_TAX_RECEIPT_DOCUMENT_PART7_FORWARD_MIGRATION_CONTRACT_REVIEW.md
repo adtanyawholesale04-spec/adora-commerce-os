@@ -2,12 +2,12 @@
 
 **Phase:** `1E Finance & Tax Control MVP`
 **Task:** `FIN-TAX-001-PART7`
-**Status:** OWNER APPROVED / FM01-FM30 FROZEN / LAYERS A-B LOCAL VALIDATED / LAYER C GATED
+**Status:** OWNER APPROVED / FM01-FM30 FROZEN / LAYERS A-C LOCAL VALIDATED
 **Date:** 2026-08-03
 **Owner Approval Date:** 2026-08-03
 **Depends on:** Owner-frozen FS01-FS30
-**Migration files:** `supabase/migrations/20260802182034_phase_1e_receipt_foundation.sql`, `supabase/migrations/20260802191541_phase_1e_receipt_guarded_actions.sql`
-**Local apply:** Layers A-B validated on 2026-08-03
+**Migration files:** `supabase/migrations/20260802182034_phase_1e_receipt_foundation.sql`, `supabase/migrations/20260802191541_phase_1e_receipt_guarded_actions.sql`, `supabase/migrations/20260802200637_phase_1e_receipt_read_boundaries.sql`
+**Local apply:** Layers A-C validated on 2026-08-03
 **Production apply:** Not authorized / blocked by P16
 
 ## Layer A implementation checkpoint
@@ -28,6 +28,17 @@ Fresh replay, exact grant/permission/tenant checks, canonical-source
 eligibility, idempotency, immutable snapshot, audit, replacement, reversal and
 competing-action races passed locally. Layer B creates no read RPC, role
 mapping, UI or Production change.
+
+## Layer C implementation checkpoint
+
+The Project Owner separately approved Layer C on 2026-08-03. The
+CLI-generated read-boundary migration adds only the four frozen authenticated
+staff and Customer Portal functions. Fresh replay, exact grants, active
+profile/membership/permission checks, active customer-link ownership,
+non-enumeration, keyset pagination, privacy allowlists, sanitized detail-view
+audit, direct-table denial, database lint, and cross-workflow regressions
+passed locally. Layer C creates no role mapping, runtime service, UI, Receipt
+mutation, duplicate canonical source, or Production change.
 
 ## Objective
 
@@ -577,8 +588,9 @@ The Project Owner approved FM01-FM30 in full on 2026-08-03. These decisions are
 frozen for the Receipt MVP. Any change requires a new explicit Owner decision
 record.
 
-Part 7 decision freeze and the separately approved Layer A and Layer B local
-implementations are complete. The next permitted step requires separate Owner
-approval for **Layer C staff and Customer Portal Receipt read boundaries**.
-Layer C, role mapping, runtime/UI, Production apply, and public activation
-remain closed.
+Part 7 decision freeze and the separately approved Layer A, Layer B, and Layer
+C local implementations are complete. The next permitted step requires a
+separate Owner decision for **Receipt permission-to-role mapping**, followed
+by separately approved server read-service and permission-aware Admin/Portal
+UI integration. Role mapping, runtime/UI, Production apply, and public
+activation remain closed.

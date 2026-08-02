@@ -13,11 +13,12 @@ const migrations = fs
   .map((file) => fs.readFileSync(`supabase/migrations/${file}`, "utf8"))
   .join("\n");
 
-test("receipt/bill Portal work records the missing canonical dependency", () => {
-  assert.match(contract, /BLOCKED \/ DEPENDENCY REQUIRED/);
-  assert.match(contract, /does not currently contain a canonical `receipts`/);
-  assert.match(contract, /No migration, RPC, view, grant, RLS policy/);
-  assert.match(contract, /Finance & Tax MVP business rules/);
+test("receipt/bill Portal work records the validated read dependency and remaining UI gate", () => {
+  assert.match(contract, /READ BOUNDARY LOCAL VALIDATED \/ PORTAL UI GATED/);
+  assert.match(contract, /canonical immutable Receipt sources/);
+  assert.match(contract, /Layer C active-customer-owned read RPCs/);
+  assert.match(contract, /No new migration, RPC, view, grant, RLS policy/);
+  assert.match(contract, /server-only read-service integration/);
 });
 
 test("receipt/bill review does not invent a financial source or UI", () => {
